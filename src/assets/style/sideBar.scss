@@ -1,0 +1,177 @@
+.sideBar{
+    position: absolute;
+    top: 0px;
+    padding: 10px;
+    background-color: white;
+    z-index: 4100 !important;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+}
+.bm-item {
+    .row{
+        display: flex !important;
+    }
+} 
+.logoApps{
+    padding: 10px 20px;
+
+    img{
+        width: 160px;
+    }
+}
+.menu-button{
+    cursor: pointer;
+}
+
+.col-close{
+    align-self: center;
+    text-align-last: right;
+}
+
+.row-header{
+    width: 107%;
+    padding-left: 10px;
+    padding-right: 7px;
+    padding-bottom: 10px;
+    border-bottom: solid 1px rgb(214, 214, 214);
+    margin-bottom: 20px;
+}
+
+.bm-menu{
+    overflow: inherit !important;
+}
+
+.list-menu{
+    align-items: center !important;
+    padding: 1px 5px 0px 15px;
+    font-size: small !important;
+}
+.iconList{
+    margin-right: 20px;
+}
+
+.row-line{
+    border-bottom: solid 1px rgb(214, 214, 214);
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+.menu-item{
+    cursor: pointer;
+}
+.menu-item:hover{
+    color: #16a75c !important;
+    .iconList{
+        color: #16a75c !important;
+    }
+}
+.title-menu-sidebar{
+    padding-top: 7px;
+    margin-left: 10px;
+    max-width: 277px !important;
+}
+.btn-side-back{
+    align-self: center;
+    cursor: pointer;
+    :hover{
+        cursor: pointer;
+        color: #16a75c !important;
+    }
+}
+.sideBarForm{
+    width: 390px !important;
+    position: absolute;
+    top: 0px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+    transition: none !important;
+}
+.header-sidebar{
+    padding: 15px 20px 14px 25px;
+    border-bottom: solid 1px rgb(214, 214, 214);
+}
+.formInput{
+    font-family: 'Roboto' !important;
+    padding: 25px 30px 25px 30px;
+}
+.input-sidebar{
+    height: 50px !important;
+    width: 100% !important;
+    margin-left: 0px !important;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    background-color: #f5f5f5 !important;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px !important;
+
+}
+.input-sidebar:focus {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px !important;
+}
+.input-sidebar-area:focus {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px !important;
+}
+.label-form{
+    font-size: smaller;
+    font-family: 'Roboto';
+    font-weight: bold;
+    color: #838383;
+}
+.footer{
+    padding: 20px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    text-align: right;
+}
+.simpan-sidebar{
+    border-radius: 25px;
+    margin-left: 30px;
+    width: 79%;
+    font-family: 'Roboto' !important;
+    background-color: #16a75c !important;
+}
+.input-sidebar-area{
+    height: 100px !important;
+    width: 100% !important;
+    margin-left: 0px !important;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    background-color: #f5f5f5 !important;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px !important;
+
+}
+.batal{
+    font-family: 'Roboto' !important;
+    color: red;
+    text-decoration-line: none;
+}
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+  color: rgb(151, 151, 151);
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 10px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 40px; }
+
+.required-star{
+    color: #16a75c;
+}
+
+.btn-area{
+    font-size: smaller !important;
+    font-family: 'Roboto' !important;
+    width: 100%;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}

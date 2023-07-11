@@ -1,0 +1,71 @@
+.form-control {
+  width: 27vh !important;
+  border: none !important;
+  outline: none !important;
+  height: 4vh !important;
+  font-size: small !important;
+  margin-left: 5px !important;
+}
+
+.buttonSidebar{
+  position: absolute;
+  top: 10px;
+  left: 23px;
+  padding: 5px; 
+  z-index: 400;
+  border-radius: 8px;
+  width: auto !important;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+}
+
+.form-control:focus {
+  box-shadow: none !important;
+}
+
+.searchInput:focus {
+  box-shadow: none !important;
+}
+
+#autocomplete-input{
+  width: 332.828px !important;
+  display: block;
+  max-height: 300px;
+  overflow:hidden !important ;
+  position: absolute;
+  border: none !important;
+  top: 10px !important;
+  height: auto !important;
+  font-size: small;
+  margin-left: -41px;
+  padding: 5px;
+  z-index: 400;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+}
+
+.col-sm{
+  padding: 0px !important;
+  align-self: center;
+}
+
+.row{
+  flex-wrap: inherit !important;
+}
+
+.burgerButton{
+  cursor: pointer;
+  align-self: center;
+  padding: 4px 5px 5px 5px !important;
+  margin-left: 5px;
+}
+
+.burgerSearch{
+  text-align-last: center;
+  margin-right: 5px;
+}
+
+.row > * {
+  flex-shrink: inherit !important;
+}
