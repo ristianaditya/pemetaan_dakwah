@@ -7,13 +7,19 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "compile:scss": "sass ./src/assets/scss/light-bootstrap-dashboard-react.scss ./src/assets/css/light-bootstrap-dashboard-react.css",
+    "minify:scss": "sass src/assets/scss/light-bootstrap-dashboard-react.scss src/assets/css/light-bootstrap-dashboard-react.min.css --style compressed",
+    "build:scss": "npm run compile:scss && npm run minify:scss"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "5.15.2",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.0",
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^3.8.0",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-bootstrap-typeahead": "^6.2.3",
@@ -23,7 +29,10 @@
     "react-icons": "^4.10.1",
     "react-leaflet": "^4.2.1",
     "react-leaflet-draw": "^0.20.4",
-    "react-router-dom": "^6.13.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "reactstrap": "^9.2.0",
+    "sort-by": "^1.2.0",
     "typeface-roboto": "^1.1.13"
   },
   "devDependencies": {
