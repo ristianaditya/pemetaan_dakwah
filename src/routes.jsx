@@ -1,28 +1,46 @@
-/*!
+// import Dashboard from "./views/Dashboard.jsx";
+import Dashboard from "./views/Dashboard/index.jsx";
 
-=========================================================
-* Light Bootstrap Dashboard React - v2.0.1
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/light-bootstrap-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/light-bootstrap-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import Dashboard from "./views/Dashboard.jsx";
+import {
+  HomeIcon,
+  StatsIcon,
+  CreditIcon,
+  PersonIcon,
+  DocumentIcon,
+  RocketIcon,
+  SupportIcon,
+} from "./components/Icons/Icons";
+import { PiMosque } from 'react-icons/pi';
+import { TbHomeShare } from 'react-icons/tb';
+import { SiGooglemaps } from 'react-icons/si';
 
 
 const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    icon: "nc-icon nc-chart-pie-35",
+    icon: <HomeIcon color="inherit" />,
+    component: Dashboard,
+    layout: "/maps/admin"
+  },
+  {
+    path: "/data_masjid",
+    name: "Data Masjid",
+    icon: <PiMosque color="inherit" />,
+    component: Dashboard,
+    layout: "/maps/admin"
+  },
+  {
+    path: "/data_masyarakat",
+    name: "Data Masyarakat",
+    icon: <TbHomeShare color="inherit" />,
+    component: Dashboard,
+    layout: "/maps/admin"
+  },
+  {
+    path: "/data_dakwah",
+    name: "Data Dakwah",
+    icon: <SiGooglemaps color="inherit" />,
     component: Dashboard,
     layout: "/maps/admin"
   },

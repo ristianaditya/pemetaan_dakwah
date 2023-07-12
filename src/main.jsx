@@ -11,7 +11,7 @@ import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
 import './assets/style/maps.scss';
 import 'typeface-roboto';
-import { BrowserRouter, Route, Switch, Redirect, Link, Router} from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AdminLayout from "./layouts/Admin.jsx";
 
@@ -22,10 +22,7 @@ root.render(
     <Switch>
       <Route exact path="/maps" ><App /></Route>
       <Route path="/maps/admin" render={(props) => <AdminLayout {...props} />} />
-      {/* <Route exact path="/">
-         <Redirect to="/dashboard" /> : <PublicHomePage />
-      </Route> */}
-      {/* <Redirect from="/maps/admin" to="maps/admin/dashboard" /> */}
+      <Redirect from={`/maps/admin`} to="maps/admin/dashboard" />
     </Switch>
   </BrowserRouter>
 );

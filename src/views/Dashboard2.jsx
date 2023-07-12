@@ -2,7 +2,6 @@ import React from "react";
 // import ChartistGraph from "react-chartist";
 // react-bootstrap components
 // import "../assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
-import "../assets/css/light-bootstrap-dashboard-react.min.css";
 
 import {
   Badge,
