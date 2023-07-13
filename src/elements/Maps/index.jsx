@@ -1,8 +1,7 @@
-import { MapContainer, TileLayer, ZoomControl, FeatureGroup } from 'react-leaflet';
-import { EditControl } from 'react-leaflet-draw';
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import React from 'react';
 
-function Maps({mapRef, onCreated}) {
+function Maps({mapRef}) {
 
     return (
         <>
@@ -13,10 +12,7 @@ function Maps({mapRef, onCreated}) {
                 maxNativeZoom={18}
                 maxZoom={20}
                 minZoom={5}
-                />  
-                <FeatureGroup>
-                    <EditControl onCreated={onCreated} position="topright" />
-                </FeatureGroup>
+                /> 
                 <ZoomControl position="bottomright" />
             </MapContainer>
         </>

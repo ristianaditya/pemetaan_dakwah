@@ -7,17 +7,7 @@ import { slide as Menu } from 'react-burger-menu';
 import React, { useState } from 'react';
 import '../../assets/style/sideBar.scss';
 
-export default function MasjidMenu({ showFormMasjid, handleCloseFormMasjid, handleShow, setTypePolygon }) {
-
-    const createPolygon = () => 
-    {
-        setTypePolygon('masjid');
-        var e = document.createEvent('Event');
-        e.initEvent('click', true, true);
-        var cb = document.getElementsByClassName('leaflet-draw-draw-polygon');
-        cb.typePoly = 'masjid';
-        return !cb[0].dispatchEvent(e);
-    }
+export default function MasjidMenu({ showFormMasjid, handleCloseFormMasjid, handleShow }) {
 
     return (
         <>
@@ -51,7 +41,7 @@ export default function MasjidMenu({ showFormMasjid, handleCloseFormMasjid, hand
                         </div>
                         <div className="form-group">
                             <label  className='label-form'>Buat Area Masjid <span className="required-star">*</span></label>
-                            <a className="btn btn-outline-success btn-area" onClick={createPolygon}><BiShapePolygon /> Buat Area Masjid</a>
+                            <a className="btn btn-outline-success btn-area" ><BiShapePolygon /> Buat Area Masjid</a>
                             <textarea readOnly type='number' className="form-control input-sidebar-area" id='area_masjid' />
                         </div>
                     </form>

@@ -1,10 +1,22 @@
 
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import '../../assets/style/inputSearch.scss';
 
+function onClick(e) {
+    alert(this.getLatLng());
+}
+
 function SearchInput({ mapRef, show, handleShow }) {
+    if (mapRef.current) {
+        const map = mapRef.current;
+  
+        const circleCenter = [-6.945473281565919, 107.70341536040067];
+  
+        const circle = L.marker(circleCenter);
+        circle.addTo(map).on('click', onClick);
+      }
 
     const provider = new OpenStreetMapProvider();
 

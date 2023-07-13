@@ -7,8 +7,6 @@ import MasjidMenu from "./elements/Sidebar/masjidMenu";
 
 function App() {
   const mapRef = useRef(null);
-  var dataPolygonMasjid = [];
-  const [typePolygon, setTypePolygon] = useState('');
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -20,23 +18,14 @@ function App() {
     handleClose() ;
     setTimeout(function() { setShowFormMasjid(true); }, 1000);
   }
-  const onCreated = (e) => {
-    const { layerType, layer } = e;
-    let color = 'red';
-    if  (layerType === 'polygon') {
-      layer.setStyle({ color });
-      dataPolygonMasjid.push([layer._leaflet_id, layer.getLatLngs()[0]]);
-      console.log(e);
-    }
-  };
   
   return (
     <>
       <div>
-        <Maps mapRef ={mapRef} onCreated={onCreated}/>
+        <Maps mapRef ={mapRef}/>
         <SearchInput mapRef ={mapRef} show= {show} handleShow={handleShow}/>
         <Sidebar show={ show } handleClose={ handleClose } handleShowFormMasjid={handleShowFormMasjid}/>
-        <MasjidMenu showFormMasjid={ showFormMasjid } handleCloseFormMasjid={ handleCloseFormMasjid } handleShow={ handleShow } setTypePolygon={setTypePolygon}/>
+        <MasjidMenu showFormMasjid={ showFormMasjid } handleCloseFormMasjid={ handleCloseFormMasjid } handleShow={ handleShow }/>
         <ModalLogin />
       </div>
     </>
