@@ -11,7 +11,6 @@ import {
 import IconBox from "../Icons/IconBox";
 import { CreativeTimLogo } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
-import { SidebarHelp } from "../Sidebar/SidebarHelp";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -27,7 +26,12 @@ const SidebarContent = ({ logoText, routes }) => {
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
-    return location.pathname === routeName ? "active" : "";
+    if (window.location.href.indexOf(routeName) > -1) {
+      return "active";
+    } else {
+      return ""
+    }
+    // return location.pathname === routeName ? "active" : "";
   };
   const createLinks = (routes) => {
     // Chakra Color Mode
@@ -40,31 +44,8 @@ const SidebarContent = ({ logoText, routes }) => {
       if (prop.redirect) {
         return null;
       }
-      if (prop.category) {
-        var st = {};
-        st[prop["state"]] = !state[prop.state];
-        return (
-          <div key={prop.name}>
-            <Text
-              color={activeColor}
-              fontWeight="bold"
-              mb={{
-                xl: "12px",
-              }}
-              mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
-              py="12px"
-            >
-              {document.documentElement.dir === "rtl"
-                ? prop.rtlName
-                : prop.name}
-            </Text>
-            {createLinks(prop.views)}
-          </div>
-        );
+      if(prop.show == false) {
+        return null;
       }
       return (
         <NavLink to={prop.layout + prop.path} key={prop.name}>
@@ -178,29 +159,28 @@ const SidebarContent = ({ logoText, routes }) => {
 
   return (
     <>
-        <Box pt={"25px"} mb="12px">
-      <Link
-        // href={`${process.env.REACT_APP_PUBLIC_URL}/#/`}
-        target="_blank"
-        display="flex"
-        lineHeight="100%"
-        mb="30px"
-        fontWeight="bold"
-        justifyContent="center"
-        alignItems="center"
-        fontSize="11px"
-      >
-        <CreativeTimLogo w="32px" h="32px" me="10px" />
-        <Text fontSize="sm" mt="3px">
-          {logoText}
-        </Text>
-      </Link>
-      <Separator></Separator>
-    </Box>
-          <Stack direction="column" mb="40px">
-            <Box>{links}</Box>
-          </Stack>
-          <SidebarHelp />
+      <Box pt={"25px"} mb="12px">
+        <Link
+          // href={`${process.env.REACT_APP_PUBLIC_URL}/#/`}
+          target="_blank"
+          display="flex"
+          lineHeight="100%"
+          mb="30px"
+          fontWeight="bold"
+          justifyContent="center"
+          alignItems="center"
+          fontSize="11px"
+        >
+          <CreativeTimLogo w="32px" h="32px" me="10px" />
+          <Text fontSize="sm" mt="3px">
+            {logoText}
+          </Text>
+        </Link>
+        <Separator></Separator>
+      </Box>
+      <Stack direction="column" mb="40px">
+        <Box>{links}</Box>
+      </Stack>
     </>
   )
 }

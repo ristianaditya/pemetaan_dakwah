@@ -35,6 +35,7 @@
     "react-bootstrap": "^2.8.0",
     "react-bootstrap-typeahead": "^6.2.3",
     "react-burger-menu": "^3.0.9",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "^18.2.0",
     "react-esri-leaflet": "^2.0.1",
     "react-github-btn": "^1.2.1",
@@ -45,6 +46,7 @@
     "react-router-dom": "^5.2.0",
     "reactstrap": "^9.2.0",
     "sort-by": "^0.0.2",
+    "styled-components": "^6.0.5",
     "typeface-roboto": "^1.1.13"
   },
   "devDependencies": {

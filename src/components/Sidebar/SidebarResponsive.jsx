@@ -20,7 +20,6 @@ import {
 import IconBox from "../Icons/IconBox";
 import { CreativeTimLogo } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
-import { SidebarHelp } from "../Sidebar/SidebarHelp";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -32,7 +31,13 @@ function SidebarResponsive(props) {
     const mainPanel = React.useRef();
     // verifies if routeName is the one active (in browser input)
     const activeRoute = (routeName) => {
-      return location.pathname === routeName ? "active" : "";
+      if (window.location.href.indexOf(routeName) > -1) {
+        return "active";
+      } else {
+        return ""
+      }
+      
+      // return location.pathname === routeName ? "active" : "";
     };
   
     const createLinks = (routes) => {
@@ -257,7 +262,6 @@ function SidebarResponsive(props) {
                 <Stack direction="column" mb="40px">
                   <Box>{links}</Box>
                 </Stack>
-                <SidebarHelp></SidebarHelp>
               </Box>
             </DrawerBody>
           </DrawerContent>
