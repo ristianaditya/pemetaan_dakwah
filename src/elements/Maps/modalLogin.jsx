@@ -9,7 +9,6 @@ export default function ModalLogin() {
     const toggleModalLogin = () => {
     setShowLogin(!showLogin);
     };
-
     return (
         <>
             <button className="btn btn-success login-button" style={{ fontFamily: 'Roboto' }} onClick={toggleModalLogin}>Login</button>
