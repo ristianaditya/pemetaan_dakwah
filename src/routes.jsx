@@ -2,6 +2,11 @@
 import Dashboard from "./views/Dashboard/index.jsx";
 import Masjid from "./views/Masjid/index.jsx";
 import MasjidTambah from "./views/Masjid/Tambah.jsx";
+// Masyarakat
+import Masyarakat from "./views/Masyarakat/index.jsx";
+import MasyarakatTambah from "./views/Masyarakat/Tambah.jsx";
+import MasyarakatEdit from "./views/Masyarakat/Edit.jsx";
+import MasyarakatDetail from "./views/Masyarakat/Detail.jsx";
 
 import {
   HomeIcon,
@@ -40,9 +45,33 @@ const dashboardRoutes = [
     path: "/data_masyarakat",
     name: "Data Masyarakat",
     icon: <TbHomeShare color="inherit" />,
-    component: Dashboard,
+    component: Masyarakat,
     layout: "/maps/admin",
     show: true
+  },
+  {
+    path: "/data_masyarakat/tambah",
+    name: "Data Masyarakat Tambah",
+    icon: <TbHomeShare color="inherit" />,
+    component: MasyarakatTambah,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/data_masyarakat/edit",
+    name: "Data Masyarakat Edit",
+    icon: <TbHomeShare color="inherit" />,
+    component: MasyarakatEdit,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/data_masyarakat/detail",
+    name: "Data Masyarakat Detail",
+    icon: <TbHomeShare color="inherit" />,
+    component: MasyarakatDetail,
+    layout: "/maps/admin",
+    show: false
   },
   {
     path: "/data_dakwah",

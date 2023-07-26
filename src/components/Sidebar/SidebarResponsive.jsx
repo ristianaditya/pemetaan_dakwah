@@ -15,7 +15,8 @@ import {
     Text,
     useColorModeValue,
     useDisclosure,
-    Icon
+    Icon,
+    Image
 } from "@chakra-ui/react";
 import IconBox from "../Icons/IconBox";
 import { CreativeTimLogo } from "../Icons/Icons";
@@ -36,7 +37,7 @@ function SidebarResponsive(props) {
       } else {
         return ""
       }
-      
+
       // return location.pathname === routeName ? "active" : "";
     };
   
@@ -49,6 +50,9 @@ function SidebarResponsive(props) {
   
       return routes.map((prop, key) => {
         if (prop.redirect) {
+          return null;
+        }
+        if(prop.show == false) {
           return null;
         }
         if (prop.category) {
@@ -207,10 +211,10 @@ function SidebarResponsive(props) {
           alignItems="center"
           fontSize="11px"
         >
-          <CreativeTimLogo w="32px" h="32px" me="10px" />
-          <Text fontSize="sm" mt="3px">
+          <Image src={"../../src/assets/logo/logoAljabar.svg"} alt="PEMENTAAN DAKWAH" h="32px" /> 
+          {/* <Text fontSize="sm" mt="3px">
             {logoText}
-          </Text>
+          </Text> */}
         </Link>
         <Separator></Separator>
       </Box>
@@ -225,6 +229,9 @@ function SidebarResponsive(props) {
         display={{ sm: "flex", xl: "none" }}
         ref={mainPanel}
         alignItems="center"
+        marginLeft={{ sm : "20px"}}
+        marginRight={{ md : "35px"}}
+        width={{ sm: "100%" }}
       >
         <HamburgerIcon
           color={hamburgerColor}

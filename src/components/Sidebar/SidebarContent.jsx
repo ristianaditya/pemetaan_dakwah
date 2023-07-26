@@ -6,7 +6,8 @@ import {
     Link,
     Stack,
     Text,
-    useColorModeValue
+    useColorModeValue,
+    Image
 } from "@chakra-ui/react";
 import IconBox from "../Icons/IconBox";
 import { CreativeTimLogo } from "../Icons/Icons";
@@ -171,10 +172,11 @@ const SidebarContent = ({ logoText, routes }) => {
           alignItems="center"
           fontSize="11px"
         >
-          <CreativeTimLogo w="32px" h="32px" me="10px" />
-          <Text fontSize="sm" mt="3px">
+          {/* <CreativeTimLogo w="32px" h="32px" me="10px" /> */}
+          <Image src={"../../src/assets/logo/logoAljabar.svg"} alt="PEMENTAAN DAKWAH" h="32px" /> 
+          {/* <Text fontSize="sm" mt="3px">
             {logoText}
-          </Text>
+          </Text> */}
         </Link>
         <Separator></Separator>
       </Box>

@@ -47,11 +47,12 @@ function Sidebar(props) {
           m={sidebarMargins}
           borderRadius={sidebarRadius}
         >
-          <SidebarContent routes={routes}
-        logoText={"PEMETAAN DAKWAH"}
-        display="none"
-        sidebarVariant={sidebarVariant}
-        />
+          <SidebarContent 
+            routes={routes}
+            logoText={"PEMETAAN DAKWAH"}
+            display="none"
+            sidebarVariant={sidebarVariant}
+            />
         </Box>
       </Box>
     </Box>
