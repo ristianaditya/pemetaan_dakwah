@@ -7,6 +7,11 @@ import Masyarakat from "./views/Masyarakat/index.jsx";
 import MasyarakatTambah from "./views/Masyarakat/Tambah.jsx";
 import MasyarakatEdit from "./views/Masyarakat/Edit.jsx";
 import MasyarakatDetail from "./views/Masyarakat/Detail.jsx";
+// Kegiatan Dakwah
+import KegiatanDakwah from "./views/KegiatanDakwah/index.jsx";
+import KegiatanDakwahTambah from "./views/KegiatanDakwah/Tambah.jsx";
+import KegiatanDakwahEdit from "./views/KegiatanDakwah/Edit.jsx";
+import KegiatanDakwahDetail from "./views/KegiatanDakwah/Detail.jsx";
 
 import {
   HomeIcon,
@@ -14,6 +19,7 @@ import {
 import { PiMosque } from 'react-icons/pi';
 import { TbHomeShare } from 'react-icons/tb';
 import { SiGooglemaps } from 'react-icons/si';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 
 
 const dashboardRoutes = [
@@ -74,10 +80,42 @@ const dashboardRoutes = [
     show: false
   },
   {
-    path: "/data_dakwah",
-    name: "Data Dakwah",
+    path: "/kegiatan_dakwah",
+    name: "Kegiatan Dakwah",
     icon: <SiGooglemaps color="inherit" />,
-    component: Dashboard,
+    component: KegiatanDakwah,
+    layout: "/maps/admin",
+    show: true
+  },
+  {
+    path: "/kegiatan_dakwah/tambah",
+    name: "Data Kegiatan Dakwah Tambah",
+    icon: <TbHomeShare color="inherit" />,
+    component: KegiatanDakwahTambah,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/kegiatan_dakwah/edit",
+    name: "Data Kegiatan Dakwah Edit",
+    icon: <TbHomeShare color="inherit" />,
+    component: KegiatanDakwahEdit,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/kegiatan_dakwah/detail",
+    name: "Data Kegiatan Dakwah Detail",
+    icon: <TbHomeShare color="inherit" />,
+    component: KegiatanDakwahDetail,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/management_user",
+    name: "Manajemen User",
+    icon: <AiOutlineUsergroupAdd color="inherit" />,
+    component: KegiatanDakwah,
     layout: "/maps/admin",
     show: true
   },
