@@ -1,11 +1,13 @@
 import { FiX } from 'react-icons/fi';
 import Badge from 'react-bootstrap/Badge';
 import { slide as Menu } from 'react-burger-menu';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import '../../assets/style/sideBar.scss';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSidebarMasyarakat, selectedMarker }) {
+    const [dataKeluarga, setDataKeluarga] = useState([]);
     const title = (selectedMarker?.kepalaKeluarga.peran == 'Ayah')? 'Rumah Bapak ' : 'Rumah Ibu ';
     var shalat;
     var quran;
@@ -35,6 +37,21 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
     const pZakat = (selectedMarker?.kondisiZakat)? 1 : 0;
     const pKurban =  (selectedMarker?.kurban)? 1 : 0;
     const PHasil = Math.round((pHaji + pZakat + pKurban + pShalat + pQuran) / 7 * 100);
+
+    const fetchData = async () => {
+        try {
+            if(selectedMarker?.keluargaId){
+                const response = await axios.get('http://localhost:3000/api/admin/keluarga/'+selectedMarker?.keluargaId);
+                setDataKeluarga(response.data.keluarga.anggotaKeluarga);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        };
+        useEffect(() => {
+            fetchData();
+        }, [selectedMarker?.keluargaId]);
+
     return (
         <>
             <Menu isOpen={showSidebarMasyarakat} className='sideBarForm' customBurgerIcon={false} onClose={handleCloseSidebarMasyarakat} style={{ fontFamily: 'Roboto' }}>
@@ -47,58 +64,93 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
                             <div ><h5 className='close-button'><FiX /></h5></div>
                         </div>
                     </div>
-                    <img className='img-rumah' src={selectedMarker?.fotoRumah} alt="new" />
-                    <div className='body-side-rumah input-group form-group'>
-                        <div className='titleHome'> { title+selectedMarker?.kepalaKeluarga.nama }</div>
+                    <div className='scrollbox'>
+                        <img className='img-rumah' src={selectedMarker?.fotoRumah} alt="new" />
+                        <div className='body-side-rumah input-group form-group'>
+                            <div className='titleHome'> { title+selectedMarker?.kepalaKeluarga.nama }</div>
                             <div className='date-update'>12/2/2002</div>
-                    </div>
-                    <div className='titleBody'>Lokasi Rumah</div>
-                    <div className='bodyData'>
-                        <ul className='nav nav-pills flex-column mb-auto'>
-                            <li className='li-data input-group form-group'>
-                                <div className='textLeft'>Latitude</div>
-                                <div className='textRight'>{selectedMarker?.lat}</div>
-                            </li>
-                            <li className='li-data-last input-group form-group'>
-                                <div className='textLeft'>Longtitude</div>
-                                <div className='textRight'>{selectedMarker?.lng}</div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className='titleBody'>Point dan Data Rumah</div>
-                    <div className='bodyData' style={{ marginBottom: '10px' }}>
-                        <ul className='nav nav-pills flex-column mb-auto'>
-                            <li className='li-data'>
-                                <ProgressBar now={PHasil} label={`${PHasil}%`} style={{ height: '30px' }} />    
-                            </li>
-                        </ul>
-                    </div>
-                    <div className='bodyData'>
-                        <ul className='nav nav-pills flex-column mb-auto'>
-                            <li className='li-data input-group form-group'>
-                                <div className='textLeft'>Informasi Haji</div>
-                                <div className='textRight badges-text'>{(selectedMarker?.informasiHaji)? <Badge bg="success">Sudah Haji</Badge>: <Badge bg="warning" text="dark">Belum Haji</Badge>}</div>
-                            </li>
-                            <li className='li-data input-group form-group'>
-                                <div className='textLeft'>Keaktifan Shalat</div>
-                                <div className='textRight badges-text'>{shalat}</div>
-                            </li>
-                            <li className='li-data input-group form-group'>
-                                <div className='textLeft'>Kondisi Zakat</div>
-                                <div className='textRight badges-text'>{(selectedMarker?.kondisiZakat)? <Badge bg="success">Sudah Zakat</Badge>: <Badge bg="warning" text="dark">Belum Zakat</Badge>}</div>
-                            </li>
-                            <li className='li-data input-group form-group'>
-                                <div className='textLeft'>Kurban</div>
-                                <div className='textRight badges-text'>{(selectedMarker?.kurban)? <Badge bg="success">Sudah Kurban</Badge>: <Badge bg="warning" text="dark">Tidak Kurban</Badge>}</div>
-                            </li>
-                            <li className='li-data-last input-group form-group'>
-                                <div className='textLeft'>Baca Quran</div>
-                                <div className='textRight badges-text'>{quran}</div>
-                            </li>
-                        </ul>
+                        </div>
+                        <div className='titleBody'>Lokasi Rumah</div>
+                        <div className='bodyData'>
+                            <ul className='nav nav-pills flex-column mb-auto'>
+                                <li className='li-data input-group form-group'>
+                                    <div className='textLeft'>Latitude</div>
+                                    <div className='textRight'>{selectedMarker?.lat}</div>
+                                </li>
+                                <li className='li-data-last input-group form-group'>
+                                    <div className='textLeft'>Longtitude</div>
+                                    <div className='textRight'>{selectedMarker?.lng}</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className='titleBody'>Point dan Data Rumah</div>
+                        <div className='bodyData' style={{ marginBottom: '10px' }}>
+                            <ul className='nav nav-pills flex-column mb-auto'>
+                                <li className='li-data'>
+                                    <ProgressBar now={PHasil} label={`${PHasil}%`} style={{ height: '30px' }} />    
+                                </li>
+                            </ul>
+                        </div>
+                        <div className='bodyData'>
+                            <ul className='nav nav-pills flex-column mb-auto'>
+                                <li className='li-data input-group form-group'>
+                                    <div className='textLeft'>Informasi Haji</div>
+                                    <div className='textRight badges-text'>{(selectedMarker?.informasiHaji)? <Badge bg="success">Sudah Haji</Badge>: <Badge bg="warning" text="dark">Belum Haji</Badge>}</div>
+                                </li>
+                                <li className='li-data input-group form-group'>
+                                    <div className='textLeft'>Keaktifan Shalat</div>
+                                    <div className='textRight badges-text'>{shalat}</div>
+                                </li>
+                                <li className='li-data input-group form-group'>
+                                    <div className='textLeft'>Kondisi Zakat</div>
+                                    <div className='textRight badges-text'>{(selectedMarker?.kondisiZakat)? <Badge bg="success">Sudah Zakat</Badge>: <Badge bg="warning" text="dark">Belum Zakat</Badge>}</div>
+                                </li>
+                                <li className='li-data input-group form-group'>
+                                    <div className='textLeft'>Kurban</div>
+                                    <div className='textRight badges-text'>{(selectedMarker?.kurban)? <Badge bg="success">Sudah Kurban</Badge>: <Badge bg="warning" text="dark">Tidak Kurban</Badge>}</div>
+                                </li>
+                                <li className='li-data-last input-group form-group'>
+                                    <div className='textLeft'>Baca Quran</div>
+                                    <div className='textRight badges-text'>{quran}</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className='titleBody'>Daftar Keluarga</div>
+                        <div className='row bodyData' style={{ marginBottom: '10px' }}>
+                            <div className='col-1' style={{ padding: '0px 5px', marginRight: '35px', }}>
+                                { imagePeran(selectedMarker?.kepalaKeluarga.peran) }
+                            </div>
+                            <div className='col'>
+                                <div className='textLeft input-group form-group'><div className='textName'>{ selectedMarker?.kepalaKeluarga.nama }</div> ({ selectedMarker?.kepalaKeluarga.usia })</div>
+                                <div className='textLeft'>Pekerjaan {selectedMarker?.kepalaKeluarga.pekerjaan}</div>
+                            </div>
+                        </div>
+                        {dataKeluarga.map((anggota, index) => (
+                            
+                            <div className='row bodyData' key={index} style={{ marginBottom: '10px' }}>
+                                <div className='col-1' style={{ padding: '0px 5px', marginRight: '35px', }}>
+                                    { imagePeran(anggota?.peran) }
+                                </div>
+                                <div className='col'>
+                                    <div className='textLeft input-group form-group'><div className='textName'>{ anggota.nama }</div> ({ anggota.usia })</div>
+                                    <div className='textLeft'>Pekerjaan {anggota.pekerjaan}</div>
+                                </div>
+                            </div>
+                        ))}
+                        <div className='titleBody'></div>
                     </div>
                 </div>
             </Menu>
         </>
     );
+}
+
+function imagePeran(params) {
+    if(params === 'Ayah'){
+        return <img src='./src/assets/icons/dad.png' style={{ height: '45px' }} />
+    }else if(params === 'Ibu'){
+        return <img src='./src/assets/icons/mom.png' style={{ height: '45px' }} />
+    }else{
+        return <img src='./src/assets/icons/son.png' style={{ height: '45px' }} />
+    }
 }

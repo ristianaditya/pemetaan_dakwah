@@ -251,8 +251,8 @@
     position: sticky;
     background: white;
     width: 90% !important;
-    margin-right: auto;
-    margin-left: auto;
+    margin-right: auto !important;
+    margin-left: auto !important;
     border-radius: 8px;
 }
 .textLeft{
@@ -281,4 +281,54 @@
 }
 .progress-bar{
     background-color: #26ADE3;
+}
+
+.scrollbox {
+    width: 100%;
+    height: 94vh;
+    overflow-y: scroll;
+  }
+  .scrollbox::-webkit-scrollbar {
+    display: none;
+  }
+
+.textName{
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    margin-right: 5px;
+}
+.side-li-child{
+    margin-left: 27px;
+    border-left: 1px solid;
+    padding-left: 18px !important;
+    padding: 2px 0px;
+}
+.body-row-sidebar{
+    width: fit-content !important;
+    padding: 0px !important;
+    text-align: left;
+    padding-left: 35px !important;
+}
+.col-switch{
+    padding-left: 0px !important;
+    text-align: -webkit-right;
+    padding-right: 0px !IMPORTANT;
+    padding-top: 4px;
+    width: 80px !important;
+}
+.dropdown-switch{
+    padding-right: 0px !important;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+}
+.titleDakwah{
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 150%;
 }

@@ -1,5 +1,5 @@
 import MasyarakatModels from '../../models/masyarakatModels.js';
-import iconMarker from '../../assets/icons/mosque.png';
+import iconMarker from '../../assets/icons/masjid.svg';
 
 function onClickMarker(markerData) {
     console.log(`Marker ${markerData.id} (${markerData.nama}) clicked!`);
