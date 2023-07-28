@@ -19,7 +19,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
-
+import { Icon } from "leaflet";
+import iconMarker from '../../assets/icons/Icon_Default.svg';
 
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -61,6 +62,11 @@ function Tables() {
     setLongtitude(lng.toString());
   };
 
+  const myIcon = new Icon({
+    iconUrl: iconMarker,
+    iconSize: [50, 50]
+  });
+
   const getData = async () => {
     try {
       const response = await axios.get(`http://api.petadakwah.site/api/masjid/` + iditem, 
@@ -72,7 +78,7 @@ function Tables() {
       }
     )
     .then(res => {
-      const data = res.data;
+      const data = res.data.masjids;
       setLatitude(data.lat);
       setLongtitude(data.lng);
       setDataMaster(data);
@@ -222,7 +228,7 @@ function Tables() {
                   maxZoom={20}
                   minZoom={5}
                 />
-                <Marker position={[latitude,longtitude]} draggable 
+                <Marker position={[latitude,longtitude]} draggable icon={myIcon}
                   eventHandlers={{
                     dragend: (e) => {
                       handleDragEnd(e)
@@ -232,6 +238,7 @@ function Tables() {
                 </Marker>
               </MapContainer>
             </Flex>
+            <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
             <FormControl isRequired mt="2" textAlign="right">
               <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">
                 Batal

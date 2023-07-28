@@ -10,15 +10,19 @@ import {
   RadioGroup,
   Radio,
   HStack,
-  Select
+  Select,
+  IconButton
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
 import { FaPlusCircle  } from "react-icons/fa"
+import { HiPencilAlt  } from "react-icons/hi"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
+import { Icon } from "leaflet";
+import iconMarker from '../../assets/icons/Icon_Default.svg';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -61,6 +65,11 @@ const handleDragEnd = (e) => {
   setLongtitude(lng.toString());
 };
 
+const myIcon = new Icon({
+  iconUrl: iconMarker,
+  iconSize: [50, 50]
+});
+
 const getData = async () => {
   try {
     const response = await axios.get(`http://api.petadakwah.site/api/masjid/` + iditem, 
@@ -72,7 +81,7 @@ const getData = async () => {
     }
   )
   .then(res => {
-    const data = res.data;
+    const data = res.data.masjids;
     setLatitude(data.lat);
     setLongtitude(data.lng);
     setDataMaster(data);
@@ -97,6 +106,10 @@ const location = useLocation();
 
 const backButton = () => {
   history.push(location.pathname.replace('/detail', ''));
+}
+
+const editButton = () => {
+  history.push(location.pathname.replace('/detail', '/edit'));
 }
 
 
@@ -156,8 +169,15 @@ return (
     <CardHeader p='6px 0px 22px 0px' >
       <Flex justify='space-between' align='center' mb='1rem' w='100%'>
         <Text fontSize='lg' color={textColor} fontWeight='bold'>
-          Edit
+          Detail
         </Text>
+        <IconButton
+          colorScheme="teal"
+          aria-label="Edit"
+          size="md"
+          onClick={editButton}
+          icon={<HiPencilAlt />}
+        />
       </Flex>
     </CardHeader>
     <CardBody>
@@ -222,11 +242,12 @@ return (
                 maxZoom={20}
                 minZoom={5}
               />
-              <Marker position={[latitude,longtitude]} 
+              <Marker position={[latitude,longtitude]} icon={myIcon}
               >
               </Marker>
             </MapContainer>
           </Flex>
+          <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
           <FormControl isRequired mt="2" textAlign="right">
             <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">
               Kembali

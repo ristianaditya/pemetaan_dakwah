@@ -107,11 +107,6 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
   const columns = [
     {
-      name: 'No',
-      maxWidth: '10px',
-      selector: (row, index) => index + 1,
-    },
-    {
         name: 'Nama Keluaga',
         selector: row => row.kepalaKeluarga.nama ? row.kepalaKeluarga.nama : "",
     },
@@ -193,7 +188,6 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
       )
       .then(res => {
         const data = res.data.keluargas;
-        console.log(data);
         setDeleting(false)
         setRows( data );
         setPending( false );

@@ -10,16 +10,20 @@ import {
   RadioGroup,
   Radio,
   HStack,
-  Select
+  Select,
+  IconButton
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
 import { FaPlusCircle  } from "react-icons/fa"
 import { BiLocationPlus  } from "react-icons/bi"
+import { HiPencilAlt  } from "react-icons/hi"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
+import { Icon } from "leaflet";
+import iconMarker from '../../assets/icons/Icon_Default.svg';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -63,6 +67,11 @@ const latlongHandle =  async () => {
   });
 
 }
+
+const myIcon = new Icon({
+  iconUrl: iconMarker,
+  iconSize: [50, 50]
+});
 
 const getData = async () => {
   try {
@@ -125,6 +134,10 @@ const location = useLocation();
 
 const backButton = () => {
   history.push(location.pathname.replace('/detail', ''));
+}
+
+const editButton = () => {
+  history.push(location.pathname.replace('/detail', '/edit'));
 }
 
 const tambahKeluarga = async () => {
@@ -232,6 +245,13 @@ return (
         <Text fontSize='lg' color={textColor} fontWeight='bold'>
           Detail
         </Text>
+        <IconButton
+          colorScheme="teal"
+          aria-label="Edit"
+          size="md"
+          onClick={editButton}
+          icon={<HiPencilAlt />}
+        />
       </Flex>
     </CardHeader>
     <CardBody>
@@ -314,7 +334,7 @@ return (
               maxZoom={20}
               minZoom={5}
             />
-            <Marker position={[latitude,longtitude]}>
+            <Marker position={[latitude,longtitude]} icon={myIcon}>
             </Marker>
           </MapContainer>
           <Flex align='center' w="100%" mt="4" mb="2">

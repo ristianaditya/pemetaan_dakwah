@@ -10,14 +10,18 @@ import {
     RadioGroup,
     Radio,
     HStack,
-    Select
+    Select,
+    Switch
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
 import { FaPlusCircle  } from "react-icons/fa"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
+import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
+import { Icon } from "leaflet";
+import iconMarker from '../../assets/icons/Icon_Default.svg';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -30,27 +34,59 @@ function Tables() {
 
   const [latitude, setLatitude] = useState("");
   const [longtitude, setLongtitude] = useState("");
-  const [angkeluarga, setAngkeluarga] = useState([
-    {
-      id: 0
-    }
-  ]);
+  const [isDakwahMasjid, setIsDakwahMasjid] = useState()
+  const [dataMasjid, setDataMasjid] = useState([])
+  const [idMasjid, setIdMasjid] = useState("")
+  
   const [ token ] = useState(localStorage.getItem('access_token'));
+
+  const mapRef = useRef(null)
 
   const [iditem, setIditem] = useState(localStorage.getItem("idEdit"));
   const [dataMaster, setDataMaster] = useState();
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-
-      setLatitude(latitude.toString());
-      setLongtitude(longitude.toString());
-    });
-
+    getDataMasjid();
     getData()
 
   }, []);
+
+  const getDataMasjid = () => {
+    axios.get(`http://api.petadakwah.site/api/masjid`, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      }
+    )
+    .then(res => {
+      setDataMasjid(res.data.masjids)
+    })
+  } 
+
+  const myIcon = new Icon({
+    iconUrl: iconMarker,
+    iconSize: [50, 50]
+  });
+
+  const getNowLocation = (mapRef) => {
+    
+    setTimeout(() => {
+      if (latitude == "" && longtitude == "") {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const { latitude, longitude } = position.coords;
+          setLatitude(latitude.toString());
+          setLongtitude(longitude.toString());
+    
+          mapRef.current.flyTo([latitude, longitude], 18, { duration: 2 });
+        });
+      } else {
+        mapRef.current.flyTo([latitude, longtitude], 18, { duration: 2 });
+      }
+    }, 200);
+
+  }
 
   const getData = async () => {
     try {
@@ -64,8 +100,21 @@ function Tables() {
     )
     .then(res => {
       const data = res.data.petaDakwah;
+      setIsDakwahMasjid(true)
 
-      
+      if (data.masjidId != null) {
+        setIsDakwahMasjid(true)
+        setIdMasjid(data.masjidId._id)
+      } else {
+        setIsDakwahMasjid(false)
+        setLatitude(data.lat);
+        setLongtitude(data.lng);
+  
+        mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
+      }
+
+
+
       data.waktuMulai = data.waktuMulai.slice(0, data.waktuMulai.length - 5)
       data.waktuAkhir = data.waktuAkhir.slice(0, data.waktuAkhir.length - 5)
 
@@ -85,6 +134,24 @@ function Tables() {
     }
   }
 
+  const handleDragEnd = (e) => {
+    const { lat, lng } = e.target._latlng;
+    setLatitude(lat.toString());
+    setLongtitude(lng.toString());
+  };
+
+  const handleIsMasjid = (e , mapRef) => {
+    setIsDakwahMasjid(e.target.checked)    
+    
+    if (!e.target.checked) {
+      getNowLocation(mapRef)
+    }
+  }
+
+  const handleChangeMasjid = (e) => {
+    setIdMasjid(e.target.value)
+  }
+
   const history = useHistory(); 
   const location = useLocation(); 
 
@@ -94,14 +161,45 @@ function Tables() {
 
 
   const postRumah = async (values) => {
-    const data = {
-      pembicara: values.pembicara,
-      topikDakwah: values.topikDakwah,
-      kategori: values.kategori,
-      waktuMulai: values.waktuMulai,
-      waktuAkhir: values.waktuAkhir,
-      lat: latitude,
-      lng: longtitude
+    let data;
+    if (isDakwahMasjid) {
+      data = {
+        masjidId: idMasjid,
+        lat: '',
+        lng: '',
+        pembicara: values.pembicara,
+        gelar_pembicara: values.gelar_pembicara,
+        asal_instansi_pembicara: values.asal_instansi_pembicara,
+        topikDakwah: values.topikDakwah,
+        kategori: values.kategori,
+        waktuMulai: values.waktuMulai,
+        waktuAkhir: values.waktuAkhir,
+        foto: "https://example.com/path/to/foto.jpg",
+        tipe_kegiatan: values.tipe_kegiatan,
+        nama_penyelenggara: values.nama_penyelenggara,
+        alamat_penyelenggara: values.alamat_penyelenggara,
+        penanggung_jawab: values.penanggung_jawab,
+        no_hp_penyelenggara: values.no_hp_penyelenggara
+      }
+    } else {
+      data = {
+        masjidId: null,
+        lat: latitude,
+        lng: longtitude,
+        pembicara: values.pembicara,
+        gelar_pembicara: values.gelar_pembicara,
+        asal_instansi_pembicara: values.asal_instansi_pembicara,
+        topikDakwah: values.topikDakwah,
+        kategori: values.kategori,
+        waktuMulai: values.waktuMulai,
+        waktuAkhir: values.waktuAkhir,
+        foto: "https://example.com/path/to/foto.jpg",
+        tipe_kegiatan: values.tipe_kegiatan,
+        nama_penyelenggara: values.nama_penyelenggara,
+        alamat_penyelenggara: values.alamat_penyelenggara,
+        penanggung_jawab: values.penanggung_jawab,
+        no_hp_penyelenggara: values.no_hp_penyelenggara
+      }
     }
     
     const rumahId = values._id
@@ -177,29 +275,126 @@ function Tables() {
           isSubmitting,
         }) => (
           <Form onSubmit={handleSubmit}>
-            <FormControl isRequired >
+            <FormControl display='flex' alignItems='center'>
+              <FormLabel htmlFor='email-alerts'>
+                Apakah Kegiatan Dakwah di Masjid ?
+              </FormLabel>
+              <Switch id='email-alerts' onChange={(e) => handleIsMasjid(e, mapRef)} isChecked={isDakwahMasjid} />
+            </FormControl>
+
+            {isDakwahMasjid ? 
+            <>
+              <FormControl isRequired mt="2" mr={{ lg: "2"}}>
+               <FormLabel>Nama Masjid</FormLabel>  
+               <Select onChange={handleChangeMasjid} value={idMasjid}>
+                 <option value={""}>-- Pilih Kategori --</option>
+                {dataMasjid.map((value, key) => (
+                 <option value={value._id}>{value.namaMasjid}</option>
+                ))}
+               </Select>
+             </FormControl>
+            </>
+              : 
+              <>
+              <Flex mt="2">
+              <MapContainer 
+                center={[-6.947794701156682, 107.70349499168313]} 
+                zoom={17} 
+                ref={mapRef} 
+                dragging={true}
+                attributionControl={true}
+                zoomControl={true}
+                doubleClickZoom={true}
+                scrollWheelZoom={true}
+                style={{ width: "100%", height: "40vh" }}>
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  maxZoom={20}
+                  minZoom={5}
+                />
+                <Marker position={[latitude,longtitude]} draggable icon={myIcon}
+                  eventHandlers={{
+                    dragend: (e) => {
+                      handleDragEnd(e)
+                    },
+                  }}
+                >
+                </Marker>
+              </MapContainer>
+            </Flex>
+            <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
+            </>
+            }
+
+            <FormControl isRequired mt="4">
               <FormLabel>Topik Dakwah</FormLabel>  
               <Input name="topikDakwah" onChange={handleChange} value={values?.topikDakwah ? values.topikDakwah : "" }/>
             </FormControl>
+            <Separator mt="7" mb="2"/>
             <FormControl isRequired mt="4" >
               <FormLabel>Pembicara</FormLabel>  
               <Input name="pembicara" onChange={handleChange} value={values?.pembicara ? values.pembicara : "" }/>
             </FormControl>
-            <FormControl isRequired mt="2" >
-              <FormLabel>Kategori</FormLabel>  
-              <Select name="kategori" onChange={handleChange} value={values?.kategori ? values.kategori : "" }>
-                <option value={""}>Pilih Kategori</option>
-                <option value={"kehidupan"}>Kehidupan</option>
-                <option value={"ibadah"}>Ibadah</option>
-                <option value={"keluarga"}>Keluarga</option>
-                <option value={"remaja"}>Remaja</option>
-                <option value={"akhlak"}>Akhlak</option>
-                <option value={"toleransi"}>Toleransi</option>
-                <option value={"tauhid"}>Tauhid</option>
-              </Select>
-            </FormControl>
-            <Flex>
+            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
               <FormControl isRequired mt="4" mr={{ lg: "2"}}>
+                <FormLabel>Gelar Pembicara</FormLabel>  
+                <Input name="gelar_pembicara" onChange={handleChange} value={values?.gelar_pembicara ? values.gelar_pembicara : "" }/>
+              </FormControl>
+              <FormControl isRequired mt="4" ml={{ lg: "2"}}>
+                <FormLabel>Asal Instansi Pembicara</FormLabel>  
+                <Input name="asal_instansi_pembicara" onChange={handleChange} value={values?.asal_instansi_pembicara ? values.asal_instansi_pembicara : "" }/>
+              </FormControl>
+            </Flex>
+
+            <Separator mt="7" mb="2"/>
+            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
+              <FormControl isRequired mt="4" mr={{ lg: "2"}} >
+                <FormLabel>Nama Penyelenggara</FormLabel>  
+                <Input name="nama_penyelenggara" onChange={handleChange} value={values?.nama_penyelenggara ? values.nama_penyelenggara : "" }/>
+              </FormControl>
+              <FormControl isRequired mt="4" ml={{ lg: "2"}}>
+                <FormLabel>Tanggal Berakhir</FormLabel>  
+                <Input name="alamat_penyelenggara" onChange={handleChange} value={values?.alamat_penyelenggara ? values.alamat_penyelenggara : "" }/>
+              </FormControl>
+            </Flex>
+            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
+              <FormControl isRequired mt="4" mr={{ lg: "2"}} >
+                <FormLabel>Penanggung Jawab</FormLabel>  
+                <Input name="penanggung_jawab" onChange={handleChange} value={values?.penanggung_jawab ? values.penanggung_jawab : "" }/>
+              </FormControl>
+              <FormControl isRequired mt="4" ml={{ lg: "2"}}>
+                <FormLabel>No Hp Penyelenggara</FormLabel>  
+                <Input type="number" name="no_hp_penyelenggara" onChange={handleChange} value={values?.no_hp_penyelenggara ? values.no_hp_penyelenggara : "" }/>
+              </FormControl>
+            </Flex>
+
+            <Separator mt="7" mb="2"/>
+            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
+              <FormControl isRequired mt="2" mr={{ lg: "2"}}>
+                <FormLabel>Tipe Kegiatan</FormLabel>  
+                <Select name="tipe_kegiatan" onChange={handleChange} value={values?.tipe_kegiatan ? values.tipe_kegiatan : "" }>
+                  <option value={""}>-- Pilih Kategori --</option>
+                  <option value={"offline"}>Offline</option>
+                  <option value={"online"}>Online</option>
+                </Select>
+              </FormControl>
+              <FormControl isRequired mt="2" ml={{ lg: "2"}}>
+                <FormLabel>Kategori</FormLabel>  
+                <Select name="kategori" onChange={handleChange} value={values?.kategori ? values.kategori : "" }>
+                  <option value={""}>-- Pilih Kategori --</option>
+                  <option value={"kehidupan"}>Kehidupan</option>
+                  <option value={"ibadah"}>Ibadah</option>
+                  <option value={"keluarga"}>Keluarga</option>
+                  <option value={"remaja"}>Remaja</option>
+                  <option value={"akhlak"}>Akhlak</option>
+                  <option value={"toleransi"}>Toleransi</option>
+                  <option value={"tauhid"}>Tauhid</option>
+                </Select>
+              </FormControl>
+            </Flex>
+            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
+              <FormControl isRequired mt="4" mr={{ lg: "2"}} >
                 <FormLabel>Tanggal Mulai</FormLabel>  
                 <Input name="waktuMulai" onChange={handleChange} type="datetime-local" value={values?.waktuMulai ? values.waktuMulai : "" }/>
               </FormControl>
@@ -208,6 +403,7 @@ function Tables() {
                 <Input name="waktuAkhir" onChange={handleChange} type="datetime-local" value={values?.waktuAkhir ? values.waktuAkhir : "" }/>
               </FormControl>
             </Flex>
+
             <FormControl isRequired mt="2" textAlign="right">
               <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">
                 Batal
