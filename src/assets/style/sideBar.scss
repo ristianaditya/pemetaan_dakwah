@@ -72,11 +72,11 @@
     display: table-column;
     position: absolute;
     right: 20px;
+    z-index: 10000;
     margin-top: 10px;
     cursor: pointer;
     :hover{
         cursor: pointer;
-        color: #16a75c !important;
     }
 }
 .sideBarForm{
@@ -87,7 +87,21 @@
     background-color: #F5F5FA;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
     transition: none !important;
+    max-width: calc(100% - 20px);
 }
+    /* Lebar responsif untuk perangkat dengan lebar layar di bawah 768px */
+    @media screen and (max-width: 767px) {
+        .responsive-container {
+        width: 100%; /* Lebar 100% pada perangkat dengan lebar layar di bawah 768px */
+        }
+    }
+    
+    /* Lebar responsif untuk perangkat dengan lebar layar di atas atau sama dengan 768px */
+    @media screen and (min-width: 768px) {
+        .responsive-container {
+        width: 365px; /* Lebar tetap 365px pada perangkat dengan lebar layar di atas atau sama dengan 768px */
+        }
+    }
 .header-sidebar{
     height: 70px;
 }
@@ -222,7 +236,8 @@
 }
 .close-button{
     width: fit-content;
-    background: white;
+    background: #ef5e30;
+    color: white !important;
     border-radius: 10px;
     padding-top: 0px !important;
     padding: 4px;

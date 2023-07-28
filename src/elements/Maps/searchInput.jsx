@@ -4,12 +4,9 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import '../../assets/style/inputSearch.scss';
 import burgerIcon from '../../assets/icons/burgerButton.png';
 import searchIcon from '../../assets/icons/search_icon.png';
-import Sidebar from '../Sidebar';
-import Sidebars from '../Sidebar';
 
 function SearchInput({ mapRef, setCollapsed, collapsed }) {
 
-    const [show, setShow] = useState(false);
     const provider = new OpenStreetMapProvider();
 
     const [selectedOption, setSelectedOption] = useState([]);

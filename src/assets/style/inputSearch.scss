@@ -23,7 +23,7 @@
   padding: 5px; 
   z-index: 400;
   border-radius: 8px;
-  width: auto !important;
+  width: 330px !important;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
@@ -71,8 +71,9 @@
 }
 
 .burgerSearch{
+  text-align-last: right !important;
   text-align-last: center;
-  margin-right: 5px;
+  margin-right: 10px;
 }
 
 .row > * {
