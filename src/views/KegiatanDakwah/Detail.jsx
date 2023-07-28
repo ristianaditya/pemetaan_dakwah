@@ -148,7 +148,7 @@ return (
     <CardHeader p='6px 0px 22px 0px' >
       <Flex justify='space-between' align='center' mb='1rem' w='100%'>
         <Text fontSize='lg' color={textColor} fontWeight='bold'>
-          Edit
+          Detail
         </Text>
       </Flex>
     </CardHeader>

@@ -19,6 +19,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
+import { Icon } from "leaflet";
+import iconMarker from '../../assets/icons/Icon_Default.svg';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -60,6 +62,11 @@ const handleDragEnd = (e) => {
   setLatitude(lat.toString());
   setLongtitude(lng.toString());
 };
+
+const myIcon = new Icon({
+  iconUrl: iconMarker,
+  iconSize: [50, 50]
+});
 
 const getData = async () => {
   try {
@@ -222,7 +229,7 @@ return (
                 maxZoom={20}
                 minZoom={5}
               />
-              <Marker position={[latitude,longtitude]} 
+              <Marker position={[latitude,longtitude]} icon={myIcon}
               >
               </Marker>
             </MapContainer>
