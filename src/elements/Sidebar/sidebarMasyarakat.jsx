@@ -5,6 +5,9 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import '../../assets/style/sideBar.scss';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import imageDad from '../../assets/icons/dad.png';
+import imageMom from '../../assets/icons/mom.png';
+import imageSon from '../../assets/icons/son.png';
 
 export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSidebarMasyarakat, selectedMarker }) {
     const [dataKeluarga, setDataKeluarga] = useState([]);
@@ -41,7 +44,7 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
     const fetchData = async () => {
         try {
             if(selectedMarker?.keluargaId){
-                const response = await axios.get('http://api.petadakwah.site/api/admin/keluarga/'+selectedMarker?.keluargaId);
+                const response = await axios.get('https://api.petadakwah.site/api/admin/keluarga/'+selectedMarker?.keluargaId);
                 setDataKeluarga(response.data.keluarga.anggotaKeluarga);
             }
         } catch (error) {
@@ -144,10 +147,10 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
 
 function imagePeran(params) {
     if(params === 'Ayah'){
-        return <img src='./src/assets/icons/dad.png' style={{ height: '45px' }} />
+        return <img src={imageDad} style={{ height: '45px' }} />
     }else if(params === 'Ibu'){
-        return <img src='./src/assets/icons/mom.png' style={{ height: '45px' }} />
+        return <img src={imageMom} style={{ height: '45px' }} />
     }else{
-        return <img src='./src/assets/icons/son.png' style={{ height: '45px' }} />
+        return <img src={imageSon} style={{ height: '45px' }} />
     }
 }

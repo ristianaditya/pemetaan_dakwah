@@ -10,40 +10,48 @@ import { BsCalendar2Date } from 'react-icons/bs';
 import { BiLineChartDown } from 'react-icons/bi';
 import iconMarker from '../../assets/icons/rumah.svg';
 import iconMarkerDakwah from '../../assets/icons/dakwah.svg';
+import iconMarkerMasjid from '../../assets/icons/masjid.svg';
 import SidebarMasyarakat from './sidebarMasyarakat';
 import SidebarDakwah from './sidebarDakwah';
 import SearchInput from '../Maps/searchInput';
 import iconLogo from '../../assets/logo/logo.svg';
+import SidebarMasjid from './sidebarMasjid';
 
 
 export default function Sidebars({mapRef }) {
 
     const handleCloseSidebarMasyarakat = () => setShowSidebarMasyarakat(false);
     const handleCloseSidebarDakwah = () => setShowSidebarDakwah(false);
+    const handleCloseSidebarMasjid = () => setShowSidebarMasjid(false);
 
     const [markers, setMarkers] = useState([]);
     const [markersKurban, setMarkersKurban] = useState([]);
     const [markersZakat, setMarkersZakat] = useState([]);
     const [markersHaji, setMarkersHaji] = useState([]);
     const [markersDakwah, setMarkersDakwah] = useState([]);
+    const [markersMasjid, setMarkersMasjid] = useState([]);
 
     const [toggleHome, setToggleHome] = useState(false);
     const [toggleKurban, setToggleKurban] = useState(false);
     const [toggleHaji, setToggleHaji] = useState(false);
     const [toggleZakat, setToggleZakat] = useState(false);
     const [toggleDakwah, setToggleDakwah] = useState(false);
+    const [toggleMasjid, setToggleMasjid] = useState(false);
 
     const [dataMasyarakat, setDataMasyarakat] = useState([]);
     const [dataMasyarakatKurban, setDataMasyarakatKurban] = useState([]);
     const [dataMasyarakatHaji, setDataMasyarakatHaji] = useState([]);
     const [dataMasyarakatZakat, setDataMasyarakatZakat] = useState([]);
     const [dataDakwah, setDataDakwah] = useState([]);
+    const [dataMasjid, setDataMasjid] = useState([]);
 
     const [showSidebarMasyarakat, setShowSidebarMasyarakat] = useState(false);
     const [showSidebarDakwah, setShowSidebarDakwah] = useState(false);
+    const [showSidebarMasjid, setShowSidebarMasjid] = useState(false);
+
     const [selectedMarkerDakwah, setSelectedMarkerDakwah] = useState(null);
     const [selectedMarker, setSelectedMarker] = useState(null);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [selectedMarkerMasjid, setSelectedMarkerMasjid] = useState(null);
 
     const markerIcon = L.icon({
         iconUrl: iconMarker,
@@ -55,34 +63,61 @@ export default function Sidebars({mapRef }) {
         iconSize: [50, 50],
     });
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
+    const markerIconMasjid = L.icon({
+        iconUrl: iconMarkerMasjid,
+        iconSize: [50, 50],
+    });
 
     function onClickMasyarakat(markerData) {
         handleCloseSidebarDakwah();
+        handleCloseSidebarMasjid();
         setTimeout(function() { setShowSidebarMasyarakat(true); }, 1000);
         setSelectedMarker(markerData);
+        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
+            duration: 2, 
+        });
+    }
+
+    function onClickMasjid(markerData) {
+        handleCloseSidebarDakwah();
+        handleCloseSidebarMasyarakat()
+        setTimeout(function() { setShowSidebarMasjid(true); }, 1000);
+        setSelectedMarkerMasjid(markerData);
+        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
+            duration: 2, 
+        });
     }
 
     function onClickDakwah(markerData) {
-        handleCloseSidebarMasyarakat()
+        handleCloseSidebarMasyarakat();
+        handleCloseSidebarMasjid
         setTimeout(function() { setShowSidebarDakwah(true); }, 1000);
         setSelectedMarkerDakwah(markerData);
+        if(markerData?.lng === 'undefined' || markerData?.lng === undefined){
+            mapRef.current.flyTo([markerData?.masjidId.lat, markerData?.masjidId.lng], 17, {
+                duration: 2, 
+            });
+        }else{
+            mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
+                duration: 2, 
+            });
+        }
     }
 
     const fetchData = async () => {
         try {
-            const rumahAll = await axios.get('http://api.petadakwah.site/api/admin/rumah');
-            const rumahKurban = await axios.get('http://api.petadakwah.site/api/rumah/kurban/true');
-            const rumahHaji = await axios.get('http://api.petadakwah.site/api/rumah/haji/true');
-            const rumahZakat = await axios.get('http://api.petadakwah.site/api/rumah/zakat/true');
-            const petaDakwah = await axios.get('http://api.petadakwah.site/api/petadakwah');
+            const rumahAll = await axios.get('https://api.petadakwah.site/api/admin/rumah');
+            const rumahKurban = await axios.get('https://api.petadakwah.site/api/rumah/kurban/true');
+            const rumahHaji = await axios.get('https://api.petadakwah.site/api/rumah/haji/true');
+            const rumahZakat = await axios.get('https://api.petadakwah.site/api/rumah/zakat/true');
+            const petaDakwah = await axios.get('https://api.petadakwah.site/api/petadakwah');
+            const petaMasjid = await axios.get('https://api.petadakwah.site/api/masjid');
             setDataMasyarakatKurban(rumahKurban.data.keluargas);
             setDataMasyarakatHaji(rumahHaji.data.keluargas);
             setDataMasyarakatZakat(rumahZakat.data.keluargas);
             setDataMasyarakat(rumahAll.data.keluargas);
             setDataDakwah(petaDakwah.data.petaDakwahs);
+            setDataMasjid(petaMasjid.data.masjids);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -188,12 +223,16 @@ export default function Sidebars({mapRef }) {
         if(!toggleDakwah){
             if (mapRef.current) {
                 const map = mapRef.current;
-                console.log(dataDakwah);
                 dataDakwah.forEach(markerData => {
-                    console.log(markerData?.lng);
-                    // const marker = L.marker([markerData?.lat, markerData?.lng], { icon: markerIconDakwah });
-                    // marker.addTo(map).on('click', () => onClickDakwah(markerData));
-                    // setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
+                    if(markerData?.lng === 'undefined' || markerData?.lng === undefined){
+                        const marker = L.marker([markerData?.masjidId.lat, markerData?.masjidId.lng], { icon: markerIconDakwah });
+                        marker.addTo(map).on('click', () => onClickDakwah(markerData));
+                        setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
+                    }else{
+                        const marker = L.marker([markerData?.lat, markerData?.lng], { icon: markerIconDakwah });
+                        marker.addTo(map).on('click', () => onClickDakwah(markerData));
+                        setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
+                    }
                 });
             }
         }else{
@@ -204,17 +243,30 @@ export default function Sidebars({mapRef }) {
                     setMarkersDakwah([]);
             }
         }
-
     };
+
+    const handdleToggleMasjid = async () => {
+        setToggleMasjid(!toggleMasjid);
+        if(!toggleMasjid){
+            if (mapRef.current) {
+                const map = mapRef.current;
+                dataMasjid.forEach(markerData => {
+                    const marker = L.marker([markerData?.lat, markerData?.lng], { icon: markerIconMasjid });
+                    marker.addTo(map).on('click', () => onClickMasjid(markerData));
+                    setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
+                });
+            }
+        }else{
+            if (markersDakwah) {
+                markersDakwah.forEach(marker => {
+                    marker.remove();
+                    });
+                    setMarkersDakwah([]);
+            }
+        }
+    };
+    
     const [collapsed, setCollapsed] = React.useState(false);
-    const dataToggle = () => {
-        return  <div className='col dropdown-switch'>
-        <label className="toggle-switch">
-            <input type="checkbox" onClick={ handdleToggleHome } />
-            <span className="switch" />
-        </label>
-    </div>
-    }
 return (
     <>  
         <div className='sideBar' style={{ display: 'flex', height: '100%', minHeight: '400px' }}>
@@ -232,7 +284,7 @@ return (
                             </div>
                             <div className='col dropdown-switch'>
                                 <label className="toggle-switch">
-                                    <input type="checkbox" onClick={ handdleToggleHome } />
+                                    <input type="checkbox" onClick={ handdleToggleMasjid } />
                                     <span className="switch" />
                                 </label>
                             </div>
@@ -334,6 +386,7 @@ return (
                 <SearchInput mapRef ={mapRef} setCollapsed = {setCollapsed} collapsed={collapsed}/>
                 { showSidebarMasyarakat && <SidebarMasyarakat showSidebarMasyarakat={ showSidebarMasyarakat } handleCloseSidebarMasyarakat={ handleCloseSidebarMasyarakat } selectedMarker={selectedMarker}/> }
                 { showSidebarDakwah &&<SidebarDakwah showSidebarDakwah={ showSidebarDakwah } handleCloseSidebarDakwah={ handleCloseSidebarDakwah } selectedMarkerDakwah={selectedMarkerDakwah}/> }
+                { showSidebarMasjid &&<SidebarMasjid showSidebarMasjid={ showSidebarMasjid } handleCloseSidebarMasjid={ handleCloseSidebarMasjid } selectedMarkerMasjid={selectedMarkerMasjid}/> }
             </div>
         </div>
     </>
