@@ -1,21 +1,22 @@
-import { slide as Menu } from 'react-burger-menu';
+// import { push as Menu } from 'react-burger-menu';
+import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import '../../assets/style/sideBar.scss';
 import '../../assets/style/toggleSwitch.scss';
-import { FiX } from 'react-icons/fi';
 import { PiMosque } from 'react-icons/pi';
 import { TbHomeShare } from 'react-icons/tb';
 import { BsCalendar2Date } from 'react-icons/bs';
 import { BiLineChartDown } from 'react-icons/bi';
-import { MdKeyboardArrowDown } from 'react-icons/md';
 import iconMarker from '../../assets/icons/rumah.svg';
 import iconMarkerDakwah from '../../assets/icons/dakwah.svg';
 import SidebarMasyarakat from './sidebarMasyarakat';
 import SidebarDakwah from './sidebarDakwah';
+import SearchInput from '../Maps/searchInput';
+import iconLogo from '../../assets/logo/logo.svg';
 
 
-export default function Sidebar({ show, handleClose, mapRef }) {
+export default function Sidebars({mapRef }) {
 
     const handleCloseSidebarMasyarakat = () => setShowSidebarMasyarakat(false);
     const handleCloseSidebarDakwah = () => setShowSidebarDakwah(false);
@@ -59,13 +60,13 @@ export default function Sidebar({ show, handleClose, mapRef }) {
     };
 
     function onClickMasyarakat(markerData) {
-        handleClose() ;
+        handleCloseSidebarDakwah();
         setTimeout(function() { setShowSidebarMasyarakat(true); }, 1000);
         setSelectedMarker(markerData);
     }
 
     function onClickDakwah(markerData) {
-        handleClose() ;
+        handleCloseSidebarMasyarakat()
         setTimeout(function() { setShowSidebarDakwah(true); }, 1000);
         setSelectedMarkerDakwah(markerData);
     }
@@ -187,12 +188,13 @@ export default function Sidebar({ show, handleClose, mapRef }) {
         if(!toggleDakwah){
             if (mapRef.current) {
                 const map = mapRef.current;
+                console.log(dataDakwah);
                 dataDakwah.forEach(markerData => {
-                    const marker = L.marker([markerData?.lat, markerData?.lng], { icon: markerIconDakwah });
-                    marker.addTo(map).on('click', () => onClickDakwah(markerData));
-                    setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
+                    console.log(markerData?.lng);
+                    // const marker = L.marker([markerData?.lat, markerData?.lng], { icon: markerIconDakwah });
+                    // marker.addTo(map).on('click', () => onClickDakwah(markerData));
+                    // setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
                 });
-                
             }
         }else{
             if (markersDakwah) {
@@ -204,25 +206,27 @@ export default function Sidebar({ show, handleClose, mapRef }) {
         }
 
     };
-
+    const [collapsed, setCollapsed] = React.useState(false);
+    const dataToggle = () => {
+        return  <div className='col dropdown-switch'>
+        <label className="toggle-switch">
+            <input type="checkbox" onClick={ handdleToggleHome } />
+            <span className="switch" />
+        </label>
+    </div>
+    }
 return (
-    <>
-        <Menu isOpen={show} className='sideBar' customBurgerIcon={false} onClose={handleClose} style={{ fontFamily: 'Roboto' }}>
-            <div>
-                <div className='row row-header'>
-                <div className='col logoApps'><img src='./src/assets/logo/logoAljabar.svg' /></div>
-                <div className='col col-close'>
-                    <div className="menu-button" onClick={handleClose}><h3><FiX /></h3></div>
-                </div>
-                </div>
-            </div>
-            <ul className='nav nav-pills flex-column mb-auto'>
-                <li className='side-li' >
-                    <div className="menu-item ">
+    <>  
+        <div className='sideBar' style={{ display: 'flex', height: '100%', minHeight: '400px' }}>
+            <Sidebar collapsed={collapsed} >
+                <Menu>
+                    <div>
+                        <div className='row row-header'>
+                            <div className='col logoApps'><img src={ iconLogo } /></div>
+                        </div>
+                    </div>
+                    <MenuItem icon={<h4><PiMosque color='#007800'/></h4> }>
                         <div className='input-group list-menu row'>
-                            <div className='col-1'>
-                                <h4><PiMosque color='#5f5d5d' className='iconList' /></h4> 
-                            </div>
                             <div className='col-1 body-row-sidebar'>
                                 Pemetaan Masjid
                             </div>
@@ -233,14 +237,9 @@ return (
                                 </label>
                             </div>
                         </div>
-                    </div>
-                </li>
-                <li className='side-li' >
-                    <div className="menu-item ">
+                    </MenuItem>
+                    <MenuItem icon={<h4><PiMosque color='#007800'/></h4> }>
                         <div className='input-group list-menu row'>
-                            <div className='col-1'>
-                                <h4><TbHomeShare color='#5f5d5d' className='iconList' /></h4> 
-                            </div>
                             <div className='col-1 body-row-sidebar'>
                                 Pemetaan dakwah
                             </div>
@@ -251,29 +250,9 @@ return (
                                 </label>
                             </div>
                         </div>
-                    </div>
-                </li>
-                <li className='side-li' onClick={toggleDropdown}>
-                    <div className="menu-item ">
-                        <div className='input-group list-menu row'>
-                            <div className='col-1'>
-                                <h4><TbHomeShare color='#5f5d5d' className='iconList' /></h4> 
-                            </div>
-                            <div className='col-1 body-row-sidebar'>
-                                Pemetaan masyarakat
-                            </div>
-                            <div className='col dropdown-switch'>
-                                    <MdKeyboardArrowDown style={{ fontSize: '20px' }}/>
-                                    <label className="toggle-switch">
-                                        <input type="checkbox" onClick={ handdleToggleHome } />
-                                        <span className="switch" />
-                                    </label>
-                            </div>
-                        </div>
-                    </div>
-                    {isDropdownOpen && (
-                        <ul className='nav nav-pills flex-column mb-auto'>
-                        <li className='side-li-child'>
+                    </MenuItem>
+                    <SubMenu icon={<h4><TbHomeShare color='#007800' /></h4> } label="Pemetaan masyarakat" className='list-menu '>
+                        <MenuItem> 
                             <div className="menu-item ">
                                 <div className='input-group list-menu row' style={{ paddingRight: '0px !important', height: '3vh' }}>
                                     <div className='col'>
@@ -287,8 +266,8 @@ return (
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                        <li className='side-li-child'>
+                        </MenuItem>
+                        <MenuItem> 
                             <div className="menu-item ">
                                 <div className='input-group list-menu row' style={{ paddingRight: '0px !important', height: '3vh' }}>
                                     <div className='col'>
@@ -302,8 +281,8 @@ return (
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                        <li className='side-li-child'>
+                        </MenuItem>
+                        <MenuItem> 
                             <div className="menu-item ">
                                 <div className='input-group list-menu row' style={{ paddingRight: '0px !important', height: '3vh' }}>
                                     <div className='col'>
@@ -317,32 +296,46 @@ return (
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
-                    )}
-                    
-                </li>
-            </ul>
-            <div className='row-line'></div>
-            <ul className='nav nav-pills flex-column mb-auto'>
-                <li className='side-li'>
-                    <div className="menu-item ">
-                        <div className='input-group list-menu'>
-                        <h4><BiLineChartDown color='#5f5d5d' className='iconList' /></h4> Statistik Aktifitas Dakwah
+                        </MenuItem>
+                        <MenuItem> 
+                            <div className="menu-item ">
+                                <div className='input-group list-menu row' style={{ paddingRight: '0px !important', height: '3vh' }}>
+                                    <div className='col'>
+                                        Pemetaan Lainnya
+                                    </div>
+                                    <div className='col-1 col-switch' style={{ paddingRight: '0px !important' }}>
+                                        <label className="toggle-switch">
+                                            <input type="checkbox" onClick={ handdleToggleHome } />
+                                            <span className="switch" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </MenuItem>
+                    </SubMenu>
+                    <div className='row-line'></div>
+                    <MenuItem icon={<h4><BiLineChartDown color='#007800' /></h4> }>
+                        <div className='input-group list-menu row'>
+                            <div className='col-1 body-row-sidebar'>
+                                Statistik Aktifitas Dakwah
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li className='side-li'>
-                    <div className="menu-item ">
-                        <div className='input-group list-menu'>
-                        <h4><BsCalendar2Date color='#5f5d5d' className='iconList' /></h4> Kalender Dakwah
+                    </MenuItem>
+                    <MenuItem icon={<h4><BsCalendar2Date color='#007800'/></h4> }>
+                        <div className='input-group list-menu row'>
+                            <div className='col-1 body-row-sidebar'>
+                                Kalender Dakwah
+                            </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
-        </Menu>
-        <SidebarMasyarakat showSidebarMasyarakat={ showSidebarMasyarakat } handleCloseSidebarMasyarakat={ handleCloseSidebarMasyarakat } selectedMarker={selectedMarker}/>
-        <SidebarDakwah showSidebarDakwah={ showSidebarDakwah } handleCloseSidebarDakwah={ handleCloseSidebarDakwah } selectedMarkerDakwah={selectedMarkerDakwah}/>
+                    </MenuItem>
+                </Menu>
+            </Sidebar>
+            <div style={{ height: 'fit-content' }}>
+                <SearchInput mapRef ={mapRef} setCollapsed = {setCollapsed} collapsed={collapsed}/>
+                { showSidebarMasyarakat && <SidebarMasyarakat showSidebarMasyarakat={ showSidebarMasyarakat } handleCloseSidebarMasyarakat={ handleCloseSidebarMasyarakat } selectedMarker={selectedMarker}/> }
+                { showSidebarDakwah &&<SidebarDakwah showSidebarDakwah={ showSidebarDakwah } handleCloseSidebarDakwah={ handleCloseSidebarDakwah } selectedMarkerDakwah={selectedMarkerDakwah}/> }
+            </div>
+        </div>
     </>
     );
 }

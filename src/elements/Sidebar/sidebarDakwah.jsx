@@ -2,6 +2,9 @@ import { FiX } from 'react-icons/fi';
 import Badge from 'react-bootstrap/Badge';
 import { slide as Menu } from 'react-burger-menu';
 import React, {useState, useEffect} from 'react';
+import { FiUser } from 'react-icons/fi';
+import { BiTime } from 'react-icons/bi';
+import { PiSubtitlesBold } from 'react-icons/pi';
 import axios from 'axios';
 import '../../assets/style/sideBar.scss';
 
@@ -21,7 +24,10 @@ function DateTimeSeparator ({ datetimeString }) {
     const formattedTime = `${hours}:${minutes}:${seconds}`;
 
     return (
-        <div> {formattedDate+' '+formattedTime}</div>
+        <div>
+            {formattedDate}
+             <Badge bg="success" style={{ marginLeft: '5px'}}>{formattedTime}</Badge>
+        </div>
     );
 };
 
@@ -32,24 +38,23 @@ export default function SidebarDakwah({ showSidebarDakwah, handleCloseSidebarDak
             <Menu isOpen={showSidebarDakwah} className='sideBarForm' customBurgerIcon={false} onClose={handleCloseSidebarDakwah} style={{ fontFamily: 'Roboto' }}>
                 <div>
                     <div className="row header-sidebar">
-                        <div className="col title-menu-sidebar" style={{ fontFamily: 'Roboto' }}>
-                            <div className='text-header'>Peta Dakwah</div>
-                        </div>
+                    </div>
+                    <div className='scrollbox'>
                         <div className="col-1 btn-side-back" onClick={handleCloseSidebarDakwah}>
                             <div ><h5 className='close-button'><FiX /></h5></div>
                         </div>
-                    </div>
-                    <div className='scrollbox'>
                         <img className='img-rumah' src='https://www.utusan.com.my/wp-content/uploads/dkwa.jpg' alt="new" />
-                        <div className='titleDakwah'> { selectedMarkerDakwah?.topikDakwah }</div>
-                        <Badge bg="success" style={{ marginLeft: '15px', marginBottom: '10px' }}>{selectedMarkerDakwah?.kategori}</Badge>
-                        <div className='titleBody'>Data Dakwah</div>
+                        <div className='titleBody'><PiSubtitlesBold style={{ marginRight: '5px', marginBottom: '2.5px', color: '#16a75c' }} /> Judul Dakwah <Badge bg="success" style={{ marginLeft: '5px'}}>{selectedMarkerDakwah?.kategori}</Badge></div>
+                        <div className='bodyData' style={{ fontSize: '14px' }}>
+                                { selectedMarkerDakwah?.topikDakwah }
+                        </div>
+                        <div className='titleBody'><FiUser style={{ marginRight: '5px', marginBottom: '2.5px', color: '#16a75c' }} /> Pembicara Dakwah </div>
+                        <div className='bodyData' style={{ fontSize: '14px' }}>
+                            {selectedMarkerDakwah?.pembicara} <Badge bg="info" style={{ marginLeft: '5px'}}>{selectedMarkerDakwah?.gelar_pembicara}</Badge>
+                        </div>
+                        <div className='titleBody'><BiTime style={{ marginRight: '5px', marginBottom: '2.5px', color: '#16a75c' }} /> Waktu Dakwah</div>
                         <div className='bodyData'>
                             <ul className='nav nav-pills flex-column mb-auto'>
-                            <li className='li-data input-group form-group'>
-                                    <div className='textLeft'>Pembicara</div>
-                                    <div className='textRight'>{selectedMarkerDakwah?.pembicara}</div>
-                                </li>
                                 <li className='li-data input-group form-group'>
                                     <div className='textLeft'>Waktu Mulai</div>
                                     <div className='textRight'><DateTimeSeparator datetimeString={selectedMarkerDakwah?.waktuMulai}/></div>
