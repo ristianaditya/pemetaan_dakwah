@@ -66,6 +66,7 @@
 .title-menu-sidebar{
     padding-top: 7px;
     margin-left: 10px;
+    text-align-last: left;
     max-width: 277px !important;
 }
 .btn-side-back{
@@ -77,20 +78,26 @@
     }
 }
 .sideBarForm{
-    width: 390px !important;
+    width: 350px !important;
     position: absolute;
     top: 0px;
-    background-color: white;
+    background-color: #F5F5FA;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
     transition: none !important;
 }
 .header-sidebar{
-    padding: 15px 20px 14px 25px;
-    border-bottom: solid 1px rgb(214, 214, 214);
+    padding: 10px 20px 5px 10px;
 }
-.formInput{
-    font-family: 'Roboto' !important;
-    padding: 25px 30px 25px 30px;
+.body-side-rumah{
+    font-family: "Roboto" !important;
+    padding: 15px 15px 15px 15px;
+    margin-top: -24px;
+    position: sticky;
+    background: white;
+    width: 90% !important;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 8px;
 }
 .input-sidebar{
     height: 50px !important;
@@ -150,10 +157,10 @@
 
 /* style icon */
 .inner-addon .glyphicon {
-  position: absolute;
-  padding: 10px;
-  pointer-events: none;
-  color: rgb(151, 151, 151);
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+    color: rgb(151, 151, 151);
 }
 
 /* align icon */
@@ -174,4 +181,154 @@
     width: 100%;
     margin-bottom: 5px;
     margin-top: 5px;
+}
+
+.img-rumah{
+    width: 100%;
+}
+
+.titleHome{
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 150%;
+}
+
+.icon-marker{
+    font: -webkit-small-control;
+    color: #a1a1a1;
+}
+
+.latlng{
+    font: -webkit-small-control;
+    align-self: center;
+    padding-left: 0px !important;
+    color: #818181;
+}
+.marker{
+    align-self: auto;
+    height: 26.6px !important;
+    padding-right: 0px !important;
+}
+.text-header{
+    color: #000;
+    text-align: center;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+.close-button{
+    width: fit-content;
+    background: white;
+    border-radius: 10px;
+    padding-top: 0px !important;
+    padding: 4px;
+    margin-top: 2px;
+    margin-left: 8px;
+}
+.date-update{
+    background: #16a75c;
+    color: white;
+    font-size: 11px;
+    padding: 4px 8px 0px 8px;
+    border-radius: 10px !important;
+    align-self: center;
+    position: absolute;
+    right: 13px;
+}
+.titleBody{
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    padding: 10px 21px;
+    line-height: 150%;
+    margin-top: 5px;
+}
+
+.bodyData{
+    font-family: "Roboto" !important;
+    padding: 15px;
+    position: sticky;
+    background: white;
+    width: 90% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    border-radius: 8px;
+}
+.textLeft{
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+.textRight{
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    right: 0px;
+    position: absolute;
+}
+.li-data{
+    padding: 10px 0px;
+    border-bottom: 0.1px solid #d8d8d8;
+}
+.li-data-last{
+    padding: 10px 0px;
+}
+.badges-text{
+    font-size: 15px !important;
+}
+.progress-bar{
+    background-color: #26ADE3;
+}
+
+.scrollbox {
+    width: 100%;
+    height: 94vh;
+    overflow-y: scroll;
+  }
+  .scrollbox::-webkit-scrollbar {
+    display: none;
+  }
+
+.textName{
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    margin-right: 5px;
+}
+.side-li-child{
+    margin-left: 27px;
+    border-left: 1px solid;
+    padding-left: 18px !important;
+    padding: 2px 0px;
+}
+.body-row-sidebar{
+    width: fit-content !important;
+    padding: 0px !important;
+    text-align: left;
+    padding-left: 35px !important;
+}
+.col-switch{
+    padding-left: 0px !important;
+    text-align: -webkit-right;
+    padding-right: 0px !IMPORTANT;
+    padding-top: 4px;
+    width: 80px !important;
+}
+.dropdown-switch{
+    padding-right: 0px !important;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+}
+.titleDakwah{
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 150%;
 }
