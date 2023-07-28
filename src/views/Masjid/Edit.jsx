@@ -69,7 +69,7 @@ function Tables() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`http://api.petadakwah.site/api/masjid/` + iditem, 
+      const response = await axios.get(`https://api.petadakwah.site/api/masjid/` + iditem, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ function Tables() {
     const rumahId = values._id
 
     try {
-      const response = await axios.put(`http://api.petadakwah.site/api/masjid/` + rumahId, data, {
+      const response = await axios.put(`https://api.petadakwah.site/api/masjid/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token

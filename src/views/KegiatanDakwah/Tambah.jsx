@@ -47,7 +47,7 @@ function Tables() {
   }, []);
 
   const getDataMasjid = () => {
-    axios.get(`http://api.petadakwah.site/api/masjid`, 
+    axios.get(`https://api.petadakwah.site/api/masjid`, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ function Tables() {
     }
    
     try {
-      const response = await axios.post(`http://api.petadakwah.site/api/petadakwah/create`, data, {
+      const response = await axios.post(`https://api.petadakwah.site/api/petadakwah/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token

@@ -97,7 +97,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     setFilterval(selectedValue)
 
     if (selectedValue != "") {
-      axios.get(`http://api.petadakwah.site/api/petadakwah/filter/kategori?kategori=` + selectedValue, 
+      axios.get(`https://api.petadakwah.site/api/petadakwah/filter/kategori?kategori=` + selectedValue, 
         {
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
     setPending(true);
     try {
-      await axios.delete(`http://api.petadakwah.site/api/petadakwah/` + deleteid, {
+      await axios.delete(`https://api.petadakwah.site/api/petadakwah/` + deleteid, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -167,7 +167,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     },
     {
         name: 'Tanggal Mulai',
-        minWidth: '250px',
+        width: '250px',
         selector: row => row.waktuAkhir ? dayjs(row.waktuMulai).format("DD MMMM YYYY H:mm") : "",
     },
     {
@@ -217,7 +217,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   useEffect(() => {
-    axios.get(`http://api.petadakwah.site/api/petadakwah`, 
+    axios.get(`https://api.petadakwah.site/api/petadakwah`, 
         {
           headers: {
             'Content-Type': 'application/json',

@@ -97,7 +97,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     setFilterval(selectedValue)
 
     if (selectedValue != "") {
-      axios.get(`http://api.petadakwah.site/api/petadakwah/filter/kategori?kategori=` + selectedValue, 
+      axios.get(`https://api.petadakwah.site/api/petadakwah/filter/kategori?kategori=` + selectedValue, 
         {
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
     setPending(true);
     try {
-      await axios.delete(`http://api.petadakwah.site/api/masjid/` + deleteid, {
+      await axios.delete(`https://api.petadakwah.site/api/masjid/` + deleteid, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -222,7 +222,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   useEffect(() => {
-    axios.get(`http://api.petadakwah.site/api/masjid`, 
+    axios.get(`https://api.petadakwah.site/api/masjid`, 
         {
           headers: {
             'Content-Type': 'application/json',
