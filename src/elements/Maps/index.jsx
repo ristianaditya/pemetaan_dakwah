@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl, FeatureGroup } from 'react-leaflet';
 import React from 'react';
 
 function Maps({mapRef}) {

@@ -1,32 +1,25 @@
 import Maps from "./elements/Maps"
 import ModalLogin from "./elements/Maps/modalLogin";
 import SearchInput from "./elements/Maps/searchInput";
-import React, { useRef, useState, useEffect } from 'react';
-import Sidebar from "./elements/Sidebar";
-import MasjidMenu from "./elements/Sidebar/masjidMenu";
+import React, { useRef, useState } from 'react';
+import PetaMasyarakat from "./elements/Maps/petaMasyarakat";
 
 function App() {
   const mapRef = useRef(null);
-
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const [showFormMasjid, setShowFormMasjid] = useState(false);
-  const handleCloseFormMasjid = () => setShowFormMasjid(false);
-  const handleShowFormMasjid = () => {
-    handleClose() ;
-    setTimeout(function() { setShowFormMasjid(true); }, 1000);
-  }
   
+  const [showPetaMasyarakat, setShowPetaMasyarakat] = useState(false);
+
+  setTimeout(() => {
+    setShowPetaMasyarakat(true);
+  }, 1000);
   return (
     <>
       <div>
         <Maps mapRef ={mapRef}/>
-        <SearchInput mapRef ={mapRef} show= {show} handleShow={handleShow}/>
-        <Sidebar show={ show } handleClose={ handleClose } handleShowFormMasjid={handleShowFormMasjid}/>
-        <MasjidMenu showFormMasjid={ showFormMasjid } handleCloseFormMasjid={ handleCloseFormMasjid } handleShow={ handleShow }/>
+        <SearchInput mapRef ={mapRef}/>
         <ModalLogin />
+        
+        {showPetaMasyarakat && <PetaMasyarakat mapRef={mapRef} />}
       </div>
     </>
   )
