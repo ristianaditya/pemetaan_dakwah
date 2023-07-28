@@ -17,7 +17,6 @@ export default function ModalLogin() {
         setShowLogin(!showLogin);
     };
     const token = localStorage.getItem('access_token') != "" && localStorage.getItem('access_token') ? true : false
-    console.log(token);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const handleChange = (e) => {
@@ -62,7 +61,6 @@ export default function ModalLogin() {
             }
         })
         .catch(error => {
-            console.log(error);
             if (error.response.status == 401) {
                 toast.error('Username Atau Password Yang Anda Masukan Salah !', {
                     position: "top-right",

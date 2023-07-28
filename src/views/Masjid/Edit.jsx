@@ -31,19 +31,28 @@ function Tables() {
 
   const [latitude, setLatitude] = useState("");
   const [longtitude, setLongtitude] = useState("");
-  
+  const [angkeluarga, setAngkeluarga] = useState([
+    {
+      id: 0
+    }
+  ]);
   const [ token ] = useState(localStorage.getItem('access_token'));
 
   const mapRef = useRef(null)
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      setLatitude(latitude.toString());
-      setLongtitude(longitude.toString());
+  const [iditem, setIditem] = useState(localStorage.getItem("idEdit"));
+  const [dataMaster, setDataMaster] = useState();
 
-      mapRef.current.flyTo([latitude, longitude], 18, { duration: 2 });
-    });
+  useEffect(() => {
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //   const { latitude, longitude } = position.coords;
+
+    //   setLatitude(latitude.toString());
+    //   setLongtitude(longitude.toString());
+    // });
+
+    getData()
+
   }, []);
 
   const handleDragEnd = (e) => {
@@ -52,12 +61,44 @@ function Tables() {
     setLongtitude(lng.toString());
   };
 
+  const getData = async () => {
+    try {
+      const response = await axios.get(`http://api.petadakwah.site/api/masjid/` + iditem, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      }
+    )
+    .then(res => {
+      const data = res.data;
+      setLatitude(data.lat);
+      setLongtitude(data.lng);
+      setDataMaster(data);
+      mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
+    })
+    } catch (error) {
+      toast.error('Gagal Get Data', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
+
   const history = useHistory(); 
   const location = useLocation(); 
 
   const backButton = () => {
-    history.push(location.pathname.replace('/tambah', ''));
+    history.push(location.pathname.replace('/edit', ''));
   }
+
 
   const postRumah = async (values) => {
     const data = {
@@ -70,9 +111,11 @@ function Tables() {
       lat: latitude,
       lng: longtitude
     }
+    
+    const rumahId = values._id
 
     try {
-      const response = await axios.post(`http://api.petadakwah.site/api/masjid/create`, data, {
+      const response = await axios.put(`http://api.petadakwah.site/api/masjid/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -80,7 +123,7 @@ function Tables() {
       }
     )
     .then(res => {
-      toast.success('Berhasil Tambah Data', {
+      toast.success('Berhasil Edit Data', {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -91,10 +134,10 @@ function Tables() {
         theme: "colored",
       });
 
-      history.push(location.pathname.replace('/tambah', ''));
+      history.push(location.pathname.replace('/edit', ''));
     })
     } catch (error) {
-      toast.error('Gagal Tambah Data', {
+      toast.error('Gagal Edit Data', {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -113,19 +156,16 @@ function Tables() {
       <CardHeader p='6px 0px 22px 0px' >
         <Flex justify='space-between' align='center' mb='1rem' w='100%'>
           <Text fontSize='lg' color={textColor} fontWeight='bold'>
-            Tambah
+            Edit
           </Text>
         </Flex>
       </CardHeader>
       <CardBody>
         <Formik
-        initialValues={{
-          namaMasjid: "",
-          ketuaDKM: "",
-          tahunBerdiri: "",
-          jumlahJamaah: "",
-          alamat: "",
-        }}
+        enableReinitialize={true}
+        initialValues={
+          dataMaster
+        }
         onSubmit={(values, { setSubmitting }) => {
 
           postRumah(values);
@@ -147,23 +187,23 @@ function Tables() {
           <Form onSubmit={handleSubmit}>
             <FormControl isRequired >
               <FormLabel>Nama Masjid</FormLabel>  
-              <Input name="namaMasjid" onChange={handleChange}/>
+              <Input name="namaMasjid" onChange={handleChange} value={values?.namaMasjid ? values.namaMasjid : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Ketua DKM</FormLabel>  
-              <Input name="ketuaDKM" onChange={handleChange}/>
+              <Input name="ketuaDKM" onChange={handleChange} value={values?.ketuaDKM ? values.ketuaDKM : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Tahun Berdiri</FormLabel>  
-              <Input type="number" name="tahunBerdiri" onChange={handleChange}/>
+              <Input type="number" name="tahunBerdiri" onChange={handleChange} value={values?.tahunBerdiri ? values.tahunBerdiri : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Jumlah Jamaah</FormLabel>  
-              <Input type="number" name="jumlahJamaah" onChange={handleChange}/>
+              <Input type="number" name="jumlahJamaah" onChange={handleChange} value={values?.jumlahJamaah ? values.jumlahJamaah : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Alamat</FormLabel>  
-              <Input name="alamat" onChange={handleChange}/>
+              <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" }/>
             </FormControl>
             <Flex mt="4">
               <MapContainer 

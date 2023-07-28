@@ -158,6 +158,11 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
   const columns = [
     {
+      name: 'No',
+      maxWidth: '10px',
+      selector: (row, index) => index + 1,
+    },
+    {
         name: 'Topik Dakwah',
         selector: row => row.topikDakwah ? row.topikDakwah : "",
     },

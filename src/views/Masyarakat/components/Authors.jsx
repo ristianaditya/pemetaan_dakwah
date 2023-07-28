@@ -63,6 +63,10 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     }
   }
 
+  const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   const onHapus = async () => {
 
     setPending(true);
@@ -103,6 +107,11 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
   const columns = [
     {
+      name: 'No',
+      maxWidth: '10px',
+      selector: (row, index) => index + 1,
+    },
+    {
         name: 'Nama Keluaga',
         selector: row => row.kepalaKeluarga.nama ? row.kepalaKeluarga.nama : "",
     },
@@ -113,12 +122,12 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     },
     {
       name: 'Sholat',
-      selector: row => row.keaktifanShalat ? row.keaktifanShalat : "",
+      selector: row => row.keaktifanShalat ? capitalize(row.keaktifanShalat) : "",
       sortable: true,
     },
     {
       name: 'Baca Alqur`an',
-      selector: row => row.kemampuanBacaQuran ? row.kemampuanBacaQuran : "",
+      selector: row => row.kemampuanBacaQuran ? capitalize(row.kemampuanBacaQuran) : "",
       sortable: true,
     },
     {
@@ -184,6 +193,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
       )
       .then(res => {
         const data = res.data.keluargas;
+        console.log(data);
         setDeleting(false)
         setRows( data );
         setPending( false );

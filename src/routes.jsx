@@ -1,7 +1,10 @@
 // import Dashboard from "./views/Dashboard.jsx";
 import Dashboard from "./views/Dashboard/index.jsx";
+// Masjid
 import Masjid from "./views/Masjid/index.jsx";
 import MasjidTambah from "./views/Masjid/Tambah.jsx";
+import MasjidEdit from "./views/Masjid/Edit.jsx";
+import MasjidDetail from "./views/Masjid/Detail.jsx";
 // Masyarakat
 import Masyarakat from "./views/Masyarakat/index.jsx";
 import MasyarakatTambah from "./views/Masyarakat/Tambah.jsx";
@@ -44,6 +47,22 @@ const dashboardRoutes = [
     name: "Data Masjid Tambah",
     icon: <PiMosque color="inherit" />,
     component: MasjidTambah,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/data_masjid/edit",
+    name: "Data Masyarakat Edit",
+    icon: <TbHomeShare color="inherit" />,
+    component: MasjidEdit,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/data_masjid/detail",
+    name: "Data Masyarakat Detail",
+    icon: <TbHomeShare color="inherit" />,
+    component: MasjidDetail,
     layout: "/maps/admin",
     show: false
   },
