@@ -22,7 +22,7 @@ root.render(
     <Switch>
       <Route exact path="/maps" ><App /></Route>
       <Route path="/maps/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect from={`/maps/admin`} to="maps/admin/dashboard" />
+      <Redirect from={`/`} to="/maps" />
     </Switch>
   </BrowserRouter>
 );
