@@ -198,6 +198,7 @@ function Tables() {
                 </Marker>
               </MapContainer>
             </Flex>
+            <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
             <FormControl isRequired mt="2" textAlign="right">
               <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">
                 Batal

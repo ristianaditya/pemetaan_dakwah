@@ -10,12 +10,14 @@ import {
   RadioGroup,
   Radio,
   HStack,
-  Select
+  Select,
+  IconButton
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
 import { FaPlusCircle  } from "react-icons/fa"
 import { BiLocationPlus  } from "react-icons/bi"
+import { HiPencilAlt  } from "react-icons/hi"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -134,6 +136,10 @@ const backButton = () => {
   history.push(location.pathname.replace('/detail', ''));
 }
 
+const editButton = () => {
+  history.push(location.pathname.replace('/detail', '/edit'));
+}
+
 const tambahKeluarga = async () => {
   const newData = [
     {
@@ -239,6 +245,13 @@ return (
         <Text fontSize='lg' color={textColor} fontWeight='bold'>
           Detail
         </Text>
+        <IconButton
+          colorScheme="teal"
+          aria-label="Edit"
+          size="md"
+          onClick={editButton}
+          icon={<HiPencilAlt />}
+        />
       </Flex>
     </CardHeader>
     <CardBody>
