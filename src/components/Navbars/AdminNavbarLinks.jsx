@@ -29,6 +29,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import routes from "../../routes.jsx";
 
+import { FaSignOutAlt } from "react-icons/fa"
+import { IoMap } from "react-icons/io5";
+import { useHistory } from 'react-router-dom';
+
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
 
@@ -44,14 +48,26 @@ export default function HeaderLinks(props) {
     mainText = "white";
   }
   const settingsRef = React.useRef();
+  const [ user ] = React.useState( JSON.parse(localStorage.getItem('user')) );
+  const history = useHistory();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    history.push("/maps");
+  }
+
+  const handleMaps = () => {
+    history.push("/maps");
+  }
+
   return (
     <Flex
       pe={{ sm: "0px", md: "16px" }}
       w={{ sm: "100%", md: "auto" }}
-      alignItems="center"
+      
       flexDirection="row"
     >
-      <InputGroup
+      {/* <InputGroup
         cursor="pointer"
         bg={inputBg}
         borderRadius="15px"
@@ -92,12 +108,13 @@ export default function HeaderLinks(props) {
           placeholder="Type here..."
           borderRadius="inherit"
         />
-      </InputGroup>
-      <NavLink to="/auth/signin">
+      </InputGroup> */}
+      <NavLink to="#">
         <Button
           ms="0px"
           px="0px"
           me={{ sm: "2px", md: "16px" }}
+          display={{ sm: "none", md: "flex" }}
           color={navbarIcon}
           variant="transparent-with-icon"
           rightIcon={
@@ -115,7 +132,7 @@ export default function HeaderLinks(props) {
             )
           }
         >
-          <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
+          <Text display={{ sm: "none", md: "flex" }}>{user.name.toUpperCase()}</Text>
         </Button>
       </NavLink>
       <SidebarResponsive
@@ -125,52 +142,11 @@ export default function HeaderLinks(props) {
         // logo={logo}
         {...rest}
       />
-      <SettingsIcon
-        cursor="pointer"
-        ms={{ base: "16px", xl: "0px" }}
-        me="16px"
-        ref={settingsRef}
-        onClick={props.onOpen}
-        color={navbarIcon}
-        w="18px"
-        h="18px"
-      />
-      <Menu>
-        <MenuButton>
-          <BellIcon color={navbarIcon} w="18px" h="18px" />
-        </MenuButton>
-        <MenuList p="16px 8px">
-          <Flex flexDirection="column">
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="13 minutes ago"
-                info="from Alicia"
-                boldInfo="New Message"
-                aName="Alicia"
-                aSrc={avatar1}
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="2 days ago"
-                info="by Josh Henry"
-                boldInfo="New Album"
-                aName="Josh Henry"
-                aSrc={avatar2}
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px">
-              <ItemContent
-                time="3 days ago"
-                info="Payment succesfully completed!"
-                boldInfo=""
-                aName="Kara"
-                aSrc={avatar3}
-              />
-            </MenuItem>
-          </Flex>
-        </MenuList>
-      </Menu>
+      {/*  */}
+      <IconButton aria-label="Maps" icon={<IoMap />} onClick={handleMaps} mr="2"/>
+      <IconButton aria-label="Log Out" icon={<FaSignOutAlt />} onClick={handleLogout}/>
+      {/*  */}
+     
     </Flex>
   );
 }
