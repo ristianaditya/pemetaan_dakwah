@@ -39,7 +39,7 @@ export default function ModalLogin() {
             "password": password
         }
 
-        axios.post(`http://api.petadakwah.site/api/login`, loginBody
+        axios.post(`https://api.petadakwah.site/api/login`, loginBody
         )
         .then(res => {
             if (res.status == 200) {

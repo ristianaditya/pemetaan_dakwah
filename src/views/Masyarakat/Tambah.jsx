@@ -96,7 +96,7 @@ function Tables() {
     }
 
     try {
-      const response = await axios.post(`http://api.petadakwah.site/api/rumah/create`, data, {
+      const response = await axios.post(`https://api.petadakwah.site/api/rumah/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -112,7 +112,7 @@ function Tables() {
         fotoRumah: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmorefurniture.id%2Fartikel%2Frumah-minimalis-warna-biru&psig=AOvVaw21UQ24OgmUda4Emcv-E0Ju&ust=1690464034492000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCgn7S7rIADFQAAAAAdAAAAABAE"
       }
       try {
-        axios.post(`http://api.petadakwah.site/api/keluarga/create`, dataKeluarga, {
+        axios.post(`https://api.petadakwah.site/api/keluarga/create`, dataKeluarga, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -216,6 +216,7 @@ function Tables() {
           isSubmitting,
         }) => (
           <Form onSubmit={handleSubmit}>
+            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
             <FormControl isRequired>
               <FormLabel as="legend">Keaktifan Sholat</FormLabel>
               <RadioGroup name="keaktifanShalat" defaultValue={values.keaktifanShalat}>
@@ -236,6 +237,8 @@ function Tables() {
                 </HStack>
               </RadioGroup>
             </FormControl>
+            </Flex>
+            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
             <FormControl isRequired mt="4">
               <FormLabel as="legend">Informasi Haji</FormLabel>
               <RadioGroup name="informasiHaji" defaultValue={values.informasiHaji}>
@@ -263,6 +266,7 @@ function Tables() {
                 </HStack>
               </RadioGroup>
             </FormControl>
+            </Flex>
             <Separator mt="10" mb="10"/>
             <MapContainer center={[-6.947794701156682, 107.70349499168313]} zoom={17} scrollWheelZoom={false} ref={mapRef} style={{ width: "100%", height: "40vh" }}>
               <TileLayer

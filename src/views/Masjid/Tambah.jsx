@@ -78,7 +78,7 @@ function Tables() {
     }
 
     try {
-      const response = await axios.post(`http://api.petadakwah.site/api/masjid/create`, data, {
+      const response = await axios.post(`https://api.petadakwah.site/api/masjid/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
