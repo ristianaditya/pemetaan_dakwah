@@ -12,17 +12,20 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-
   IconButton,
   Input,
   InputGroup,
   InputLeftElement,
+  Select,
+  FormLabel,
+  filter
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import '../../../assets/style/dataTable-custom.scss';
 import axios from 'axios';
 import { FaPlusCircle, FaBars, FaInfoCircle  } from "react-icons/fa"
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
 
 // Custom components
 import Card from "../../../components/Card/Card.jsx";
@@ -36,8 +39,10 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   
   const [pending, setPending] = useState(true);
   const [rows, setRows] = useState([]);
-  const [rowsfiltered, setRowsfiltered] = useState([]);
+  const [rowssearch, setRowssearch] = useState([]);
+  const [rowsfilter, setRowsfilter] = useState([]);
   const [searchval, setSearchval] = useState("");
+  const [filterval, setFilterval] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [ deleteid, onDeleteid] = useState("");
   const [ deleting, setDeleting] = useState(false);
@@ -48,18 +53,36 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const inputBg = useColorModeValue("white", "gray.800");
 
   const onSearch = (e) => {
+    e.preventDefault();
+
     const searchInput = e.target.value;
     setSearchval(searchInput);
+    let dataFiltered
+    if (rowssearch.length > 0) {
+      dataFiltered = rowssearch.filter(el => 
+        el.topikDakwah
+        .toString()
+        .toLowerCase()
+        .includes(searchInput.toLowerCase())  
+      );
+    } else {
+      dataFiltered = rows.filter(el => 
+        el.topikDakwah
+        .toString()
+        .toLowerCase()
+        .includes(searchInput.toLowerCase())  
+      );
+    }
+    
 
-    let dataFiltered = rows.filter(el => 
-      el.kepalaKeluarga.nama
-      .toString()
-      .toLowerCase()
-      .includes(searchInput.toLowerCase())  
-    );
-
-    if (searchval != "") {
-      setRowsfiltered(dataFiltered)
+    if (searchInput != "") {
+      setRowssearch(dataFiltered)
+    } else {
+      if (filterval != "") {
+        setRowssearch(rowsfilter)
+      } else {
+        setRowssearch([])
+      }
     }
   }
 
@@ -67,11 +90,39 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  const onFilter = (e) => {
+    e.preventDefault();
+    const selectedValue = e.target.value;
+    setPending( true );
+    setFilterval(selectedValue)
+
+    if (selectedValue != "") {
+      axios.get(`http://api.petadakwah.site/api/petadakwah/filter/kategori?kategori=` + selectedValue, 
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        }
+      )
+      .then(res => {
+        setPending( false );
+        setRowssearch(res.data.petaDakwah)
+        setRowsfilter(res.data.petaDakwah)
+      })
+    } else {
+      setRowssearch([])
+      setPending( false );
+
+    }
+    
+  }
+
   const onHapus = async () => {
 
     setPending(true);
     try {
-      await axios.delete(`http://api.petadakwah.site/api/rumah/` + deleteid, {
+      await axios.delete(`http://api.petadakwah.site/api/petadakwah/` + deleteid, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -112,33 +163,21 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
       selector: (row, index) => index + 1,
     },
     {
-        name: 'Nama Keluaga',
-        selector: row => row.kepalaKeluarga.nama ? row.kepalaKeluarga.nama : "",
+        name: 'Topik Dakwah',
+        selector: row => row.topikDakwah ? row.topikDakwah : "",
     },
     {
-        name: 'Haji',
-        selector: row => row.informasiHaji ? "Sudah" : "Belum",
-        sortable: true,
+        name: 'Pembicara',
+        selector: row => row.pembicara ? row.pembicara : "",
     },
     {
-      name: 'Sholat',
-      selector: row => row.keaktifanShalat ? capitalize(row.keaktifanShalat) : "",
-      sortable: true,
+        name: 'Tanggal Mulai',
+        minWidth: '250px',
+        selector: row => row.waktuAkhir ? dayjs(row.waktuMulai).format("DD MMMM YYYY H:mm") : "",
     },
     {
-      name: 'Baca Alqur`an',
-      selector: row => row.kemampuanBacaQuran ? capitalize(row.kemampuanBacaQuran) : "",
-      sortable: true,
-    },
-    {
-      name: 'Zakat',
-      selector: row => row.kondisiZakat ? "Sudah" : "Belum",
-      sortable: true,
-    },
-    {
-      name: 'Kurban',
-      selector: row => row.kurban ? "Sudah" : "Belum",
-      sortable: true,
+        name: 'Kategori',
+        selector: row => row.kategori ? capitalize(row.kategori) : "",
     },
     {
         name: 'Aksi',
@@ -150,7 +189,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
             variant='solid'
             fontSize='xs'
             p='8px 32px'
-            onClick={() => buttonDetail(row.rumahId)}
+            onClick={() => buttonDetail(row._id)}
             >
             Detail
           </Button>
@@ -159,7 +198,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
             variant='solid'
             fontSize='xs'
             p='8px 32px'
-            onClick={() => buttonEdit(row.rumahId)}
+            onClick={() => buttonEdit(row._id)}
             >
             Edit
           </Button>
@@ -169,7 +208,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
             fontSize='xs'
             p='8px 32px'
             onClick={() => {
-              onDeleteid(row.rumahId)
+              onDeleteid(row._id)
               onOpen(row)
               }
             }>
@@ -183,7 +222,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   useEffect(() => {
-    axios.get(`http://api.petadakwah.site/api/rumah`, 
+    axios.get(`http://api.petadakwah.site/api/petadakwah`, 
         {
           headers: {
             'Content-Type': 'application/json',
@@ -192,8 +231,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
         }
       )
       .then(res => {
-        const data = res.data.keluargas;
-        console.log(data);
+        const data = res.data.petaDakwahs;
         setDeleting(false)
         setRows( data );
         setPending( false );
@@ -215,10 +253,12 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
       </CardHeader>
       <CardBody>
         {/*  */}
+        <Flex>
         <InputGroup
           bg={inputBg}
           borderRadius="15px"
           w="200px"
+          mr={{ sm: "0px", md: "5px" }}
           _focus={{
             borderColor: { mainTeal },
           }}
@@ -253,10 +293,21 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
             borderRadius="inherit"
           />
         </InputGroup>
+        <Select name="kategori" defaultValue={""} w={ "170px"} value={filterval} onChange={onFilter}>
+          <option value={""}>-- Kategori --</option>
+          <option value={"kehidupan"}>Kehidupan</option>
+          <option value={"ibadah"}>Ibadah</option>
+          <option value={"keluarga"}>Keluarga</option>
+          <option value={"remaja"}>Remaja</option>
+          <option value={"akhlak"}>Akhlak</option>
+          <option value={"toleransi"}>Toleransi</option>
+          <option value={"tauhid"}>Tauhid</option>
+        </Select>
+        </Flex>
         {/*  */}
         <DataTable
           columns={columns}
-          data={searchval != "" ? rowsfiltered : rows}
+          data={searchval != "" || filterval != "" ? rowssearch : rows}
           progressPending={pending}
           pagination
           defaultSortFieldId={1}

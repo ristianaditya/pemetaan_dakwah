@@ -12,13 +12,12 @@ import {
     HStack,
     Select
 } from "@chakra-ui/react";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form } from 'formik';
 import { FaPlusCircle  } from "react-icons/fa"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
-import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -34,23 +33,13 @@ function Tables() {
   
   const [ token ] = useState(localStorage.getItem('access_token'));
 
-  const mapRef = useRef(null)
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       setLatitude(latitude.toString());
       setLongtitude(longitude.toString());
-
-      mapRef.current.flyTo([latitude, longitude], 18, { duration: 2 });
     });
   }, []);
-
-  const handleDragEnd = (e) => {
-    const { lat, lng } = e.target._latlng;
-    setLatitude(lat.toString());
-    setLongtitude(lng.toString());
-  };
 
   const history = useHistory(); 
   const location = useLocation(); 
@@ -61,18 +50,17 @@ function Tables() {
 
   const postRumah = async (values) => {
     const data = {
-      namaMasjid: values.namaMasjid,
-      ketuaDKM: values.ketuaDKM,
-      tahunBerdiri: values.tahunBerdiri,
-      jumlahJamaah: values.jumlahJamaah,
-      alamat: values.alamat,
-      foto: "https://asset-2.tstatic.net/banjarmasin/foto/bank/images/masjid-sinar-sabilal-muhtadin-atau-yang-biasa-disebut-masjid-timbul.jpg",
+      pembicara: values.pembicara,
+      topikDakwah: values.topikDakwah,
+      kategori: values.kategori,
+      waktuMulai: values.waktuMulai,
+      waktuAkhir: values.waktuAkhir,
       lat: latitude,
       lng: longtitude
     }
 
     try {
-      const response = await axios.post(`http://api.petadakwah.site/api/masjid/create`, data, {
+      const response = await axios.post(`http://api.petadakwah.site/api/petadakwah/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -120,11 +108,10 @@ function Tables() {
       <CardBody>
         <Formik
         initialValues={{
-          namaMasjid: "",
-          ketuaDKM: "",
-          tahunBerdiri: "",
-          jumlahJamaah: "",
-          alamat: "",
+          pembicara: "",
+          topikDakwah: "",
+          waktuMulai: "",
+          waktuAkhir: ""
         }}
         onSubmit={(values, { setSubmitting }) => {
 
@@ -145,52 +132,39 @@ function Tables() {
           isSubmitting,
         }) => (
           <Form onSubmit={handleSubmit}>
+            {/* <FormControl mt="4" >
+              <FormLabel><b>Kepala Keluarga</b></FormLabel>  
+            </FormControl> */}
             <FormControl isRequired >
-              <FormLabel>Nama Masjid</FormLabel>  
-              <Input name="namaMasjid" onChange={handleChange}/>
+              <FormLabel>Topik Dakwah</FormLabel>  
+              <Input name="topikDakwah" onChange={handleChange}/>
             </FormControl>
             <FormControl isRequired mt="4" >
-              <FormLabel>Ketua DKM</FormLabel>  
-              <Input name="ketuaDKM" onChange={handleChange}/>
+              <FormLabel>Pembicara</FormLabel>  
+              <Input name="pembicara" onChange={handleChange}/>
             </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Tahun Berdiri</FormLabel>  
-              <Input type="number" name="tahunBerdiri" onChange={handleChange}/>
+            <FormControl isRequired mt="2" >
+              <FormLabel>Kategori</FormLabel>  
+              <Select name="kategori" onChange={handleChange}>
+                <option value={""}>Pilih Kategori</option>
+                <option value={"kehidupan"}>Kehidupan</option>
+                <option value={"ibadah"}>Ibadah</option>
+                <option value={"keluarga"}>Keluarga</option>
+                <option value={"remaja"}>Remaja</option>
+                <option value={"akhlak"}>Akhlak</option>
+                <option value={"toleransi"}>Toleransi</option>
+                <option value={"tauhid"}>Tauhid</option>
+              </Select>
             </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Jumlah Jamaah</FormLabel>  
-              <Input type="number" name="jumlahJamaah" onChange={handleChange}/>
-            </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Alamat</FormLabel>  
-              <Input name="alamat" onChange={handleChange}/>
-            </FormControl>
-            <Flex mt="4">
-              <MapContainer 
-                center={[-6.947794701156682, 107.70349499168313]} 
-                zoom={17} 
-                ref={mapRef} 
-                dragging={true}
-                attributionControl={true}
-                zoomControl={true}
-                doubleClickZoom={true}
-                scrollWheelZoom={true}
-                style={{ width: "100%", height: "40vh" }}>
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  maxZoom={20}
-                  minZoom={5}
-                />
-                <Marker position={[latitude,longtitude]} draggable 
-                  eventHandlers={{
-                    dragend: (e) => {
-                      handleDragEnd(e)
-                    },
-                  }}
-                >
-                </Marker>
-              </MapContainer>
+            <Flex>
+              <FormControl isRequired mt="4" mr={{ lg: "2"}}>
+                <FormLabel>Tanggal Mulai</FormLabel>  
+                <Input name="waktuMulai" onChange={handleChange} type="datetime-local"/>
+              </FormControl>
+              <FormControl isRequired mt="4" ml={{ lg: "2"}}>
+                <FormLabel>Tanggal Berakhir</FormLabel>  
+                <Input name="waktuAkhir" onChange={handleChange} type="datetime-local"/>
+              </FormControl>
             </Flex>
             <FormControl isRequired mt="2" textAlign="right">
               <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">

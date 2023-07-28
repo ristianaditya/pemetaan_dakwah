@@ -12,12 +12,14 @@ import {
     HStack,
     Select
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
 import { FaPlusCircle  } from "react-icons/fa"
+import { BiLocationPlus  } from "react-icons/bi"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
+import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -29,28 +31,38 @@ function Tables() {
   const textColor = useColorModeValue("gray.700", "white");
 
   const [latitude, setLatitude] = useState("");
-  const [longtitude, setLongtitude] = useState("");
+  const [longtitude, setLongtitude] = useState("107.70349499168313");
   const [angkeluarga, setAngkeluarga] = useState([
     {
-      id: 0
+      nama: "",
+      peran: "",
+      usia: "",
+      pekerjaan: "",
     }
   ]);
   const [ token ] = useState(localStorage.getItem('access_token'));
+
+  const mapRef = useRef(null)
 
   const [iditem, setIditem] = useState(localStorage.getItem("idEdit"));
   const [dataMaster, setDataMaster] = useState();
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-
-      setLatitude(latitude.toString());
-      setLongtitude(longitude.toString());
-    });
+    
 
     getData()
 
   }, []);
+
+  const latlongHandle =  async () => {
+     await navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      setLatitude(latitude.toString());
+      setLongtitude(longitude.toString());
+      mapRef.current.flyTo([latitude, longitude], 18, { duration: 2 });
+    });
+
+  }
 
   const getData = async () => {
     try {
@@ -63,7 +75,10 @@ function Tables() {
       }
     )
     .then(res => {
-      const data = res.data.keluarga;
+      const data = res.data.keluargas;
+      setLatitude(data.lat);
+      setLongtitude(data.lng);
+      mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
 
       try {
         axios.get(`http://api.petadakwah.site/api/keluarga/` + data.RumahId, {
@@ -248,9 +263,9 @@ function Tables() {
               <FormLabel as="legend">Keaktifan Sholat</FormLabel>
               <RadioGroup name="keaktifanShalat" value={values?.keaktifanShalat ? values.keaktifanShalat : ""}>
                 <HStack spacing="24px" onChange={handleChange} >
-                  <Radio value="Jarang">Jarang</Radio>
-                  <Radio value="Kadang-kadang">Kadang-kadang</Radio>
-                  <Radio value="Sering">Sering</Radio>
+                  <Radio value="jarang">Jarang</Radio>
+                  <Radio value="kadang-kadang">Kadang-kadang</Radio>
+                  <Radio value="sering">Sering</Radio>
                 </HStack>
               </RadioGroup>
             </FormControl>
@@ -258,9 +273,9 @@ function Tables() {
               <FormLabel as="legend">Kemampuan Baca Quran</FormLabel>
               <RadioGroup name="kemampuanBacaQuran" value={values?.kemampuanBacaQuran ? values.kemampuanBacaQuran : ""}>
                 <HStack spacing="24px" onChange={handleChange}>
-                  <Radio value="Tidak Bisa">Tidak Bisa</Radio>
-                  <Radio value="Terbata-bata">Terbata-bata</Radio>
-                  <Radio value="Fasih">Fasih</Radio>
+                  <Radio value="tidak Bisa">Tidak Bisa</Radio>
+                  <Radio value="terbata-bata">Terbata-bata</Radio>
+                  <Radio value="fasih">Fasih</Radio>
                 </HStack>
               </RadioGroup>
             </FormControl>
@@ -291,7 +306,30 @@ function Tables() {
                 </HStack>
               </RadioGroup>
             </FormControl>
-            <Separator mt="10"/>
+            <Separator mt="10" mb="10"/>
+            <MapContainer center={[latitude, longtitude]} zoom={17} scrollWheelZoom={false} ref={mapRef} style={{ width: "100%", height: "40vh" }}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                maxZoom={20}
+                minZoom={5}
+              />
+              <Marker position={[latitude,longtitude]}>
+              </Marker>
+            </MapContainer>
+            <Flex align='center' w="100%" mt="4" mb="2">
+              <FormControl w="fit-content" mr="2">
+                <Button leftIcon={<BiLocationPlus />} colorScheme="green" variant="outline" onClick={latlongHandle}>
+                  Tangkap Lokasi Anda
+                </Button>
+              </FormControl>  
+              <Text align={'center'} display={ latitude &&  longtitude ? '' : 'none'}>lat : {latitude} long : {longtitude}</Text>
+            </Flex>
+            <FormControl isRequired mt="4" >
+              <FormLabel>Alamat</FormLabel>  
+              <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" }/>
+            </FormControl>
+            <Separator mt="10" mb="10"/>
             <FormControl mt="4" >
               <FormLabel><b>Kepala Keluarga</b></FormLabel>  
             </FormControl>
@@ -302,9 +340,9 @@ function Tables() {
             <FormControl isRequired mt="2" >
               <FormLabel>Peran</FormLabel>  
               <Select name="kepalaKeluarga[peran]" onChange={handleChange} value={values?.kepalaKeluarga?.peran ? values.kepalaKeluarga.peran : ""}>
-                <option value={"Ayah"}>Ayah</option>
-                <option value={"Ibu"}>Ibu</option>
-                <option value={"Anak"}>Anak</option>
+                <option value={"ayah"}>Ayah</option>
+                <option value={"ibu"}>Ibu</option>
+                <option value={"anak"}>Anak</option>
               </Select>
             </FormControl>
             <FormControl isRequired mt="2" >
@@ -321,7 +359,7 @@ function Tables() {
                 Anggota Keluarga
               </Button>
             </FormControl>
-            {values?.anggotaKeluarga ? values.anggotaKeluarga.map((value, key) => (
+            {values?.anggotaKeluarga.length ? values.anggotaKeluarga.map((value, key) => (
               <div key={key}>
 
               <FormControl mt="4" >
@@ -334,9 +372,9 @@ function Tables() {
               <FormControl isRequired mt="2" >
                 <FormLabel>Peran</FormLabel>  
                 <Select name={"anggotaKeluarga["+ key.toString() +"][peran]"} onChange={handleChange} value={value?.peran}>
-                  <option value={"Ayah"}>Ayah</option>
-                  <option value={"Ibu"}>Ibu</option>
-                  <option value={"Anak"}>Anak</option>
+                  {/* <option value={"ayah"}>Ayah</option> */}
+                  <option value={"ibu"}>Ibu</option>
+                  <option value={"anak"}>Anak</option>
                 </Select>
               </FormControl>
               <FormControl isRequired mt="2" >
@@ -348,30 +386,7 @@ function Tables() {
                 <Input name={"anggotaKeluarga["+ key.toString() +"][pekerjaan]"} onChange={handleChange} value={value?.pekerjaan}/>
               </FormControl>  
               </div>
-            )) :  angkeluarga.map((value, key) => (
-              <div key={key}>
-                <FormControl mt="4" >
-                  <FormLabel><b>Anggota Keluarga {key + 1}</b></FormLabel>  
-                </FormControl>
-                <FormControl isRequired mt="4" >
-                  <FormLabel>Nama</FormLabel>
-                  <Input name={"anggotaKeluarga["+ key.toString() +"][nama]"} onChange={handleChange}/>
-                </FormControl>
-                <FormControl isRequired mt="2" >
-                  <FormLabel>Peran</FormLabel>  
-                  <Input name={"anggotaKeluarga["+ key.toString() +"][peran]"} onChange={handleChange}/>
-                </FormControl>
-                <FormControl isRequired mt="2" >
-                  <FormLabel>Usia</FormLabel>  
-                  <Input type="number" name={"anggotaKeluarga["+ key.toString() +"][usia]"} onChange={handleChange}/>
-                </FormControl>
-                <FormControl isRequired mt="2" >
-                  <FormLabel>Pekerjaan</FormLabel>  
-                  <Input name={"anggotaKeluarga["+ key.toString() +"][pekerjaan]"} onChange={handleChange}/>
-                </FormControl>
-              </div>
-            ))
-            }
+            )) :  ""}
             <FormControl isRequired mt="2" textAlign="right">
               <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">
                 Batal

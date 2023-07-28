@@ -29,7 +29,7 @@ function Tables() {
     return (
       <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
         <Authors
-          title={"Data Masjid"}
+          title={"Kegiatan Dakwah"}
           buttonTambah={buttonTambah}
           buttonEdit={buttonEdit}
           buttonDetail={buttonDetail}
