@@ -41,7 +41,7 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
     const fetchData = async () => {
         try {
             if(selectedMarker?.keluargaId){
-                const response = await axios.get('http://localhost:3000/api/admin/keluarga/'+selectedMarker?.keluargaId);
+                const response = await axios.get('http://api.petadakwah.site/api/admin/keluarga/'+selectedMarker?.keluargaId);
                 setDataKeluarga(response.data.keluarga.anggotaKeluarga);
             }
         } catch (error) {
@@ -57,14 +57,11 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
             <Menu isOpen={showSidebarMasyarakat} className='sideBarForm' customBurgerIcon={false} onClose={handleCloseSidebarMasyarakat} style={{ fontFamily: 'Roboto' }}>
                 <div>
                     <div className="row header-sidebar">
-                        <div className="col title-menu-sidebar" style={{ fontFamily: 'Roboto' }}>
-                            <div className='text-header'>Pemetaan Rumah</div>
-                        </div>
+                    </div>
+                    <div className='scrollbox'>
                         <div className="col-1 btn-side-back" onClick={handleCloseSidebarMasyarakat}>
                             <div ><h5 className='close-button'><FiX /></h5></div>
                         </div>
-                    </div>
-                    <div className='scrollbox'>
                         <img className='img-rumah' src={selectedMarker?.fotoRumah} alt="new" />
                         <div className='body-side-rumah input-group form-group'>
                             <div className='titleHome'> { title+selectedMarker?.kepalaKeluarga.nama }</div>

@@ -1,10 +1,11 @@
 .sideBar{
     position: absolute;
     top: 0px;
-    padding: 10px;
-    background-color: white;
+    width: 0px;
+    // padding: 10px;
+    // background-color: white;
     z-index: 4100 !important;
-    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+    // box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
 .bm-item {
     .row{
@@ -13,9 +14,10 @@
 } 
 .logoApps{
     padding: 10px 20px;
+    text-align: center;
 
     img{
-        width: 160px;
+        width: 145px;
     }
 }
 .menu-button{
@@ -29,9 +31,10 @@
 
 .row-header{
     width: 107%;
-    padding-left: 10px;
+    padding-left: 15px;
     padding-right: 7px;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
+    padding-top: 6px;
     border-bottom: solid 1px rgb(214, 214, 214);
     margin-bottom: 20px;
 }
@@ -42,11 +45,7 @@
 
 .list-menu{
     align-items: center !important;
-    padding: 1px 5px 0px 15px;
     font-size: small !important;
-}
-.iconList{
-    margin-right: 20px;
 }
 
 .row-line{
@@ -70,7 +69,10 @@
     max-width: 277px !important;
 }
 .btn-side-back{
-    align-self: center;
+    display: table-column;
+    position: absolute;
+    right: 20px;
+    margin-top: 10px;
     cursor: pointer;
     :hover{
         cursor: pointer;
@@ -78,15 +80,16 @@
     }
 }
 .sideBarForm{
-    width: 350px !important;
+    width: 365px !important;
     position: absolute;
     top: 0px;
+    z-index: 1100 !important;
     background-color: #F5F5FA;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
     transition: none !important;
 }
 .header-sidebar{
-    padding: 10px 20px 5px 10px;
+    height: 70px;
 }
 .body-side-rumah{
     font-family: "Roboto" !important;
@@ -309,12 +312,12 @@
     width: fit-content !important;
     padding: 0px !important;
     text-align: left;
-    padding-left: 35px !important;
+    padding-left: 12px !important;
 }
 .col-switch{
     padding-left: 0px !important;
     text-align: -webkit-right;
-    padding-right: 0px !IMPORTANT;
+    padding-right: 0px !important;
     padding-top: 4px;
     width: 80px !important;
 }
@@ -331,4 +334,56 @@
     font-size: 16px;
     font-weight: 500;
     line-height: 150%;
+}
+.css-1t8x7v1 >.ps-menu-button {
+    height: 40px !important;
+    padding-right: 5px !important;
+    padding-left: 18px !important;
+}
+.css-1wvake5.ps-collapsed {
+    width: 74px;
+    min-width: 0px !important;
+}
+.css-1wvake5 {
+    position: relative;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-color: #efefef;
+    -webkit-transition: width,left,right,300ms;
+    transition: width,left,right,300ms;
+    width: 250px;
+    min-width: 260px !important;
+}
+
+.css-16jesut >.ps-menu-button {
+    height: 40px !important;
+    padding-right: 35px !important;
+    padding-left: 18px !important;
+}
+.css-1tqrhto >.ps-menu-button {
+    padding-left: 65px !important;
+    height: 35px !important;
+}
+.ps-menu-icon{
+    background: #16a75c41 !important;
+    border-radius: 10px !important;
+}
+.css-1t8x7v1 >.ps-menu-button:hover {
+    color: #16a75c;
+    background-color: white !important;
+}
+.css-16jesut >.ps-menu-button:hover {
+    color: #16a75c;
+    background-color: white !important;
+}
+.css-1tqrhto >.ps-menu-button:hover {
+    color: #16a75c;
+    background-color: white !important;
+}
+.bm-overlay{
+    width: fit-content !important;
+    transition: none !important;
+}
+.css-1wvake5 {
+    z-index: 100000000;
 }

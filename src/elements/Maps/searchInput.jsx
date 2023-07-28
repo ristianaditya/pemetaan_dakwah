@@ -2,14 +2,14 @@ import React, { useState  } from 'react';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import '../../assets/style/inputSearch.scss';
+import burgerIcon from '../../assets/icons/burgerButton.png';
+import searchIcon from '../../assets/icons/search_icon.png';
 import Sidebar from '../Sidebar';
+import Sidebars from '../Sidebar';
 
-function SearchInput({ mapRef }) {
+function SearchInput({ mapRef, setCollapsed, collapsed }) {
 
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
     const provider = new OpenStreetMapProvider();
 
     const [selectedOption, setSelectedOption] = useState([]);
@@ -50,30 +50,26 @@ function SearchInput({ mapRef }) {
 
     return (
         <>
-            { !show &&
-                <div className="row buttonSidebar" style={{ fontFamily: 'Roboto' }}>
-                    <div className="col-1 burgerButton" onClick={ handleShow }>
-                        <img src='./src/assets/icons/burgerButton.png' />
-                    </div>
-                    <div className="col-sm">
-                        <AsyncTypeahead
-                            className="searchInput"
-                            id="autocomplete-input"
-                            options={ options }
-                            onSearch={ handleSearch }
-                            onChange={ handleInputChange }
-                            selected={ selectedOption }
-                            placeholder="Telusuri Area Wilayah"
-                            labelKey="label"
-                        />
-                    </div>
-                    <div className="col-sm burgerSearch">
-                        <img src='./src/assets/icons/search_icon.png' />
-                    </div>
+            <div className="row buttonSidebar" style={{ fontFamily: 'Roboto', zIndex: '10000', position: 'fixed' }}>
+                <div className="col-1 burgerButton" onClick={() => setCollapsed(!collapsed)}>
+                    <img src={burgerIcon} />
                 </div>
-            }
-
-            <Sidebar show={ show } handleClose={ handleClose } mapRef={mapRef}/>
+                <div className="col-sm">
+                    <AsyncTypeahead
+                        className="searchInput"
+                        id="autocomplete-input"
+                        options={ options }
+                        onSearch={ handleSearch }
+                        onChange={ handleInputChange }
+                        selected={ selectedOption }
+                        placeholder="Telusuri Area Wilayah"
+                        labelKey="label"
+                    />
+                </div>
+                <div className="col-sm burgerSearch">
+                    <img src={searchIcon} />
+                </div>
+            </div>
         </>
     )
   }
