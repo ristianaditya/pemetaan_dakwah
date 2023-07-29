@@ -475,7 +475,7 @@ function Tables() {
                 <Input name="nama_penyelenggara" onChange={handleChange} value={values?.nama_penyelenggara ? values.nama_penyelenggara : "" }/>
               </FormControl>
               <FormControl isRequired mt="4" ml={{ lg: "2"}}>
-                <FormLabel>Tanggal Berakhir</FormLabel>  
+                <FormLabel>Alamat Penyelenggara</FormLabel>  
                 <Input name="alamat_penyelenggara" onChange={handleChange} value={values?.alamat_penyelenggara ? values.alamat_penyelenggara : "" }/>
               </FormControl>
             </Flex>
