@@ -28,6 +28,7 @@ import { PiMosque } from 'react-icons/pi';
 import { TbHomeShare } from 'react-icons/tb';
 import { SiGooglemaps } from 'react-icons/si';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { GiPublicSpeaker } from 'react-icons/gi';
 
 
 const dashboardRoutes = [
@@ -106,7 +107,7 @@ const dashboardRoutes = [
   {
     path: "/kegiatan_dakwah",
     name: "Kegiatan Dakwah",
-    icon: <SiGooglemaps color="inherit" />,
+    icon: <GiPublicSpeaker color="inherit" />,
     component: KegiatanDakwah,
     layout: "/maps/admin",
     show: true
