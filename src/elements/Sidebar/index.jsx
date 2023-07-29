@@ -1,6 +1,6 @@
 // import { push as Menu } from 'react-burger-menu';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import '../../assets/style/sideBar.scss';
 import '../../assets/style/toggleSwitch.scss';
@@ -8,6 +8,7 @@ import { PiMosque } from 'react-icons/pi';
 import { TbHomeShare } from 'react-icons/tb';
 import { BsCalendar2Date } from 'react-icons/bs';
 import { BiLineChartDown } from 'react-icons/bi';
+import { GiPublicSpeaker } from 'react-icons/GI';
 import iconMarker from '../../assets/icons/rumah.svg';
 import iconMarkerDakwah from '../../assets/icons/dakwah.svg';
 import iconMarkerMasjid from '../../assets/icons/masjid.svg';
@@ -16,6 +17,7 @@ import SidebarDakwah from './sidebarDakwah';
 import SearchInput from '../Maps/searchInput';
 import iconLogo from '../../assets/logo/logo.svg';
 import SidebarMasjid from './sidebarMasjid';
+import Calender from '../Maps/calender';
 
 
 export default function Sidebars({mapRef }) {
@@ -23,6 +25,9 @@ export default function Sidebars({mapRef }) {
     const handleCloseSidebarMasyarakat = () => setShowSidebarMasyarakat(false);
     const handleCloseSidebarDakwah = () => setShowSidebarDakwah(false);
     const handleCloseSidebarMasjid = () => setShowSidebarMasjid(false);
+
+    const buttonMasjid = useRef(null);
+    const buttonDakwah = useRef(null);
 
     const [markers, setMarkers] = useState([]);
     const [markersKurban, setMarkersKurban] = useState([]);
@@ -53,6 +58,8 @@ export default function Sidebars({mapRef }) {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [selectedMarkerMasjid, setSelectedMarkerMasjid] = useState(null);
 
+    const [collapsed, setCollapsed] = React.useState(false);
+
     const markerIcon = L.icon({
         iconUrl: iconMarker,
         iconSize: [50, 50],
@@ -68,12 +75,17 @@ export default function Sidebars({mapRef }) {
         iconSize: [50, 50],
     });
 
+    const [showCalender, setShowCalender] = useState(false);
+    const toggleModalCalender = () => {
+        setShowCalender(!showCalender);
+    };
+
     function onClickMasyarakat(markerData) {
         handleCloseSidebarDakwah();
         handleCloseSidebarMasjid();
         setTimeout(function() { setShowSidebarMasyarakat(true); }, 1000);
         setSelectedMarker(markerData);
-        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 15, {
+        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
             duration: 2, 
         });
     }
@@ -83,22 +95,22 @@ export default function Sidebars({mapRef }) {
         handleCloseSidebarMasyarakat()
         setTimeout(function() { setShowSidebarMasjid(true); }, 1000);
         setSelectedMarkerMasjid(markerData);
-        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 15, {
+        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
             duration: 2, 
         });
     }
 
     function onClickDakwah(markerData) {
         handleCloseSidebarMasyarakat();
-        handleCloseSidebarMasjid
+        handleCloseSidebarMasjid();
         setTimeout(function() { setShowSidebarDakwah(true); }, 1000);
         setSelectedMarkerDakwah(markerData);
-        if(markerData?.lng === 'undefined' || markerData?.lng === undefined){
-            mapRef.current.flyTo([markerData?.masjidId.lat, markerData?.masjidId.lng], 15, {
+        if(markerData?.lng === 'undefined' || markerData?.lng === undefined|| markerData?.lng === '' || markerData?.lng === null){
+            mapRef.current.flyTo([markerData?.masjidId.lat, markerData?.masjidId.lng], 17, {
                 duration: 2, 
             });
         }else{
-            mapRef.current.flyTo([markerData?.lat, markerData?.lng], 15, {
+            mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
                 duration: 2, 
             });
         }
@@ -125,6 +137,10 @@ export default function Sidebars({mapRef }) {
 
     useEffect(() => {
         fetchData();
+        setTimeout(() => {
+            buttonMasjid.current.click();
+            buttonDakwah.current.click();
+        }, 1000);
     }, []);
 
     const handdleToggleHome = async () => {
@@ -224,7 +240,8 @@ export default function Sidebars({mapRef }) {
             if (mapRef.current) {
                 const map = mapRef.current;
                 dataDakwah.forEach(markerData => {
-                    if(markerData?.lng === 'undefined' || markerData?.lng === undefined){
+                    console.log(markerData?.lng);
+                    if(markerData?.lng === 'undefined' || markerData?.lng === undefined|| markerData?.lng === '' || markerData?.lng === null){
                         const marker = L.marker([markerData?.masjidId.lat, markerData?.masjidId.lng], { icon: markerIconDakwah });
                         marker.addTo(map).on('click', () => onClickDakwah(markerData));
                         setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
@@ -253,20 +270,18 @@ export default function Sidebars({mapRef }) {
                 dataMasjid.forEach(markerData => {
                     const marker = L.marker([markerData?.lat, markerData?.lng], { icon: markerIconMasjid });
                     marker.addTo(map).on('click', () => onClickMasjid(markerData));
-                    setMarkersDakwah(prevMarkers => [...prevMarkers, marker]);
+                    setMarkersMasjid(prevMarkers => [...prevMarkers, marker]);
                 });
             }
         }else{
-            if (markersDakwah) {
-                markersDakwah.forEach(marker => {
+            if (markersMasjid) {
+                markersMasjid.forEach(marker => {
                     marker.remove();
                     });
-                    setMarkersDakwah([]);
+                    setMarkersMasjid([]);
             }
         }
     };
-    
-    const [collapsed, setCollapsed] = React.useState(false);
 return (
     <>  
         <div className='sideBar' style={{ display: 'flex', height: '100%', minHeight: '400px' }}>
@@ -284,20 +299,20 @@ return (
                             </div>
                             <div className='col dropdown-switch'>
                                 <label className="toggle-switch">
-                                    <input type="checkbox" onClick={ handdleToggleMasjid } />
+                                    <input ref={buttonMasjid} type="checkbox" onClick={ handdleToggleMasjid } />
                                     <span className="switch" />
                                 </label>
                             </div>
                         </div>
                     </MenuItem>
-                    <MenuItem icon={<h4><PiMosque color='#007800'/></h4> }>
+                    <MenuItem icon={<h4><GiPublicSpeaker color='#007800'/></h4> }>
                         <div className='input-group list-menu row'>
                             <div className='col-1 body-row-sidebar'>
                                 Pemetaan dakwah
                             </div>
                             <div className='col dropdown-switch'>
                                 <label className="toggle-switch">
-                                    <input type="checkbox" onClick={ handdleToggleDakwah } />
+                                    <input ref={buttonDakwah} type="checkbox" onClick={ handdleToggleDakwah } />
                                     <span className="switch" />
                                 </label>
                             </div>
@@ -373,7 +388,7 @@ return (
                             </div>
                         </div>
                     </MenuItem>
-                    <MenuItem icon={<h4><BsCalendar2Date color='#007800'/></h4> }>
+                    <MenuItem icon={<h4><BsCalendar2Date color='#007800'/></h4> } onClick={toggleModalCalender}>
                         <div className='input-group list-menu row'>
                             <div className='col-1 body-row-sidebar'>
                                 Kalender Dakwah
@@ -389,6 +404,7 @@ return (
                 { showSidebarMasjid &&<SidebarMasjid showSidebarMasjid={ showSidebarMasjid } handleCloseSidebarMasjid={ handleCloseSidebarMasjid } selectedMarkerMasjid={selectedMarkerMasjid}/> }
             </div>
         </div>
+        <Calender showCalender={showCalender} toggleModalCalender={toggleModalCalender} dataDakwah={dataDakwah} mapRef={mapRef}/>
     </>
     );
 }

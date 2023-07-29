@@ -369,10 +369,14 @@
   }
   .modal-backdrop {
     --bs-backdrop-zindex: 11081 !important;
-    --bs-backdrop-bg: #0000 !important;
+    --bs-backdrop-bg: #00000060 !important;
     --bs-backdrop-opacity: 5 !important;
-    backdrop-filter: blur(3px) !important;
+    backdrop-filter: blur(4px) !important;
   }
   .modal {
     --bs-modal-zindex: 111066 !important;
   }
+  .login-container {
+    max-width: 463px;
+    min-width: 350px !important;
+}

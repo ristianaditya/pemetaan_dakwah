@@ -11,6 +11,8 @@ import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
 import './assets/style/maps.scss';
 import 'typeface-roboto';
+import 'react-big-calendar/lib/sass/styles.scss';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AdminLayout from "./layouts/Admin.jsx";
