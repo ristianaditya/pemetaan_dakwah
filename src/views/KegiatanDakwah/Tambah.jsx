@@ -349,7 +349,7 @@ function Tables() {
             }
              <FormControl isRequired mt="4" >
               <FormLabel>Foto</FormLabel>  
-              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept="jpg, png, jpeg"/>
+              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept={"image/jpeg, image/png, image/gif, image/jpg"}/>
             </FormControl>
             {photoView != null &&
                 <FormControl isRequired mt="4" >
