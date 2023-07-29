@@ -12,7 +12,8 @@ import {
   HStack,
   Select,
   Switch,
-  IconButton
+  IconButton,
+  Image
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
@@ -24,6 +25,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 import { Icon } from "leaflet";
 import iconMarker from '../../assets/icons/Icon_Default.svg';
+import '../../assets/style/formStyle.scss';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -332,7 +334,10 @@ return (
           <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
           </>
           }
-
+           <FormControl mt="4" >
+            <FormLabel>Foto</FormLabel>  
+            <Image src={values?.foto ? values.foto : "" } h="200px" />
+          </FormControl>
           <FormControl isRequired mt="4">
             <FormLabel>Topik Dakwah</FormLabel>  
             <Input name="topikDakwah" onChange={handleChange} value={values?.topikDakwah ? values.topikDakwah : "" } disabled/>

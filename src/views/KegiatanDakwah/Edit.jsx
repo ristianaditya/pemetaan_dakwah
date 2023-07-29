@@ -11,7 +11,8 @@ import {
     Radio,
     HStack,
     Select,
-    Switch
+    Switch,
+    Image
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
@@ -22,7 +23,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 import { Icon } from "leaflet";
 import iconMarker from '../../assets/icons/Icon_Default.svg';
-
+import '../../assets/style/formStyle.scss';
 
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -37,7 +38,8 @@ function Tables() {
   const [isDakwahMasjid, setIsDakwahMasjid] = useState()
   const [dataMasjid, setDataMasjid] = useState([])
   const [idMasjid, setIdMasjid] = useState("")
-  
+  const [file, setFile] = useState();
+  const [photoView, setPhotoView] = useState(null);
   const [ token ] = useState(localStorage.getItem('access_token'));
 
   const mapRef = useRef(null)
@@ -87,6 +89,54 @@ function Tables() {
     }, 200);
 
   }
+
+  const handleChangePhoto = (e) => {
+
+    const file = e.target.files[0]
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setPhotoView(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+      setFile(file);
+    }
+  }
+
+  const postUpload = async () => {
+    const data = new FormData();
+    data.append("image", file)
+
+    try {
+      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + token,
+        }
+      }
+    )
+    .then(res => {
+      return res.data.imageUrl;
+    })
+
+    return response
+    } catch (error) {
+      toast.error('Gagal Upload Foto', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
+
 
   const getData = async () => {
     try {
@@ -162,43 +212,102 @@ function Tables() {
 
   const postRumah = async (values) => {
     let data;
-    if (isDakwahMasjid) {
-      data = {
-        masjidId: idMasjid,
-        lat: '',
-        lng: '',
-        pembicara: values.pembicara,
-        gelar_pembicara: values.gelar_pembicara,
-        asal_instansi_pembicara: values.asal_instansi_pembicara,
-        topikDakwah: values.topikDakwah,
-        kategori: values.kategori,
-        waktuMulai: values.waktuMulai,
-        waktuAkhir: values.waktuAkhir,
-        foto: "https://example.com/path/to/foto.jpg",
-        tipe_kegiatan: values.tipe_kegiatan,
-        nama_penyelenggara: values.nama_penyelenggara,
-        alamat_penyelenggara: values.alamat_penyelenggara,
-        penanggung_jawab: values.penanggung_jawab,
-        no_hp_penyelenggara: values.no_hp_penyelenggara
+    if (photoView != null) {
+      const fileUrl = await postUpload();
+
+      if (fileUrl == undefined) {
+        toast.error('Foto Wajib Diupload', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
+        return 
+      }
+
+      if (isDakwahMasjid) {
+        data = {
+          masjidId: idMasjid,
+          lat: '',
+          lng: '',
+          pembicara: values.pembicara,
+          gelar_pembicara: values.gelar_pembicara,
+          asal_instansi_pembicara: values.asal_instansi_pembicara,
+          topikDakwah: values.topikDakwah,
+          kategori: values.kategori,
+          waktuMulai: values.waktuMulai,
+          waktuAkhir: values.waktuAkhir,
+          foto: fileUrl,
+          tipe_kegiatan: values.tipe_kegiatan,
+          nama_penyelenggara: values.nama_penyelenggara,
+          alamat_penyelenggara: values.alamat_penyelenggara,
+          penanggung_jawab: values.penanggung_jawab,
+          no_hp_penyelenggara: values.no_hp_penyelenggara
+        }
+      } else {
+        data = {
+          masjidId: null,
+          lat: latitude,
+          lng: longtitude,
+          pembicara: values.pembicara,
+          gelar_pembicara: values.gelar_pembicara,
+          asal_instansi_pembicara: values.asal_instansi_pembicara,
+          topikDakwah: values.topikDakwah,
+          kategori: values.kategori,
+          waktuMulai: values.waktuMulai,
+          waktuAkhir: values.waktuAkhir,
+          foto: fileUrl,
+          tipe_kegiatan: values.tipe_kegiatan,
+          nama_penyelenggara: values.nama_penyelenggara,
+          alamat_penyelenggara: values.alamat_penyelenggara,
+          penanggung_jawab: values.penanggung_jawab,
+          no_hp_penyelenggara: values.no_hp_penyelenggara
+        }
       }
     } else {
-      data = {
-        masjidId: null,
-        lat: latitude,
-        lng: longtitude,
-        pembicara: values.pembicara,
-        gelar_pembicara: values.gelar_pembicara,
-        asal_instansi_pembicara: values.asal_instansi_pembicara,
-        topikDakwah: values.topikDakwah,
-        kategori: values.kategori,
-        waktuMulai: values.waktuMulai,
-        waktuAkhir: values.waktuAkhir,
-        foto: "https://example.com/path/to/foto.jpg",
-        tipe_kegiatan: values.tipe_kegiatan,
-        nama_penyelenggara: values.nama_penyelenggara,
-        alamat_penyelenggara: values.alamat_penyelenggara,
-        penanggung_jawab: values.penanggung_jawab,
-        no_hp_penyelenggara: values.no_hp_penyelenggara
+      if (isDakwahMasjid) {
+        data = {
+          masjidId: idMasjid,
+          lat: '',
+          lng: '',
+          pembicara: values.pembicara,
+          gelar_pembicara: values.gelar_pembicara,
+          asal_instansi_pembicara: values.asal_instansi_pembicara,
+          topikDakwah: values.topikDakwah,
+          kategori: values.kategori,
+          waktuMulai: values.waktuMulai,
+          waktuAkhir: values.waktuAkhir,
+          foto: values.foto,
+          tipe_kegiatan: values.tipe_kegiatan,
+          nama_penyelenggara: values.nama_penyelenggara,
+          alamat_penyelenggara: values.alamat_penyelenggara,
+          penanggung_jawab: values.penanggung_jawab,
+          no_hp_penyelenggara: values.no_hp_penyelenggara
+        }
+      } else {
+        data = {
+          masjidId: null,
+          lat: latitude,
+          lng: longtitude,
+          pembicara: values.pembicara,
+          gelar_pembicara: values.gelar_pembicara,
+          asal_instansi_pembicara: values.asal_instansi_pembicara,
+          topikDakwah: values.topikDakwah,
+          kategori: values.kategori,
+          waktuMulai: values.waktuMulai,
+          waktuAkhir: values.waktuAkhir,
+          foto: values.foto,
+          tipe_kegiatan: values.tipe_kegiatan,
+          nama_penyelenggara: values.nama_penyelenggara,
+          alamat_penyelenggara: values.alamat_penyelenggara,
+          penanggung_jawab: values.penanggung_jawab,
+          no_hp_penyelenggara: values.no_hp_penyelenggara
+        }
       }
     }
     
@@ -326,7 +435,19 @@ function Tables() {
             <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
             </>
             }
-
+             <FormControl mt="4" >
+                <FormLabel>Foto</FormLabel>  
+                <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e)}} accept="jpg, png, jpeg" />
+              </FormControl>
+              {photoView == null ? 
+                <FormControl isRequired mt="4" >
+                  <Image src={values?.foto ? values.foto : "" } h="200px" />
+                </FormControl>
+              :
+                <FormControl isRequired mt="4" >
+                  <Image src={photoView} h="200px" />
+                </FormControl>
+              }
             <FormControl isRequired mt="4">
               <FormLabel>Topik Dakwah</FormLabel>  
               <Input name="topikDakwah" onChange={handleChange} value={values?.topikDakwah ? values.topikDakwah : "" }/>
