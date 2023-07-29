@@ -15,6 +15,11 @@ import KegiatanDakwah from "./views/KegiatanDakwah/index.jsx";
 import KegiatanDakwahTambah from "./views/KegiatanDakwah/Tambah.jsx";
 import KegiatanDakwahEdit from "./views/KegiatanDakwah/Edit.jsx";
 import KegiatanDakwahDetail from "./views/KegiatanDakwah/Detail.jsx";
+// User
+import User from "./views/User/index.jsx";
+import UserTambah from "./views/User/Tambah.jsx";
+import UserEdit from "./views/User/Edit.jsx";
+import UserDetail from "./views/User/Detail.jsx";
 
 import {
   HomeIcon,
@@ -134,9 +139,33 @@ const dashboardRoutes = [
     path: "/management_user",
     name: "Manajemen User",
     icon: <AiOutlineUsergroupAdd color="inherit" />,
-    component: KegiatanDakwah,
+    component: User,
     layout: "/maps/admin",
     show: true
+  },
+  {
+    path: "/management_user/tambah",
+    name: "Manajemen User Tambah",
+    icon: <TbHomeShare color="inherit" />,
+    component: UserTambah,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/management_user/edit",
+    name: "Manajemen User Edit",
+    icon: <TbHomeShare color="inherit" />,
+    component: UserEdit,
+    layout: "/maps/admin",
+    show: false
+  },
+  {
+    path: "/management_user/detail",
+    name: "Manajemen User Detail",
+    icon: <TbHomeShare color="inherit" />,
+    component: UserDetail,
+    layout: "/maps/admin",
+    show: false
   },
 ];
 
