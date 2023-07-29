@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal } from 'react-bootstrap';
 import '../../assets/style/modalLogin.scss';
 import { LuLogIn } from 'react-icons/lu';
@@ -11,6 +11,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 export default function ModalLogin() {
 
+    const loginRef = useRef(null)
     const history = useHistory(); 
     const location = useLocation(); 
     const [showLogin, setShowLogin] = useState(false);
@@ -32,6 +33,12 @@ export default function ModalLogin() {
 
     const toggleGoDashboard = () => {
         history.push(location.pathname + '/admin');
+    }
+
+    const handleKeyLogin = (e) => {
+        if(e.key === 'Enter'){
+            loginRef.current.click();
+        }
     }
 
     const loginFunc = () => {
@@ -95,11 +102,11 @@ export default function ModalLogin() {
                             </div>
                             <div className="login-form-group">
                                 <label >Email <span className="required-star">*</span></label>
-                                <input type="text" placeholder="email@example.com" id="email" onChange={handleChange} />
+                                <input type="text" placeholder="email@example.com" id="email" onChange={handleChange} onKeyDown={handleKeyLogin}/>
                             </div>
                             <div className="login-form-group">
                                 <label >Password <span className="required-star">*</span></label>
-                                <input type="password" placeholder="Minimum 8 characters" id="password" onChange={handleChange}/>
+                                <input type="password" placeholder="Minimum 8 characters" id="password" onChange={handleChange} onKeyDown={handleKeyLogin}/>
                             </div>
 
                             <div className="login-form-group single-row">
@@ -109,7 +116,7 @@ export default function ModalLogin() {
                                 <a href="#" className="link forgot-link">Forgot Password ?</a>
                             </div>
 
-                            <button className="rounded-button login-cta" onClick={loginFunc}>Login</button>
+                            <button className="rounded-button login-cta" ref={loginRef} onClick={loginFunc}>Login</button>
                         </div>
 
                     </div>
