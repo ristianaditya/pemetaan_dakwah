@@ -123,7 +123,7 @@ export default function SidebarDakwah({ showSidebarDakwah, handleCloseSidebarDak
                             </ul>
                         </div>
                         <div className='titleBody'><BsFillFilePersonFill style={{ marginRight: '5px', marginBottom: '2.5px', color: '#16a75c' }} /> Penanggung Jawab</div>
-                        <div className='bodyData' style={{ fontSize: '14px', marginBottom: '30px' }}>
+                        <div className='bodyData' style={{ fontSize: '14px', marginBottom: '40px' }}>
                                 { selectedMarkerDakwah?.penanggung_jawab }
                         </div>
                     </div>

@@ -11,15 +11,10 @@ import '../../assets/style/sideBar.scss';
 export default function SidebarMasjid({ showSidebarMasjid, handleCloseSidebarMasjid, selectedMarkerMasjid }) {
     const [dataMasjid, setDataMasjid] = useState([]);
     const fetchData = async () => {
-        try {
             if(selectedMarkerMasjid?._id){
                 const response = await axios.get('https://api.petadakwah.site/api/petadakwah/filter/masjid?id='+selectedMarkerMasjid?._id);
-                console.log(response.data.petaDakwahs);
                 setDataMasjid(response.data.petaDakwahs)
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
         };
         useEffect(() => {
             fetchData();
@@ -54,7 +49,7 @@ export default function SidebarMasjid({ showSidebarMasjid, handleCloseSidebarMas
                     <div className="row header-sidebar">
                     </div>
                     <div className='scrollbox'>
-                    <div className="col-1 btn-side-back" onClick={handleCloseSidebarMasjid}>
+                        <div className="col-1 btn-side-back" onClick={handleCloseSidebarMasjid}>
                             <div ><h5 className='close-button'><FiX /></h5></div>
                         </div>
                         <img className='img-rumah' src={selectedMarkerMasjid?.foto} alt="new" />
@@ -92,7 +87,8 @@ export default function SidebarMasjid({ showSidebarMasjid, handleCloseSidebarMas
                                 </div>
                             </div>
                         ))}
-                        <div className='titleBody'></div>
+                        {(dataMasjid.length < 1)? <div className='row bodyData' style={{ marginBottom: '10px' }}><div className='textLeft'>Tidak ada event dakwah</div></div>:''}
+                        <div className='titleBody' style={{ marginBottom: '20px' }}></div>
                     </div>
                 </div>
             </Menu>
