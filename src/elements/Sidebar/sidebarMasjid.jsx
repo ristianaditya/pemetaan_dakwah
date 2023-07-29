@@ -54,7 +54,7 @@ export default function SidebarMasjid({ showSidebarMasjid, handleCloseSidebarMas
                     <div className="row header-sidebar">
                     </div>
                     <div className='scrollbox'>
-                    <div className="col-1 btn-side-back" onClick={handleCloseSidebarMasjid}>
+                        <div className="col-1 btn-side-back" onClick={handleCloseSidebarMasjid}>
                             <div ><h5 className='close-button'><FiX /></h5></div>
                         </div>
                         <img className='img-rumah' src={selectedMarkerMasjid?.foto} alt="new" />
@@ -92,7 +92,7 @@ export default function SidebarMasjid({ showSidebarMasjid, handleCloseSidebarMas
                                 </div>
                             </div>
                         ))}
-                        <div className='titleBody'></div>
+                        <div className='titleBody' style={{ marginBottom: '20px' }}></div>
                     </div>
                 </div>
             </Menu>

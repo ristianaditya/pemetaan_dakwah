@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import '../../assets/style/modalLogin.scss';
-import { FcGoogle } from 'react-icons/fc';
+import { LuLogIn } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logoIcon from '../../assets/logo/logo.svg';
 import { useHistory, useLocation } from 'react-router-dom';
 
 export default function ModalLogin() {
@@ -17,7 +18,6 @@ export default function ModalLogin() {
         setShowLogin(!showLogin);
     };
     const token = localStorage.getItem('access_token') != "" && localStorage.getItem('access_token') ? true : false
-    console.log(token);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const handleChange = (e) => {
@@ -83,7 +83,7 @@ export default function ModalLogin() {
             {token ?
                 <button className="btn btn-success login-button" style={{ fontFamily: 'Roboto' }} onClick={toggleGoDashboard}>Dashboard</button>
             : 
-                <button className="btn btn-success login-button" style={{ fontFamily: 'Roboto' }} onClick={toggleModalLogin}>Login</button>
+                <button className="btn btn-success login-button" style={{ fontFamily: 'Roboto' }} onClick={toggleModalLogin}><LuLogIn /> Login</button>
             }
 
 
@@ -91,14 +91,8 @@ export default function ModalLogin() {
                 <div className="login-container">
                     <div className="login-form">
                         <div className="login-form-inner">
-                            <img src='./src/assets/logo/logoAljabar.svg' className='image_logo'/>
-
-                            {/* <a href="#" className="rounded-button google-login-button">
-                                <FcGoogle className='iconGoogle'/> <span> Sign in with google</span>
-                            </a> */}
-
+                            <img src={ logoIcon } className='image_logo' style={{ height:' 65px' }}/>
                             <div className="sign-in-seperator pb-4">
-                                {/* <span>or Sign in with Email</span> */}
                             </div>
                             <div className="login-form-group">
                                 <label >Email <span className="required-star">*</span></label>
@@ -109,12 +103,12 @@ export default function ModalLogin() {
                                 <input type="password" placeholder="Minimum 8 characters" id="password" onChange={handleChange}/>
                             </div>
 
-                            {/* <div className="login-form-group single-row">
+                            <div className="login-form-group single-row">
                                 <div className="custom-check">
                                 </div>
 
                                 <a href="#" className="link forgot-link">Forgot Password ?</a>
-                            </div> */}
+                            </div>
 
                             <button className="rounded-button login-cta" onClick={loginFunc}>Login</button>
                         </div>

@@ -73,7 +73,7 @@ export default function Sidebars({mapRef }) {
         handleCloseSidebarMasjid();
         setTimeout(function() { setShowSidebarMasyarakat(true); }, 1000);
         setSelectedMarker(markerData);
-        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
+        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 15, {
             duration: 2, 
         });
     }
@@ -83,7 +83,7 @@ export default function Sidebars({mapRef }) {
         handleCloseSidebarMasyarakat()
         setTimeout(function() { setShowSidebarMasjid(true); }, 1000);
         setSelectedMarkerMasjid(markerData);
-        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
+        mapRef.current.flyTo([markerData?.lat, markerData?.lng], 15, {
             duration: 2, 
         });
     }
@@ -94,11 +94,11 @@ export default function Sidebars({mapRef }) {
         setTimeout(function() { setShowSidebarDakwah(true); }, 1000);
         setSelectedMarkerDakwah(markerData);
         if(markerData?.lng === 'undefined' || markerData?.lng === undefined){
-            mapRef.current.flyTo([markerData?.masjidId.lat, markerData?.masjidId.lng], 17, {
+            mapRef.current.flyTo([markerData?.masjidId.lat, markerData?.masjidId.lng], 15, {
                 duration: 2, 
             });
         }else{
-            mapRef.current.flyTo([markerData?.lat, markerData?.lng], 17, {
+            mapRef.current.flyTo([markerData?.lat, markerData?.lng], 15, {
                 duration: 2, 
             });
         }
