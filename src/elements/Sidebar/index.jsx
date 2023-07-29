@@ -8,7 +8,7 @@ import { PiMosque } from 'react-icons/pi';
 import { TbHomeShare } from 'react-icons/tb';
 import { BsCalendar2Date } from 'react-icons/bs';
 import { BiLineChartDown } from 'react-icons/bi';
-import { GiPublicSpeaker } from 'react-icons/GI';
+import { GiPublicSpeaker } from 'react-icons/gi';
 import iconMarker from '../../assets/icons/rumah.svg';
 import iconMarkerDakwah from '../../assets/icons/dakwah.svg';
 import iconMarkerMasjid from '../../assets/icons/masjid.svg';
