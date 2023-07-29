@@ -10,7 +10,8 @@ import {
     RadioGroup,
     Radio,
     HStack,
-    Select
+    Select,
+    Image
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
@@ -21,6 +22,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 import { Icon } from "leaflet";
 import iconMarker from '../../assets/icons/Icon_Default.svg';
+import '../../assets/style/formStyle.scss';
 
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -32,6 +34,8 @@ function Tables() {
 
   const [latitude, setLatitude] = useState("");
   const [longtitude, setLongtitude] = useState("");
+  const [file, setFile] = useState();
+  const [photoView, setPhotoView] = useState(null);
   
   const [ token ] = useState(localStorage.getItem('access_token'));
 
@@ -65,17 +69,82 @@ function Tables() {
     history.push(location.pathname.replace('/tambah', ''));
   }
 
+  const handleChangePhoto = (e) => {
+    const file = e.target.files[0]
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setPhotoView(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+      setFile(file);
+    }
+  }
+
+  const postUpload = async () => {
+    const data = new FormData();
+    data.append("image", file)
+
+    try {
+      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + token,
+        }
+      }
+    )
+    .then(res => {
+      return res.data.imageUrl;
+    })
+
+    return response
+    } catch (error) {
+      toast.error('Gagal Upload Foto', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
+
   const postRumah = async (values) => {
+
+    const fileUrl = await postUpload();
+
+    if (fileUrl == undefined) {
+      toast.error('Foto Wajib Diupload', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      return 
+    }
+
     const data = {
       namaMasjid: values.namaMasjid,
       ketuaDKM: values.ketuaDKM,
       tahunBerdiri: values.tahunBerdiri,
       jumlahJamaah: values.jumlahJamaah,
       alamat: values.alamat,
-      foto: "https://asset-2.tstatic.net/banjarmasin/foto/bank/images/masjid-sinar-sabilal-muhtadin-atau-yang-biasa-disebut-masjid-timbul.jpg",
+      foto: fileUrl,
       lat: latitude,
       lng: longtitude
     }
+
 
     try {
       const response = await axios.post(`https://api.petadakwah.site/api/masjid/create`, data, {
@@ -171,6 +240,15 @@ function Tables() {
               <FormLabel>Alamat</FormLabel>  
               <Input name="alamat" onChange={handleChange}/>
             </FormControl>
+            <FormControl isRequired mt="4" >
+              <FormLabel>Foto</FormLabel>  
+              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept="jpg, png, jpeg"/>
+            </FormControl>
+            {photoView != null &&
+                <FormControl isRequired mt="4" >
+                  <Image src={photoView} h="200px" />
+                </FormControl>
+              }
             <Flex mt="4">
               <MapContainer 
                 center={[-6.947794701156682, 107.70349499168313]} 

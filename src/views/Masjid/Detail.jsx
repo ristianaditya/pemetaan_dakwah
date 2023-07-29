@@ -11,7 +11,8 @@ import {
   Radio,
   HStack,
   Select,
-  IconButton
+  IconButton,
+  Image
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
@@ -23,6 +24,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 import { Icon } from "leaflet";
 import iconMarker from '../../assets/icons/Icon_Default.svg';
+import '../../assets/style/formStyle.scss';
 
 
 import Card from "../../components/Card/Card.jsx";
@@ -35,7 +37,7 @@ const textColor = useColorModeValue("gray.700", "white");
 
 const [latitude, setLatitude] = useState("");
 const [longtitude, setLongtitude] = useState("");
-const [angkeluarga, setAngkeluarga] = useState([
+  const [angkeluarga, setAngkeluarga] = useState([
   {
     id: 0
   }
@@ -224,6 +226,10 @@ return (
           <FormControl isRequired mt="4" >
             <FormLabel>Alamat</FormLabel>  
             <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" } disabled/>
+          </FormControl>
+          <FormControl mt="4" >
+            <FormLabel>Foto</FormLabel>  
+            <Image src={values?.foto ? values.foto : "" } h="200px" />
           </FormControl>
           <Flex mt="4">
             <MapContainer 

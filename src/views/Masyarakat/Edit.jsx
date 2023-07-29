@@ -10,7 +10,8 @@ import {
     RadioGroup,
     Radio,
     HStack,
-    Select
+    Select,
+    Image
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
@@ -22,7 +23,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 import { Icon } from "leaflet";
 import iconMarker from '../../assets/icons/Icon_Default.svg';
-
+import '../../assets/style/formStyle.scss';
 
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -34,6 +35,8 @@ function Tables() {
 
   const [latitude, setLatitude] = useState("");
   const [longtitude, setLongtitude] = useState("107.70349499168313");
+  const [file, setFile] = useState();
+  const [photoView, setPhotoView] = useState(null);
   const [angkeluarga, setAngkeluarga] = useState([
     {
       nama: "",
@@ -70,6 +73,53 @@ function Tables() {
     iconUrl: iconMarker,
     iconSize: [50, 50]
   });
+
+  const handleChangePhoto = (e) => {
+
+    const file = e.target.files[0]
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setPhotoView(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+      setFile(file);
+    }
+  }
+
+  const postUpload = async () => {
+    const data = new FormData();
+    data.append("image", file)
+
+    try {
+      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + token,
+        }
+      }
+    )
+    .then(res => {
+      return res.data.imageUrl;
+    })
+
+    return response
+    } catch (error) {
+      toast.error('Gagal Upload Foto', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
   
 
   const getData = async () => {
@@ -154,6 +204,7 @@ function Tables() {
   }
 
   const postRumah = async (values) => {
+
     const data = {
       keaktifanShalat: values.keaktifanShalat,
       informasiHaji: values.informasiHaji,
@@ -174,16 +225,45 @@ function Tables() {
         }
       }
     )
-    .then(res => {
-      const data = res.data.rumah;
-      const dataKeluarga = {
-        rumah: data._id,
-        kepalaKeluarga: values.kepalaKeluarga,
-        anggotaKeluarga: values.anggotaKeluarga,
-        fotoRumah: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmorefurniture.id%2Fartikel%2Frumah-minimalis-warna-biru&psig=AOvVaw21UQ24OgmUda4Emcv-E0Ju&ust=1690464034492000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCgn7S7rIADFQAAAAAdAAAAABAE"
+    .then( async (res) => {
+      const dataRumah = res.data.rumah;
+
+      let dataFormRumah;
+      if (photoView != "") {
+        const fileUrl = await postUpload();
+  
+        if (fileUrl == undefined) {
+          toast.error('Foto Wajib Diupload', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+  
+          return 
+        }
+  
+        dataFormRumah = {
+          rumah: dataRumah._id,
+          kepalaKeluarga: values.kepalaKeluarga,
+          anggotaKeluarga: values.anggotaKeluarga,
+          fotoRumah: fileUrl
+        }
+      } else {
+        dataFormRumah = {
+          rumah: dataRumah._id,
+          kepalaKeluarga: values.kepalaKeluarga,
+          anggotaKeluarga: values.anggotaKeluarga,
+          fotoRumah: dataRumah.fotoRumah
+        }
       }
+
       try {
-        axios.put(`https://api.petadakwah.site/api/keluarga/` + data._id, dataKeluarga, {
+        axios.put(`https://api.petadakwah.site/api/keluarga/` + dataRumah._id, dataFormRumah, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -281,7 +361,7 @@ function Tables() {
               <FormLabel as="legend">Kemampuan Baca Quran</FormLabel>
               <RadioGroup name="kemampuanBacaQuran" value={values?.kemampuanBacaQuran ? values.kemampuanBacaQuran : ""}>
                 <HStack spacing="24px" onChange={handleChange}>
-                  <Radio value="tidak Bisa">Tidak Bisa</Radio>
+                  <Radio value="tidak bisa">Tidak Bisa</Radio>
                   <Radio value="terbata-bata">Terbata-bata</Radio>
                   <Radio value="fasih">Fasih</Radio>
                 </HStack>
@@ -337,6 +417,19 @@ function Tables() {
               <FormLabel>Alamat</FormLabel>  
               <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" }/>
             </FormControl>
+            <FormControl mt="4" >
+                <FormLabel>Foto</FormLabel>  
+                <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e)}} accept="jpg, png, jpeg" />
+              </FormControl>
+              {photoView == null ? 
+                <FormControl isRequired mt="4" >
+                  <Image src={values?.fotoRumah ? values.fotoRumah : "" } h="200px" />
+                </FormControl>
+              :
+                <FormControl isRequired mt="4" >
+                  <Image src={photoView} h="200px" />
+                </FormControl>
+              }
             <Separator mt="10" mb="10"/>
             <FormControl mt="4" >
               <FormLabel><b>Kepala Keluarga</b></FormLabel>  

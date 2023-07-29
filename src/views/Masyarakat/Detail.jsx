@@ -11,7 +11,8 @@ import {
   Radio,
   HStack,
   Select,
-  IconButton
+  IconButton,
+  Image
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
@@ -24,7 +25,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 import { Icon } from "leaflet";
 import iconMarker from '../../assets/icons/Icon_Default.svg';
-
+import '../../assets/style/formStyle.scss';
 
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -293,7 +294,7 @@ return (
             <FormLabel as="legend">Kemampuan Baca Quran</FormLabel>
             <RadioGroup name="kemampuanBacaQuran" value={values?.kemampuanBacaQuran ? values.kemampuanBacaQuran : ""} isDisabled={true}>
               <HStack spacing="24px" onChange={handleChange}>
-                <Radio value="tidak Bisa">Tidak Bisa</Radio>
+                <Radio value="tidak bisa">Tidak Bisa</Radio>
                 <Radio value="terbata-bata">Terbata-bata</Radio>
                 <Radio value="fasih">Fasih</Radio>
               </HStack>
@@ -348,6 +349,10 @@ return (
           <FormControl isRequired mt="4" >
             <FormLabel>Alamat</FormLabel>  
             <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" } disabled/>
+          </FormControl>
+          <FormControl mt="4" >
+            <FormLabel>Foto</FormLabel>  
+            <Image src={values?.fotoRumah ? values.fotoRumah : "" } h="200px" />
           </FormControl>
           <Separator mt="10" mb="10"/>
           <FormControl mt="4" >

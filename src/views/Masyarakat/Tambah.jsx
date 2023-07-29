@@ -10,7 +10,8 @@ import {
     RadioGroup,
     Radio,
     HStack,
-    Select
+    Select,
+    Image
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
@@ -22,8 +23,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
 import { Icon } from "leaflet";
 import iconMarker from '../../assets/icons/Icon_Default.svg';
-
-
+import '../../assets/style/formStyle.scss';
 
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -35,6 +35,8 @@ function Tables() {
 
   const [latitude, setLatitude] = useState("");
   const [longtitude, setLongtitude] = useState("");
+  const [file, setFile] = useState();
+  const [photoView, setPhotoView] = useState(null);
   const [angkeluarga, setAngkeluarga] = useState([
     {
       id: 0
@@ -81,9 +83,72 @@ function Tables() {
     iconUrl: iconMarker,
     iconSize: [50, 50]
   });
-  
+
+  const handleChangePhoto = (e) => {
+    const file = e.target.files[0]
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setPhotoView(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+      setFile(file);
+    }
+  }
+
+  const postUpload = async () => {
+    const data = new FormData();
+    data.append("image", file)
+
+    try {
+      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + token,
+        }
+      }
+    )
+    .then(res => {
+      return res.data.imageUrl;
+    })
+
+    return response
+    } catch (error) {
+      toast.error('Gagal Upload Foto', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
 
   const postRumah = async (values) => {
+
+    const fileUrl = await postUpload();
+
+    if (fileUrl == undefined) {
+      toast.error('Foto Wajib Diupload', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      return 
+    }
+
     const data = {
       keaktifanShalat: values.keaktifanShalat,
       informasiHaji: values.informasiHaji,
@@ -109,7 +174,7 @@ function Tables() {
         rumah: data._id,
         kepalaKeluarga: values.kepalaKeluarga,
         anggotaKeluarga: values?.anggotaKeluarga ? values?.anggotaKeluarga : [],
-        fotoRumah: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmorefurniture.id%2Fartikel%2Frumah-minimalis-warna-biru&psig=AOvVaw21UQ24OgmUda4Emcv-E0Ju&ust=1690464034492000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCgn7S7rIADFQAAAAAdAAAAABAE"
+        fotoRumah: fileUrl
       }
       try {
         axios.post(`https://api.petadakwah.site/api/keluarga/create`, dataKeluarga, {
@@ -182,7 +247,7 @@ function Tables() {
           lat: "",
           lng: "",
           alamat: "",
-          fotoRumah: "https://asset-2.tstatic.net/banjarmasin/foto/bank/images/masjid-sinar-sabilal-muhtadin-atau-yang-biasa-disebut-masjid-timbul.jpg"
+          fotoRumah: ""
         }}
         onSubmit={(values, { setSubmitting }) => {
           if (latitude == "" || longtitude == "") {
@@ -216,7 +281,6 @@ function Tables() {
           isSubmitting,
         }) => (
           <Form onSubmit={handleSubmit}>
-            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
             <FormControl isRequired>
               <FormLabel as="legend">Keaktifan Sholat</FormLabel>
               <RadioGroup name="keaktifanShalat" defaultValue={values.keaktifanShalat}>
@@ -237,8 +301,6 @@ function Tables() {
                 </HStack>
               </RadioGroup>
             </FormControl>
-            </Flex>
-            <Flex flexDirection={{ sm: 'column', md: "column", lg: "row" }}>
             <FormControl isRequired mt="4">
               <FormLabel as="legend">Informasi Haji</FormLabel>
               <RadioGroup name="informasiHaji" defaultValue={values.informasiHaji}>
@@ -266,7 +328,6 @@ function Tables() {
                 </HStack>
               </RadioGroup>
             </FormControl>
-            </Flex>
             <Separator mt="10" mb="10"/>
             <MapContainer center={[-6.947794701156682, 107.70349499168313]} zoom={17} scrollWheelZoom={false} ref={mapRef} style={{ width: "100%", height: "40vh" }}>
               <TileLayer
@@ -290,6 +351,15 @@ function Tables() {
               <FormLabel>Alamat</FormLabel>  
               <Input name="alamat" onChange={handleChange}/>
             </FormControl>
+            <FormControl isRequired mt="4" >
+              <FormLabel>Foto</FormLabel>  
+              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept="jpg, png, jpeg"/>
+            </FormControl>
+            {photoView != null &&
+              <FormControl isRequired mt="4" >
+                <Image src={photoView} h="200px" />
+              </FormControl>
+            }
             <Separator mt="10" mb="10"/>
             <FormControl mt="4" >
               <FormLabel><b>Kepala Keluarga</b></FormLabel>  

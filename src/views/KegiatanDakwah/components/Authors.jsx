@@ -107,8 +107,8 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
       )
       .then(res => {
         setPending( false );
-        setRowssearch(res.data.petaDakwah)
-        setRowsfilter(res.data.petaDakwah)
+        setRowssearch(res.data.petaDakwahs)
+        setRowsfilter(res.data.petaDakwahs)
       })
     } else {
       setRowssearch([])
