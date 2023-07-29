@@ -47,6 +47,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const [ deleteid, onDeleteid] = useState("");
   const [ deleting, setDeleting] = useState(false);
   const [ token ] = useState(localStorage.getItem('access_token'));
+  const [ user ] = useState(JSON.parse(localStorage.getItem('user')));
 
   const mainTeal = useColorModeValue("teal.300", "teal.300");
   const searchIconColor = useColorModeValue("gray.700", "gray.200");
@@ -60,14 +61,14 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     let dataFiltered
     if (rowssearch.length > 0) {
       dataFiltered = rowssearch.filter(el => 
-        el.namaMasjid
+        el.name
         .toString()
         .toLowerCase()
         .includes(searchInput.toLowerCase())  
       );
     } else {
       dataFiltered = rows.filter(el => 
-        el.namaMasjid
+        el.name
         .toString()
         .toLowerCase()
         .includes(searchInput.toLowerCase())  
@@ -122,7 +123,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
     setPending(true);
     try {
-      await axios.delete(`https://api.petadakwah.site/api/masjid/` + deleteid, {
+      await axios.delete(`https://api.petadakwah.site/api/user/` + deleteid, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -158,33 +159,19 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
   const columns = [
     {
-        name: 'Nama Masjid',
-        selector: row => row.namaMasjid ? row.namaMasjid : "",
+        name: 'Nama',
+        selector: row => row.name ? row.name : "",
     },
     {
-        name: 'Ketau DKM',
-        selector: row => row.ketuaDKM ? row.ketuaDKM : "",
-    },
-    {
-      name: 'Tahun Berdiri',
-      selector: row => row.tahunBerdiri ? row.tahunBerdiri : "",
-    },
-    {
-      name: 'Jumlah Jamaah',
-      selector: row => row.jumlahJamaah ? row.jumlahJamaah : "",
-    },
-    {
-      name: 'Alamat',
-      minWidth: '250px',
-      selector: row => row.alamat ? row.alamat : "",
-
+        name: 'Email',
+        selector: row => row.email ? row.email : "",
     },
     {
         name: 'Aksi',
         center: true,
         cell: (row) => (
           <>
-          <Button
+          {/* <Button
             colorScheme='teal'
             variant='solid'
             fontSize='xs'
@@ -192,7 +179,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
             onClick={() => buttonDetail(row._id)}
             >
             Detail
-          </Button>
+          </Button> */}
          <Button
             colorScheme='teal'
             variant='solid'
@@ -207,6 +194,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
             variant='solid'
             fontSize='xs'
             p='8px 32px'
+            isDisabled={user._id == row._id}
             onClick={() => {
               onDeleteid(row._id)
               onOpen(row)
@@ -222,7 +210,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   useEffect(() => {
-    axios.get(`https://api.petadakwah.site/api/masjid`, 
+    axios.get(`https://api.petadakwah.site/api/user`, 
         {
           headers: {
             'Content-Type': 'application/json',
@@ -231,7 +219,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
         }
       )
       .then(res => {
-        const data = res.data.masjids;
+        const data = res.data.users;
         setDeleting(false)
         setRows( data );
         setPending( false );
