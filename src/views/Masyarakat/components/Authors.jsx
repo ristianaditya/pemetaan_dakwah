@@ -63,11 +63,15 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     }
   }
 
+  const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   const onHapus = async () => {
 
     setPending(true);
     try {
-      await axios.delete(`http://api.petadakwah.site/api/rumah/` + deleteid, {
+      await axios.delete(`https://api.petadakwah.site/api/rumah/` + deleteid, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -113,12 +117,12 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     },
     {
       name: 'Sholat',
-      selector: row => row.keaktifanShalat ? row.keaktifanShalat : "",
+      selector: row => row.keaktifanShalat ? capitalize(row.keaktifanShalat) : "",
       sortable: true,
     },
     {
       name: 'Baca Alqur`an',
-      selector: row => row.kemampuanBacaQuran ? row.kemampuanBacaQuran : "",
+      selector: row => row.kemampuanBacaQuran ? capitalize(row.kemampuanBacaQuran) : "",
       sortable: true,
     },
     {
@@ -174,7 +178,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   useEffect(() => {
-    axios.get(`http://api.petadakwah.site/api/rumah`, 
+    axios.get(`https://api.petadakwah.site/api/rumah`, 
         {
           headers: {
             'Content-Type': 'application/json',

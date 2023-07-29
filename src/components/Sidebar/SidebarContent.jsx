@@ -14,6 +14,7 @@ import { CreativeTimLogo } from "../Icons/Icons";
 import { Separator } from "../Separator/Separator";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import logoAljabar from "../../assets/logo/logo.svg";
 
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
@@ -173,7 +174,7 @@ const SidebarContent = ({ logoText, routes }) => {
           fontSize="11px"
         >
           {/* <CreativeTimLogo w="32px" h="32px" me="10px" /> */}
-          <Image src={"../../src/assets/logo/logoAljabar.svg"} alt="PEMENTAAN DAKWAH" h="32px" /> 
+          <Image src={logoAljabar} alt="PEMENTAAN DAKWAH" h="50px" /> 
           {/* <Text fontSize="sm" mt="3px">
             {logoText}
           </Text> */}

@@ -60,14 +60,14 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
     let dataFiltered
     if (rowssearch.length > 0) {
       dataFiltered = rowssearch.filter(el => 
-        el.namaMasjid
+        el.topikDakwah
         .toString()
         .toLowerCase()
         .includes(searchInput.toLowerCase())  
       );
     } else {
       dataFiltered = rows.filter(el => 
-        el.namaMasjid
+        el.topikDakwah
         .toString()
         .toLowerCase()
         .includes(searchInput.toLowerCase())  
@@ -107,8 +107,8 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
       )
       .then(res => {
         setPending( false );
-        setRowssearch(res.data.petaDakwah)
-        setRowsfilter(res.data.petaDakwah)
+        setRowssearch(res.data.petaDakwahs)
+        setRowsfilter(res.data.petaDakwahs)
       })
     } else {
       setRowssearch([])
@@ -122,7 +122,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
     setPending(true);
     try {
-      await axios.delete(`https://api.petadakwah.site/api/masjid/` + deleteid, {
+      await axios.delete(`https://api.petadakwah.site/api/petadakwah/` + deleteid, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -158,26 +158,21 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
   const columns = [
     {
-        name: 'Nama Masjid',
-        selector: row => row.namaMasjid ? row.namaMasjid : "",
+        name: 'Topik Dakwah',
+        selector: row => row.topikDakwah ? row.topikDakwah : "",
     },
     {
-        name: 'Ketau DKM',
-        selector: row => row.ketuaDKM ? row.ketuaDKM : "",
+        name: 'Pembicara',
+        selector: row => row.pembicara ? row.pembicara : "",
     },
     {
-      name: 'Tahun Berdiri',
-      selector: row => row.tahunBerdiri ? row.tahunBerdiri : "",
+        name: 'Tanggal Mulai',
+        width: '250px',
+        selector: row => row.waktuAkhir ? dayjs(row.waktuMulai).format("DD MMMM YYYY H:mm") : "",
     },
     {
-      name: 'Jumlah Jamaah',
-      selector: row => row.jumlahJamaah ? row.jumlahJamaah : "",
-    },
-    {
-      name: 'Alamat',
-      minWidth: '250px',
-      selector: row => row.alamat ? row.alamat : "",
-
+        name: 'Kategori',
+        selector: row => row.kategori ? capitalize(row.kategori) : "",
     },
     {
         name: 'Aksi',
@@ -222,7 +217,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   useEffect(() => {
-    axios.get(`https://api.petadakwah.site/api/masjid`, 
+    axios.get(`https://api.petadakwah.site/api/petadakwah`, 
         {
           headers: {
             'Content-Type': 'application/json',
@@ -231,7 +226,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
         }
       )
       .then(res => {
-        const data = res.data.masjids;
+        const data = res.data.petaDakwahs;
         setDeleting(false)
         setRows( data );
         setPending( false );
@@ -293,7 +288,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
             borderRadius="inherit"
           />
         </InputGroup>
-        {/* <Select name="kategori" defaultValue={""} w={ "170px"} value={filterval} onChange={onFilter}>
+        <Select name="kategori" defaultValue={""} w={ "170px"} value={filterval} onChange={onFilter}>
           <option value={""}>-- Kategori --</option>
           <option value={"kehidupan"}>Kehidupan</option>
           <option value={"ibadah"}>Ibadah</option>
@@ -302,7 +297,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
           <option value={"akhlak"}>Akhlak</option>
           <option value={"toleransi"}>Toleransi</option>
           <option value={"tauhid"}>Tauhid</option>
-        </Select> */}
+        </Select>
         </Flex>
         {/*  */}
         <DataTable

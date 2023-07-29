@@ -10,15 +10,20 @@ import {
     RadioGroup,
     Radio,
     HStack,
-    Select
+    Select,
+    Image
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Formik, Form } from 'formik';
 import { FaPlusCircle  } from "react-icons/fa"
+import { BiLocationPlus  } from "react-icons/bi"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory, useLocation } from 'react-router-dom';
-
+import { MapContainer, TileLayer, ZoomControl, Marker } from 'react-leaflet';
+import { Icon } from "leaflet";
+import iconMarker from '../../assets/icons/Icon_Default.svg';
+import '../../assets/style/formStyle.scss';
 
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -29,32 +34,97 @@ function Tables() {
   const textColor = useColorModeValue("gray.700", "white");
 
   const [latitude, setLatitude] = useState("");
-  const [longtitude, setLongtitude] = useState("");
+  const [longtitude, setLongtitude] = useState("107.70349499168313");
+  const [file, setFile] = useState();
+  const [photoView, setPhotoView] = useState(null);
   const [angkeluarga, setAngkeluarga] = useState([
     {
-      id: 0
+      nama: "",
+      peran: "",
+      usia: "",
+      pekerjaan: "",
     }
   ]);
   const [ token ] = useState(localStorage.getItem('access_token'));
+
+  const mapRef = useRef(null)
 
   const [iditem, setIditem] = useState(localStorage.getItem("idEdit"));
   const [dataMaster, setDataMaster] = useState();
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-
-      setLatitude(latitude.toString());
-      setLongtitude(longitude.toString());
-    });
+    
 
     getData()
 
   }, []);
 
+  const latlongHandle =  async () => {
+     await navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      setLatitude(latitude.toString());
+      setLongtitude(longitude.toString());
+      mapRef.current.flyTo([latitude, longitude], 18, { duration: 2 });
+    });
+
+  }
+
+  const myIcon = new Icon({
+    iconUrl: iconMarker,
+    iconSize: [50, 50]
+  });
+
+  const handleChangePhoto = (e) => {
+
+    const file = e.target.files[0]
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setPhotoView(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+      setFile(file);
+    }
+  }
+
+  const postUpload = async () => {
+    const data = new FormData();
+    data.append("image", file)
+
+    try {
+      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + token,
+        }
+      }
+    )
+    .then(res => {
+      return res.data.imageUrl;
+    })
+
+    return response
+    } catch (error) {
+      toast.error('Gagal Upload Foto', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
+  
+
   const getData = async () => {
     try {
-      const response = await axios.get(`http://api.petadakwah.site/api/rumah/` + iditem, 
+      const response = await axios.get(`https://api.petadakwah.site/api/rumah/` + iditem, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -63,10 +133,13 @@ function Tables() {
       }
     )
     .then(res => {
-      const data = res.data.keluarga;
+      const data = res.data.keluargas;
+      setLatitude(data.lat);
+      setLongtitude(data.lng);
+      mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
 
       try {
-        axios.get(`http://api.petadakwah.site/api/keluarga/` + data.RumahId, {
+        axios.get(`https://api.petadakwah.site/api/keluarga/` + data.RumahId, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -131,6 +204,7 @@ function Tables() {
   }
 
   const postRumah = async (values) => {
+
     const data = {
       keaktifanShalat: values.keaktifanShalat,
       informasiHaji: values.informasiHaji,
@@ -144,23 +218,52 @@ function Tables() {
     const rumahId = values.RumahId
 
     try {
-      const response = await axios.put(`http://api.petadakwah.site/api/rumah/` + rumahId, data, {
+      const response = await axios.put(`https://api.petadakwah.site/api/rumah/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
         }
       }
     )
-    .then(res => {
-      const data = res.data.rumah;
-      const dataKeluarga = {
-        rumah: data._id,
-        kepalaKeluarga: values.kepalaKeluarga,
-        anggotaKeluarga: values.anggotaKeluarga,
-        fotoRumah: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmorefurniture.id%2Fartikel%2Frumah-minimalis-warna-biru&psig=AOvVaw21UQ24OgmUda4Emcv-E0Ju&ust=1690464034492000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCgn7S7rIADFQAAAAAdAAAAABAE"
+    .then( async (res) => {
+      const dataRumah = res.data.rumah;
+
+      let dataFormRumah;
+      if (photoView != "") {
+        const fileUrl = await postUpload();
+  
+        if (fileUrl == undefined) {
+          toast.error('Foto Wajib Diupload', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+  
+          return 
+        }
+  
+        dataFormRumah = {
+          rumah: dataRumah._id,
+          kepalaKeluarga: values.kepalaKeluarga,
+          anggotaKeluarga: values.anggotaKeluarga,
+          fotoRumah: fileUrl
+        }
+      } else {
+        dataFormRumah = {
+          rumah: dataRumah._id,
+          kepalaKeluarga: values.kepalaKeluarga,
+          anggotaKeluarga: values.anggotaKeluarga,
+          fotoRumah: dataRumah.fotoRumah
+        }
       }
+
       try {
-        axios.put(`http://api.petadakwah.site/api/keluarga/` + data._id, dataKeluarga, {
+        axios.put(`https://api.petadakwah.site/api/keluarga/` + dataRumah._id, dataFormRumah, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -248,9 +351,9 @@ function Tables() {
               <FormLabel as="legend">Keaktifan Sholat</FormLabel>
               <RadioGroup name="keaktifanShalat" value={values?.keaktifanShalat ? values.keaktifanShalat : ""}>
                 <HStack spacing="24px" onChange={handleChange} >
-                  <Radio value="Jarang">Jarang</Radio>
-                  <Radio value="Kadang-kadang">Kadang-kadang</Radio>
-                  <Radio value="Sering">Sering</Radio>
+                  <Radio value="jarang">Jarang</Radio>
+                  <Radio value="kadang-kadang">Kadang-kadang</Radio>
+                  <Radio value="sering">Sering</Radio>
                 </HStack>
               </RadioGroup>
             </FormControl>
@@ -258,9 +361,9 @@ function Tables() {
               <FormLabel as="legend">Kemampuan Baca Quran</FormLabel>
               <RadioGroup name="kemampuanBacaQuran" value={values?.kemampuanBacaQuran ? values.kemampuanBacaQuran : ""}>
                 <HStack spacing="24px" onChange={handleChange}>
-                  <Radio value="Tidak Bisa">Tidak Bisa</Radio>
-                  <Radio value="Terbata-bata">Terbata-bata</Radio>
-                  <Radio value="Fasih">Fasih</Radio>
+                  <Radio value="tidak bisa">Tidak Bisa</Radio>
+                  <Radio value="terbata-bata">Terbata-bata</Radio>
+                  <Radio value="fasih">Fasih</Radio>
                 </HStack>
               </RadioGroup>
             </FormControl>
@@ -291,7 +394,43 @@ function Tables() {
                 </HStack>
               </RadioGroup>
             </FormControl>
-            <Separator mt="10"/>
+            <Separator mt="10" mb="10"/>
+            <MapContainer center={[latitude, longtitude]} zoom={17} scrollWheelZoom={false} ref={mapRef} style={{ width: "100%", height: "40vh" }}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                maxZoom={20}
+                minZoom={5}
+              />
+              <Marker position={[latitude,longtitude]} icon={myIcon}>
+              </Marker>
+            </MapContainer>
+            <Flex align='center' w="100%" mt="4" mb="2">
+              <FormControl w="fit-content" mr="2">
+                <Button leftIcon={<BiLocationPlus />} colorScheme="green" variant="outline" onClick={latlongHandle}>
+                  Tangkap Lokasi Anda
+                </Button>
+              </FormControl>  
+              <Text align={'center'} display={ latitude &&  longtitude ? '' : 'none'}>lat : {latitude} long : {longtitude}</Text>
+            </Flex>
+            <FormControl isRequired mt="4" >
+              <FormLabel>Alamat</FormLabel>  
+              <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" }/>
+            </FormControl>
+            <FormControl mt="4" >
+                <FormLabel>Foto</FormLabel>  
+                <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e)}} accept={"image/jpeg, image/png, image/gif, image/jpg"} />
+              </FormControl>
+              {photoView == null ? 
+                <FormControl isRequired mt="4" >
+                  <Image src={values?.fotoRumah ? values.fotoRumah : "" } h="200px" />
+                </FormControl>
+              :
+                <FormControl isRequired mt="4" >
+                  <Image src={photoView} h="200px" />
+                </FormControl>
+              }
+            <Separator mt="10" mb="10"/>
             <FormControl mt="4" >
               <FormLabel><b>Kepala Keluarga</b></FormLabel>  
             </FormControl>
@@ -302,9 +441,9 @@ function Tables() {
             <FormControl isRequired mt="2" >
               <FormLabel>Peran</FormLabel>  
               <Select name="kepalaKeluarga[peran]" onChange={handleChange} value={values?.kepalaKeluarga?.peran ? values.kepalaKeluarga.peran : ""}>
-                <option value={"Ayah"}>Ayah</option>
-                <option value={"Ibu"}>Ibu</option>
-                <option value={"Anak"}>Anak</option>
+                <option value={"ayah"}>Ayah</option>
+                <option value={"ibu"}>Ibu</option>
+                <option value={"anak"}>Anak</option>
               </Select>
             </FormControl>
             <FormControl isRequired mt="2" >
@@ -321,7 +460,7 @@ function Tables() {
                 Anggota Keluarga
               </Button>
             </FormControl>
-            {values?.anggotaKeluarga ? values.anggotaKeluarga.map((value, key) => (
+            {values?.anggotaKeluarga.length ? values.anggotaKeluarga.map((value, key) => (
               <div key={key}>
 
               <FormControl mt="4" >
@@ -334,9 +473,9 @@ function Tables() {
               <FormControl isRequired mt="2" >
                 <FormLabel>Peran</FormLabel>  
                 <Select name={"anggotaKeluarga["+ key.toString() +"][peran]"} onChange={handleChange} value={value?.peran}>
-                  <option value={"Ayah"}>Ayah</option>
-                  <option value={"Ibu"}>Ibu</option>
-                  <option value={"Anak"}>Anak</option>
+                  {/* <option value={"ayah"}>Ayah</option> */}
+                  <option value={"ibu"}>Ibu</option>
+                  <option value={"anak"}>Anak</option>
                 </Select>
               </FormControl>
               <FormControl isRequired mt="2" >
@@ -348,30 +487,7 @@ function Tables() {
                 <Input name={"anggotaKeluarga["+ key.toString() +"][pekerjaan]"} onChange={handleChange} value={value?.pekerjaan}/>
               </FormControl>  
               </div>
-            )) :  angkeluarga.map((value, key) => (
-              <div key={key}>
-                <FormControl mt="4" >
-                  <FormLabel><b>Anggota Keluarga {key + 1}</b></FormLabel>  
-                </FormControl>
-                <FormControl isRequired mt="4" >
-                  <FormLabel>Nama</FormLabel>
-                  <Input name={"anggotaKeluarga["+ key.toString() +"][nama]"} onChange={handleChange}/>
-                </FormControl>
-                <FormControl isRequired mt="2" >
-                  <FormLabel>Peran</FormLabel>  
-                  <Input name={"anggotaKeluarga["+ key.toString() +"][peran]"} onChange={handleChange}/>
-                </FormControl>
-                <FormControl isRequired mt="2" >
-                  <FormLabel>Usia</FormLabel>  
-                  <Input type="number" name={"anggotaKeluarga["+ key.toString() +"][usia]"} onChange={handleChange}/>
-                </FormControl>
-                <FormControl isRequired mt="2" >
-                  <FormLabel>Pekerjaan</FormLabel>  
-                  <Input name={"anggotaKeluarga["+ key.toString() +"][pekerjaan]"} onChange={handleChange}/>
-                </FormControl>
-              </div>
-            ))
-            }
+            )) :  ""}
             <FormControl isRequired mt="2" textAlign="right">
               <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">
                 Batal

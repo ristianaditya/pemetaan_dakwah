@@ -40,7 +40,7 @@ export default function ModalLogin() {
             "password": password
         }
 
-        axios.post(`http://api.petadakwah.site/api/login`, loginBody
+        axios.post(`https://api.petadakwah.site/api/login`, loginBody
         )
         .then(res => {
             if (res.status == 200) {
@@ -62,7 +62,6 @@ export default function ModalLogin() {
             }
         })
         .catch(error => {
-            console.log(error);
             if (error.response.status == 401) {
                 toast.error('Username Atau Password Yang Anda Masukan Salah !', {
                     position: "top-right",

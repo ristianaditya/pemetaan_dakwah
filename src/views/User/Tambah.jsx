@@ -117,37 +117,16 @@ function Tables() {
 
   const postRumah = async (values) => {
 
-    const fileUrl = await postUpload();
-
-    if (fileUrl == undefined) {
-      toast.error('Foto Wajib Diupload', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
-      return 
-    }
 
     const data = {
-      namaMasjid: values.namaMasjid,
-      ketuaDKM: values.ketuaDKM,
-      tahunBerdiri: values.tahunBerdiri,
-      jumlahJamaah: values.jumlahJamaah,
-      alamat: values.alamat,
-      foto: fileUrl,
-      lat: latitude,
-      lng: longtitude
+      name: values.name,
+      email: values.email,
+      password: values.password,
     }
 
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/masjid/create`, data, {
+      const response = await axios.post(`https://api.petadakwah.site/api/user/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -195,11 +174,9 @@ function Tables() {
       <CardBody>
         <Formik
         initialValues={{
-          namaMasjid: "",
-          ketuaDKM: "",
-          tahunBerdiri: "",
-          jumlahJamaah: "",
-          alamat: "",
+          name: "",
+          email: "",
+          password: "",
         }}
         onSubmit={(values, { setSubmitting }) => {
 
@@ -221,62 +198,17 @@ function Tables() {
         }) => (
           <Form onSubmit={handleSubmit}>
             <FormControl isRequired >
-              <FormLabel>Nama Masjid</FormLabel>  
-              <Input name="namaMasjid" onChange={handleChange}/>
+              <FormLabel>Nama</FormLabel>  
+              <Input name="name" onChange={handleChange}/>
             </FormControl>
             <FormControl isRequired mt="4" >
-              <FormLabel>Ketua DKM</FormLabel>  
-              <Input name="ketuaDKM" onChange={handleChange}/>
+              <FormLabel>Email</FormLabel>  
+              <Input name="email" onChange={handleChange}/>
             </FormControl>
             <FormControl isRequired mt="4" >
-              <FormLabel>Tahun Berdiri</FormLabel>  
-              <Input type="number" name="tahunBerdiri" onChange={handleChange}/>
+              <FormLabel>Password</FormLabel>  
+              <Input type="password" name="password" onChange={handleChange}/>
             </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Jumlah Jamaah</FormLabel>  
-              <Input type="number" name="jumlahJamaah" onChange={handleChange}/>
-            </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Alamat</FormLabel>  
-              <Input name="alamat" onChange={handleChange}/>
-            </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Foto</FormLabel>  
-              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept={"image/jpeg, image/png, image/gif, image/jpg"}/>
-            </FormControl>
-            {photoView != null &&
-                <FormControl isRequired mt="4" >
-                  <Image src={photoView} h="200px" />
-                </FormControl>
-              }
-            <Flex mt="4">
-              <MapContainer 
-                center={[-6.947794701156682, 107.70349499168313]} 
-                zoom={17} 
-                ref={mapRef} 
-                dragging={true}
-                attributionControl={true}
-                zoomControl={true}
-                doubleClickZoom={true}
-                scrollWheelZoom={true}
-                style={{ width: "100%", height: "40vh" }}>
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  maxZoom={20}
-                  minZoom={5}
-                />
-                <Marker position={[latitude,longtitude]} draggable icon={myIcon}
-                  eventHandlers={{
-                    dragend: (e) => {
-                      handleDragEnd(e)
-                    },
-                  }}
-                >
-                </Marker>
-              </MapContainer>
-            </Flex>
-            <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
             <FormControl isRequired mt="2" textAlign="right">
               <Button colorScheme="pink" onClick={backButton} mt="4" mr="2">
                 Batal

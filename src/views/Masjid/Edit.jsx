@@ -36,19 +36,22 @@ function Tables() {
   const [longtitude, setLongtitude] = useState("");
   const [file, setFile] = useState();
   const [photoView, setPhotoView] = useState(null);
-  
+  const [angkeluarga, setAngkeluarga] = useState([
+    {
+      id: 0
+    }
+  ]);
   const [ token ] = useState(localStorage.getItem('access_token'));
 
   const mapRef = useRef(null)
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      setLatitude(latitude.toString());
-      setLongtitude(longitude.toString());
+  const [iditem, setIditem] = useState(localStorage.getItem("idEdit"));
+  const [dataMaster, setDataMaster] = useState();
 
-      mapRef.current.flyTo([latitude, longitude], 18, { duration: 2 });
-    });
+  useEffect(() => {
+
+    getData()
+
   }, []);
 
   const handleDragEnd = (e) => {
@@ -66,10 +69,11 @@ function Tables() {
   const location = useLocation(); 
 
   const backButton = () => {
-    history.push(location.pathname.replace('/tambah', ''));
+    history.push(location.pathname.replace('/edit', ''));
   }
 
   const handleChangePhoto = (e) => {
+
     const file = e.target.files[0]
 
     const reader = new FileReader();
@@ -115,39 +119,10 @@ function Tables() {
     }
   }
 
-  const postRumah = async (values) => {
-
-    const fileUrl = await postUpload();
-
-    if (fileUrl == undefined) {
-      toast.error('Foto Wajib Diupload', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
-      return 
-    }
-
-    const data = {
-      namaMasjid: values.namaMasjid,
-      ketuaDKM: values.ketuaDKM,
-      tahunBerdiri: values.tahunBerdiri,
-      jumlahJamaah: values.jumlahJamaah,
-      alamat: values.alamat,
-      foto: fileUrl,
-      lat: latitude,
-      lng: longtitude
-    }
-
-
+  const getData = async () => {
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/masjid/create`, data, {
+      const response = await axios.get(`https://api.petadakwah.site/api/masjid/` + iditem, 
+      {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -155,7 +130,82 @@ function Tables() {
       }
     )
     .then(res => {
-      toast.success('Berhasil Tambah Data', {
+      const data = res.data.masjids;
+      setLatitude(data.lat);
+      setLongtitude(data.lng);
+      setDataMaster(data);
+      mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
+    })
+    } catch (error) {
+      toast.error('Gagal Get Data', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }
+
+  const postRumah = async (values) => {
+    let data;
+    if (photoView != null) {
+      const fileUrl = await postUpload();
+
+      if (fileUrl == undefined) {
+        toast.error('Foto Wajib Diupload', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
+        return 
+      }
+
+      data = {
+        namaMasjid: values.namaMasjid,
+        ketuaDKM: values.ketuaDKM,
+        tahunBerdiri: values.tahunBerdiri,
+        jumlahJamaah: values.jumlahJamaah,
+        alamat: values.alamat,
+        foto: fileUrl,
+        lat: latitude,
+        lng: longtitude
+      }
+    } else {
+      data = {
+        namaMasjid: values.namaMasjid,
+        ketuaDKM: values.ketuaDKM,
+        tahunBerdiri: values.tahunBerdiri,
+        jumlahJamaah: values.jumlahJamaah,
+        alamat: values.alamat,
+        foto: values.foto,
+        lat: latitude,
+        lng: longtitude
+      }
+    }
+   
+    
+    const rumahId = values._id
+
+    try {
+      const response = await axios.put(`https://api.petadakwah.site/api/masjid/` + rumahId, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      }
+    )
+    .then(res => {
+      toast.success('Berhasil Edit Data', {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -166,10 +216,10 @@ function Tables() {
         theme: "colored",
       });
 
-      history.push(location.pathname.replace('/tambah', ''));
+      history.push(location.pathname.replace('/edit', ''));
     })
     } catch (error) {
-      toast.error('Gagal Tambah Data', {
+      toast.error('Gagal Edit Data', {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -188,19 +238,16 @@ function Tables() {
       <CardHeader p='6px 0px 22px 0px' >
         <Flex justify='space-between' align='center' mb='1rem' w='100%'>
           <Text fontSize='lg' color={textColor} fontWeight='bold'>
-            Tambah
+            Edit
           </Text>
         </Flex>
       </CardHeader>
       <CardBody>
         <Formik
-        initialValues={{
-          namaMasjid: "",
-          ketuaDKM: "",
-          tahunBerdiri: "",
-          jumlahJamaah: "",
-          alamat: "",
-        }}
+        enableReinitialize={true}
+        initialValues={
+          dataMaster
+        }
         onSubmit={(values, { setSubmitting }) => {
 
           postRumah(values);
@@ -222,33 +269,38 @@ function Tables() {
           <Form onSubmit={handleSubmit}>
             <FormControl isRequired >
               <FormLabel>Nama Masjid</FormLabel>  
-              <Input name="namaMasjid" onChange={handleChange}/>
+              <Input name="namaMasjid" onChange={handleChange} value={values?.namaMasjid ? values.namaMasjid : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Ketua DKM</FormLabel>  
-              <Input name="ketuaDKM" onChange={handleChange}/>
+              <Input name="ketuaDKM" onChange={handleChange} value={values?.ketuaDKM ? values.ketuaDKM : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Tahun Berdiri</FormLabel>  
-              <Input type="number" name="tahunBerdiri" onChange={handleChange}/>
+              <Input type="number" name="tahunBerdiri" onChange={handleChange} value={values?.tahunBerdiri ? values.tahunBerdiri : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Jumlah Jamaah</FormLabel>  
-              <Input type="number" name="jumlahJamaah" onChange={handleChange}/>
+              <Input type="number" name="jumlahJamaah" onChange={handleChange} value={values?.jumlahJamaah ? values.jumlahJamaah : "" }/>
             </FormControl>
             <FormControl isRequired mt="4" >
               <FormLabel>Alamat</FormLabel>  
-              <Input name="alamat" onChange={handleChange}/>
+              <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" }/>
             </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Foto</FormLabel>  
-              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept={"image/jpeg, image/png, image/gif, image/jpg"}/>
-            </FormControl>
-            {photoView != null &&
+              <FormControl mt="4" >
+                <FormLabel>Foto</FormLabel>  
+                <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e)}} accept={"image/jpeg, image/png, image/gif, image/jpg"} />
+              </FormControl>
+              {photoView == null ? 
+                <FormControl isRequired mt="4" >
+                  <Image src={values?.foto ? values.foto : "" } h="200px" />
+                </FormControl>
+              :
                 <FormControl isRequired mt="4" >
                   <Image src={photoView} h="200px" />
                 </FormControl>
               }
+              
             <Flex mt="4">
               <MapContainer 
                 center={[-6.947794701156682, 107.70349499168313]} 
