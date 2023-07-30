@@ -22,7 +22,6 @@ import logoAljabar from "../../assets/logo/logo.svg";
 const SidebarContent = ({ logoText, routes }) => {
 
     // to check for active links and opened collapses
-  let location = useLocation();
   // this is for the rest of the collapses
   const [state, setState] = React.useState({});
 
