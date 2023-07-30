@@ -73,7 +73,7 @@ export default function SidebarDakwah({ showSidebarDakwah, handleCloseSidebarDak
                         <div className="col-1 btn-side-back" onClick={handleCloseSidebarDakwah}>
                             <div ><h5 className='close-button'><FiX /></h5></div>
                         </div>
-                        <img className='img-rumah' src='https://www.utusan.com.my/wp-content/uploads/dkwa.jpg' alt="new" />
+                        <img className='img-rumah' src={selectedMarkerDakwah?.foto} alt="new" />
                         <div className='titleBody'><PiSubtitlesBold style={{ marginRight: '5px', marginBottom: '2.5px', color: '#16a75c' }} /> Judul Dakwah <Badge bg="success" style={{ marginLeft: '5px'}}>{selectedMarkerDakwah?.kategori}</Badge></div>
                         <div className='bodyData' style={{ fontSize: '14px' }}>
                                 { selectedMarkerDakwah?.topikDakwah }

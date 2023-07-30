@@ -18,6 +18,7 @@ import SearchInput from '../Maps/searchInput';
 import iconLogo from '../../assets/logo/logo.svg';
 import SidebarMasjid from './sidebarMasjid';
 import Calender from '../Maps/calender';
+import Chart from '../Maps/chart';
 
 
 export default function Sidebars({mapRef }) {
@@ -49,6 +50,8 @@ export default function Sidebars({mapRef }) {
     const [dataMasyarakatZakat, setDataMasyarakatZakat] = useState([]);
     const [dataDakwah, setDataDakwah] = useState([]);
     const [dataMasjid, setDataMasjid] = useState([]);
+    const [dataGraphRumah, setDataGraphRumah] = useState([]);
+    const [dataCount, setDataCount] = useState([]);
 
     const [showSidebarMasyarakat, setShowSidebarMasyarakat] = useState(false);
     const [showSidebarDakwah, setShowSidebarDakwah] = useState(false);
@@ -78,6 +81,11 @@ export default function Sidebars({mapRef }) {
     const [showCalender, setShowCalender] = useState(false);
     const toggleModalCalender = () => {
         setShowCalender(!showCalender);
+    };
+
+    const [showChart, setShowChart] = useState(false);
+    const toggleModalChart = () => {
+        setShowChart(!showChart);
     };
 
     function onClickMasyarakat(markerData) {
@@ -124,12 +132,18 @@ export default function Sidebars({mapRef }) {
             const rumahZakat = await axios.get('https://api.petadakwah.site/api/rumah/zakat/true');
             const petaDakwah = await axios.get('https://api.petadakwah.site/api/petadakwah');
             const petaMasjid = await axios.get('https://api.petadakwah.site/api/masjid');
+            const graphRumahStats = await axios.get('https://api.petadakwah.site/api/graph/rumahstats');
+            const countRumah = await axios.get('https://api.petadakwah.site/api/graph/rumah');
+            const countDakwah = await axios.get('https://api.petadakwah.site/api/graph/petadakwah');
+            const countMasjid = await axios.get('https://api.petadakwah.site/api/graph/masjid');
             setDataMasyarakatKurban(rumahKurban.data.keluargas);
             setDataMasyarakatHaji(rumahHaji.data.keluargas);
             setDataMasyarakatZakat(rumahZakat.data.keluargas);
             setDataMasyarakat(rumahAll.data.keluargas);
             setDataDakwah(petaDakwah.data.petaDakwahs);
             setDataMasjid(petaMasjid.data.masjids);
+            setDataGraphRumah(graphRumahStats.data);
+            setDataCount([countRumah.data.count, countDakwah.data.count, countMasjid.data.count])
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -240,7 +254,6 @@ export default function Sidebars({mapRef }) {
             if (mapRef.current) {
                 const map = mapRef.current;
                 dataDakwah.forEach(markerData => {
-                    console.log(markerData?.lng);
                     if(markerData?.lng === 'undefined' || markerData?.lng === undefined|| markerData?.lng === '' || markerData?.lng === null){
                         const marker = L.marker([markerData?.masjidId.lat, markerData?.masjidId.lng], { icon: markerIconDakwah });
                         marker.addTo(map).on('click', () => onClickDakwah(markerData));
@@ -381,7 +394,7 @@ return (
                         </MenuItem>
                     </SubMenu>
                     <div className='row-line'></div>
-                    <MenuItem icon={<h4><BiLineChartDown color='#007800' /></h4> }>
+                    <MenuItem icon={<h4><BiLineChartDown color='#007800' /></h4> }  onClick={toggleModalChart}>
                         <div className='input-group list-menu row'>
                             <div className='col-1 body-row-sidebar'>
                                 Statistik Aktifitas Dakwah
@@ -405,6 +418,7 @@ return (
             </div>
         </div>
         <Calender showCalender={showCalender} toggleModalCalender={toggleModalCalender} dataDakwah={dataDakwah} mapRef={mapRef}/>
+        <Chart showChart={showChart} toggleModalChart={toggleModalChart} dataGraphRumah={dataGraphRumah} dataCount={dataCount}/>
     </>
     );
 }

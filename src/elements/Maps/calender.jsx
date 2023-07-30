@@ -6,23 +6,8 @@ import '../../assets/style/calender.scss';
 
 export default function Calender({showCalender, toggleModalCalender, dataDakwah, mapRef}) {
 
-    const data = new Date(2023, 6, 15, 14, 30);
     const localizer = momentLocalizer(moment);
     const [eventList, setEventList] = useState([]);
-    // Data list kegiatan
-    const myEventsList = [
-        {
-        title: 'Kegiatan 1',
-        start: new Date(2023, 6, 10, 10, 0), // Tanggal 10 Juli 2023, pukul 10:00 AM
-        end: new Date(2023, 6, 10, 12, 0), // Tanggal 10 Juli 2023, pukul 12:00 PM
-        },
-        {
-        title: 'Kegiatan 2',
-        start: new Date(2023, 6, 15, 14, 30), // Tanggal 15 Juli 2023, pukul 2:30 PM
-        end: new Date(2023, 6, 15, 16, 0), // Tanggal 15 Juli 2023, pukul 4:00 PM
-        },
-        // Tambahkan kegiatan lain sesuai kebutuhan
-    ];
 
     useEffect(() => {
         dataDakwah.forEach(markerData => {
@@ -46,7 +31,7 @@ export default function Calender({showCalender, toggleModalCalender, dataDakwah,
         mapRef.current.flyTo([event?.lat, event?.lng], 19, {
             duration: 2, 
         });
-      };
+    };
 
     return (
         <>
