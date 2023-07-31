@@ -8,9 +8,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Custom components
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import IconBox from "components/Icons/IconBox";
+import Card from "../../../components/Card/Card.jsx";
+import CardBody from "../../../components/Card/CardBody.jsx";
+import IconBox from "../../../components/Icons/IconBox.jsx";
 import React from "react";
 
 const MiniStatistics = ({ title, amount, percentage, icon }) => {

@@ -13,52 +13,38 @@ import {
 import React from "react";
 import ChartStatistics from "./ChartStatistics.jsx";
 
-const ActiveUsers = ({ title, percentage, chart }) => {
+const ActiveUsers = ({ title, haji, zakat, qurban, total }) => {
   const iconBoxInside = useColorModeValue("white", "white");
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <Card p='16px'>
       <CardBody>
         <Flex direction='column' w='100%'>
-          {chart}
+          {/* {chart} */}
           <Flex direction='column' mt='24px' mb='36px' alignSelf='flex-start'>
             <Text fontSize='lg' color={textColor} fontWeight='bold' mb='6px'>
               {title}
             </Text>
-            <Text fontSize='md' fontWeight='medium' color='gray.400'>
-              <Text
-                as='span'
-                color={percentage > 0 ? "green.400" : "red.400"}
-                fontWeight='bold'>
-                {percentage > 0 ? `+${percentage}%` : `-${percentage}%`}
-              </Text>{" "}
-              than last week
-            </Text>
+           
           </Flex>
-          <SimpleGrid gap={{ sm: "12px" }} columns={4}>
+          <SimpleGrid gap={{ sm: "10px" }} columns={4}>
             <ChartStatistics
-              title={"Users"}
-              amount={"32,984"}
-              percentage={20}
+              title={"Sudah Haji"}
+              amount={haji+ "/" + total + " Orang"}
+              percentage={ (haji/total)*100 }
               icon={<WalletIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
             />
             <ChartStatistics
-              title={"Clicks"}
-              amount={"2.42m"}
-              percentage={80}
+              title={"Sudah Zakat"}
+              amount={zakat+ "/" + total + " Orang"}
+              percentage={(zakat/total)*100}
               icon={<RocketIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
             />
             <ChartStatistics
-              title={"Sales"}
-              amount={"2,400$"}
-              percentage={30}
+              title={"Kurban"}
+              amount={qurban+ "/" + total + " Orang"}
+              percentage={(qurban/total)*100}
               icon={<CartIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
-            />
-            <ChartStatistics
-              title={"Items"}
-              amount={"320"}
-              percentage={40}
-              icon={<StatsIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
             />
           </SimpleGrid>
         </Flex>
