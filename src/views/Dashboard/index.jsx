@@ -5,50 +5,82 @@ import {
   Image,
   SimpleGrid,
   useColorModeValue,
+  Text
 } from "@chakra-ui/react";
-// assets
-// import peopleImage from "assets/img/people-image.png";
-// import logoChakra from "assets/svg/logo-white.svg";
 import BarChart from "../../components/Charts/BarChart";
-import LineChart from "../../components/Charts/LineChart";
-// Custom icons
+import { GiGoat, GiPrayer  } from "react-icons/gi"
+import { FaHandHoldingUsd  } from "react-icons/fa"
+
 // import {
 //   CartIcon,
 //   DocumentIcon,
 //   GlobeIcon,
 //   WalletIcon,
-// } from "components/Icons/Icons.js";
-import React from "react";
-import { dashboardTableData, timelineData } from "../../variables/general";
+// } from "../../components/Icons/Icons.js";
+import React, {useState, useEffect} from "react";
+
 import ActiveUsers from "./components/ActiveUsers.jsx";
-// import BuiltByDevelopers from "./components/BuiltByDevelopers";
-// import MiniStatistics from "./components/MiniStatistics";
-// import OrdersOverview from "./components/OrdersOverview";
-// import Projects from "./components/Projects.jsx";
-import SalesOverview from "./components/SalesOverview.jsx";
-// import WorkWithTheRockets from "./components/WorkWithTheRockets";
+import MiniStatistics from "./components/MiniStatistics.jsx";
+import axios from 'axios';
+
 
 export default function Dashboard() {
+  const [ token ] = useState(localStorage.getItem('access_token'));
   const iconBoxInside = useColorModeValue("white", "white");
+  const [haji, setHaji] = useState()
+  const [zakat, setZakat] = useState()
+  const [qurban, setQurban] = useState()
+  const [total, setTotal] = useState()
+
+  useEffect(() => {
+    axios.get(`https://api.petadakwah.site/api/graph/rumahstats`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        }
+      )
+      .then(res => {
+        const data = res.data;
+        setHaji(data.haji);
+        setZakat(data.zakat);
+        setQurban(data.kurban);
+        setTotal(data.JumlahRumah);
+      })
+  }, []);
+
+
 
   return (
     <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
-       <Grid
-        templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
-        templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}
-        gap='24px'
-        mb={{ lg: "26px" }}>
-        <ActiveUsers
-          title={"Active Users"}
-          percentage={23}
-          chart={<BarChart />}
+       <Flex direction='column' mt='24px' mb='36px' alignSelf='flex-start'>
+            <Text fontSize='lg' color={"black"} fontWeight='bold' mb='6px'>
+              Dashboard
+            </Text>
+           
+          </Flex>
+       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
+        <MiniStatistics
+          title={"Sudah Haji"}
+          amount={haji+ "/" + total + " Orang"}
+          percentage={Math.trunc((haji/total)*100)}
+          icon={<GiPrayer h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
-        <SalesOverview
-          title={"Sales Overview"}
-          percentage={5}
-          chart={<LineChart />}
+        <MiniStatistics
+          title={"Sudah Zakat"}
+          amount={zakat+ "/" + total + " Orang"}
+          percentage={Math.trunc((zakat/total)*100)}
+          icon={<FaHandHoldingUsd h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
-      </Grid>
+        <MiniStatistics
+          title={"Sudah Qurban"}
+          amount={qurban+ "/" + total + " Orang"}
+          percentage={Math.trunc((qurban/total)*100)}
+          icon={<GiGoat h={"24px"} w={"24px"} color={iconBoxInside} />}
+        />
+       
+      </SimpleGrid>
   </Flex>
   );
 }

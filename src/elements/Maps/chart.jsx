@@ -165,7 +165,7 @@ export default function Chart({showChart, toggleModalChart, dataGraphRumah, data
     return (
         <>
             <Modal show={showChart} onHide={toggleModalChart} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-                <div style={{ width:'100%', textAlignLast:'center', marginBottom:'30px', fontSize:'larger', fontWeight:'larger', fontWeight: '700' }}>Statistik Pemetaan</div>
+                <div style={{ width:'100%', textAlignLast:'center', marginBottom:'30px', fontSize:'larger', fontWeight: '700' }}>Statistik Pemetaan</div>
                 <div className='row' id="chart">
                     <ReactApexChart className='col' options={options} series={series} type="donut" width={380} height={300}/>
                     <ReactApexChart className='col' options={options2} series={series2} type="bar" height={300} width={300} />
