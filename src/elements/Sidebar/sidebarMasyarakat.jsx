@@ -11,7 +11,7 @@ import imageSon from '../../assets/icons/son.png';
 
 export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSidebarMasyarakat, selectedMarker }) {
     const [dataKeluarga, setDataKeluarga] = useState([]);
-    const title = (selectedMarker?.kepalaKeluarga.peran == 'Ayah')? 'Rumah Bapak ' : 'Rumah Ibu ';
+    const title = (selectedMarker?.kepalaKeluarga.peran == 'ayah')? 'Rumah Bapak ' : 'Rumah Ibu ';
     var shalat;
     var quran;
     var pShalat = 0;
@@ -43,8 +43,8 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
 
     const fetchData = async () => {
         try {
-            if(selectedMarker?.keluargaId){
-                const response = await axios.get('https://api.petadakwah.site/api/admin/keluarga/'+selectedMarker?.keluargaId);
+            if(selectedMarker?.rumahId){
+                const response = await axios.get('https://api.petadakwah.site/api/admin/keluarga/'+selectedMarker?.rumahId);
                 setDataKeluarga(response.data.keluarga.anggotaKeluarga);
             }
         } catch (error) {
@@ -53,7 +53,7 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
         };
         useEffect(() => {
             fetchData();
-        }, [selectedMarker?.keluargaId]);
+        }, [selectedMarker?.rumahId]);
 
     return (
         <>
@@ -146,9 +146,9 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
 }
 
 function imagePeran(params) {
-    if(params === 'Ayah'){
+    if(params === 'ayah'){
         return <img src={imageDad} style={{ height: '45px' }} />
-    }else if(params === 'Ibu'){
+    }else if(params === 'ibu'){
         return <img src={imageMom} style={{ height: '45px' }} />
     }else{
         return <img src={imageSon} style={{ height: '45px' }} />
