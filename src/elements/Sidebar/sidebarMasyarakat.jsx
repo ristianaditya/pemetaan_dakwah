@@ -67,7 +67,7 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
                         </div>
                         <img className='img-rumah' src={selectedMarker?.fotoRumah} alt="new" />
                         <div className='body-side-rumah input-group form-group'>
-                            <div className='titleHome'> { title+selectedMarker?.kepalaKeluarga.nama }</div>
+                            <div className='titleHome'> { title+maskString( selectedMarker?.kepalaKeluarga.nama, 50)}</div>
                             <div className='date-update'>12/2/2002</div>
                         </div>
                         <div className='titleBody'>Lokasi Rumah</div>
@@ -121,7 +121,7 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
                                 { imagePeran(selectedMarker?.kepalaKeluarga.peran) }
                             </div>
                             <div className='col'>
-                                <div className='textLeft input-group form-group'><div className='textName'>{ selectedMarker?.kepalaKeluarga.nama }</div> ({ selectedMarker?.kepalaKeluarga.usia })</div>
+                                <div className='textLeft input-group form-group'><div className='textName'>{ maskString( selectedMarker?.kepalaKeluarga.nama, 50)}</div> ({ selectedMarker?.kepalaKeluarga.usia })</div>
                                 <div className='textLeft'>Pekerjaan {selectedMarker?.kepalaKeluarga.pekerjaan}</div>
                             </div>
                         </div>
@@ -132,7 +132,7 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
                                     { imagePeran(anggota?.peran) }
                                 </div>
                                 <div className='col'>
-                                    <div className='textLeft input-group form-group'><div className='textName'>{ anggota.nama }</div> ({ anggota.usia })</div>
+                                    <div className='textLeft input-group form-group'><div className='textName'>{ maskString(anggota.nama, 50) }</div> ({ anggota.usia })</div>
                                     <div className='textLeft'>Pekerjaan {anggota.pekerjaan}</div>
                                 </div>
                             </div>
@@ -154,3 +154,30 @@ function imagePeran(params) {
         return <img src={imageSon} style={{ height: '45px' }} />
     }
 }
+
+function maskString(inputString, maskPercentage) {
+    if (maskPercentage <= 0 || maskPercentage > 100) {
+      throw new Error("Invalid mask percentage value");
+    }
+  
+    const maskLength = Math.ceil(inputString.length * (maskPercentage / 100));
+    const maskIndices = [];
+  
+    while (maskIndices.length < maskLength) {
+      const randomIndex = Math.floor(Math.random() * inputString.length);
+      if (!maskIndices.includes(randomIndex)) {
+        maskIndices.push(randomIndex);
+      }
+    }
+  
+    let maskedString = '';
+    for (let i = 0; i < inputString.length; i++) {
+      if (maskIndices.includes(i)) {
+        maskedString += '*';
+      } else {
+        maskedString += inputString.charAt(i);
+      }
+    }
+  
+    return maskedString;
+  }

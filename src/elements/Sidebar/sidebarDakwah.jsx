@@ -82,7 +82,7 @@ export default function SidebarDakwah({ showSidebarDakwah, handleCloseSidebarDak
                         <div className='bodyData' style={{ fontSize: '14px' }}>
                             <ul className='nav nav-pills flex-column mb-auto'>
                                 <li className='li-data input-group form-group'>
-                                    <div className='textLeft'>Nama Pembicara</div>
+                                    <div className='textLeft'> Pembicara</div>
                                     <div className='textRight'>{selectedMarkerDakwah?.pembicara} <Badge bg="info" style={{ marginLeft: '5px'}}>{selectedMarkerDakwah?.gelar_pembicara}</Badge></div>
                                 </li>
                                 <li className='li-data-last input-group form-group'>
