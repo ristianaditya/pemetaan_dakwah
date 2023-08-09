@@ -229,7 +229,8 @@ function Tables() {
       const dataRumah = res.data.rumah;
 
       let dataFormRumah;
-      if (photoView != "") {
+      if (photoView != null) {
+        console.log(photoView);
         const fileUrl = await postUpload();
   
         if (fileUrl == undefined) {
