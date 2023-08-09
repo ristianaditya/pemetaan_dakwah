@@ -16,7 +16,7 @@ export default function Calender({showCalender, toggleModalCalender, dataDakwah,
             var lat;
             var lng;
 
-            if(markerData?.lng === 'undefined' || markerData?.lng === undefined){
+            if(markerData?.lng === 'undefined' || markerData?.lng === undefined || markerData?.lng === ""){
                 lat = markerData?.masjidId.lat;
                 lng = markerData?.masjidId.lng;
             }else{
