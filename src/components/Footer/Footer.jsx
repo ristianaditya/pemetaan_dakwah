@@ -36,7 +36,7 @@ export default function Footer(props) {
           color="teal.400"
           target="#"
         >
-          Wont't Be Human Creative Team
+          EXEPSI
         </Link>
           {" for a better web"}
       </Text>
