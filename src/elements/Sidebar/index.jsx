@@ -322,7 +322,7 @@ return (
                     <MenuItem icon={<h4><GiPublicSpeaker color='#007800'/></h4> }>
                         <div className='input-group list-menu row'>
                             <div className='col-1 body-row-sidebar'>
-                                Pemetaan dakwah
+                                Pemetaan Dakwah
                             </div>
                             <div className='col dropdown-switch'>
                                 <label className="toggle-switch">
@@ -332,7 +332,7 @@ return (
                             </div>
                         </div>
                     </MenuItem>
-                    <SubMenu icon={<h4><TbHomeShare color='#007800' /></h4> } label="Pemetaan masyarakat" className='list-menu '>
+                    <SubMenu icon={<h4><TbHomeShare color='#007800' /></h4> } label="Pemetaan Masyarakat" className='list-menu '>
                         <MenuItem> 
                             <div className="menu-item ">
                                 <div className='input-group list-menu row' style={{ paddingRight: '0px !important', height: '3vh' }}>
