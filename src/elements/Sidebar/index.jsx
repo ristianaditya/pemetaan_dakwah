@@ -154,7 +154,7 @@ export default function Sidebars({mapRef }) {
         setTimeout(() => {
             buttonMasjid.current.click();
             buttonDakwah.current.click();
-        }, 1000);
+        }, 1500);
     }, []);
 
     const handdleToggleHome = async () => {
@@ -281,6 +281,7 @@ export default function Sidebars({mapRef }) {
             if (mapRef.current) {
                 const map = mapRef.current;
                 dataMasjid.forEach(markerData => {
+                    console.log(markerData);
                     const marker = L.marker([markerData?.lat, markerData?.lng], { icon: markerIconMasjid });
                     marker.addTo(map).on('click', () => onClickMasjid(markerData));
                     setMarkersMasjid(prevMarkers => [...prevMarkers, marker]);

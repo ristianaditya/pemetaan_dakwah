@@ -70,26 +70,20 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
                             <div className='titleHome'> { title+maskString( selectedMarker?.kepalaKeluarga.nama, 50)}</div>
                             <div className='date-update'>12/2/2002</div>
                         </div>
-                        <div className='titleBody'>Lokasi Rumah</div>
+                        <div className='titleBody'>Alamat Rumah</div>
                         <div className='bodyData'>
-                            <ul className='nav nav-pills flex-column mb-auto'>
-                                <li className='li-data input-group form-group'>
-                                    <div className='textLeft'>Latitude</div>
-                                    <div className='textRight'>{selectedMarker?.lat}</div>
-                                </li>
-                                <li className='li-data-last input-group form-group'>
-                                    <div className='textLeft'>Longtitude</div>
-                                    <div className='textRight'>{selectedMarker?.lng}</div>
-                                </li>
-                            </ul>
+                            <div className='textLeft'>
+                                {selectedMarker?.alamat}
+                            </div>
                         </div>
-                        <div className='titleBody'>Point dan Data Rumah</div>
+                        <div className='titleBody'>Persentase keaktifan dakwah</div>
                         <div className='bodyData' style={{ marginBottom: '10px' }}>
                             <ul className='nav nav-pills flex-column mb-auto'>
                                 <li className='li-data'>
-                                    <ProgressBar now={PHasil} label={`${PHasil}%`} style={{ height: '30px' }} />    
+                                    <ProgressBar now={PHasil} label={`${PHasil}% `} style={{ height: '30px' }} />    
                                 </li>
                             </ul>
+                            <div className='textLeft'>*batas maksimal persentase dakwah adalah 100%</div>
                         </div>
                         <div className='bodyData'>
                             <ul className='nav nav-pills flex-column mb-auto'>
