@@ -37,11 +37,12 @@ const MiniStatistics = ({ title, amount, percentage, icon }) => {
                 alignSelf='flex-end'
                 justifySelf='flex-end'
                 m='0px'
+                ml="3px"
                 color={percentage > 0 ? "green.400" : "red.400"}
                 fontWeight='bold'
                 ps='3px'
                 fontSize='md'>
-                {percentage > 0 ? `+${percentage}%` : `${percentage}%`}
+                {percentage > 0 ? `${percentage}%` : `${percentage}%`}
               </StatHelpText>
             </Flex>
           </Stat>
