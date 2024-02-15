@@ -12,7 +12,7 @@ export default function SidebarMasjid({ showSidebarMasjid, handleCloseSidebarMas
     const [dataMasjid, setDataMasjid] = useState([]);
     const fetchData = async () => {
             if(selectedMarkerMasjid?._id){
-                const response = await axios.get('https://api.petadakwah.site/api/petadakwah/filter/masjid?id='+selectedMarkerMasjid?._id);
+                const response = await axios.get('http://localhost:3000/api/petadakwah/filter/masjid?id='+selectedMarkerMasjid?._id);
                 setDataMasjid(response.data.petaDakwahs)
             }
         };

@@ -104,7 +104,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -132,22 +132,6 @@ function Tables() {
 
   const postRumah = async (values) => {
 
-    const fileUrl = await postUpload();
-
-    if (fileUrl == undefined) {
-      toast.error('Foto Wajib Diupload', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
-      return 
-    }
 
     const data = {
       keaktifanShalat: values.keaktifanShalat,
@@ -161,7 +145,7 @@ function Tables() {
     }
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/rumah/create`, data, {
+      const response = await axios.post(`http://localhost:3000/api/rumah/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -174,10 +158,9 @@ function Tables() {
         rumah: data._id,
         kepalaKeluarga: values.kepalaKeluarga,
         anggotaKeluarga: values?.anggotaKeluarga ? values?.anggotaKeluarga : [],
-        fotoRumah: fileUrl
       }
       try {
-        axios.post(`https://api.petadakwah.site/api/keluarga/create`, dataKeluarga, {
+        axios.post(`http://localhost:3000/api/keluarga/create`, dataKeluarga, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -246,8 +229,7 @@ function Tables() {
           kurban: 'false',
           lat: "",
           lng: "",
-          alamat: "",
-          fotoRumah: ""
+          alamat: ""
         }}
         onSubmit={(values, { setSubmitting }) => {
           if (latitude == "" || longtitude == "") {
@@ -351,15 +333,6 @@ function Tables() {
               <FormLabel>Alamat</FormLabel>  
               <Input name="alamat" onChange={handleChange}/>
             </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Foto</FormLabel>  
-              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept={"image/jpeg, image/png, image/gif, image/jpg"}/>
-            </FormControl>
-            {photoView != null &&
-              <FormControl isRequired mt="4" >
-                <Image src={photoView} h="200px" />
-              </FormControl>
-            }
             <Separator mt="10" mb="10"/>
             <FormControl mt="4" >
               <FormLabel><b>Kepala Keluarga</b></FormLabel>  

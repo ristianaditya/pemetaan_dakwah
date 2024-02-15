@@ -56,7 +56,7 @@ useEffect(() => {
 }, []);
 
 const getDataMasjid = () => {
-  axios.get(`https://api.petadakwah.site/api/masjid`, 
+  axios.get(`http://localhost:3000/api/masjid`, 
     {
       headers: {
         'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const getNowLocation = (mapRef) => {
 
 const getData = async () => {
   try {
-    const response = await axios.get(`https://api.petadakwah.site/api/petadakwah/` + iditem, 
+    const response = await axios.get(`http://localhost:3000/api/petadakwah/` + iditem, 
     {
       headers: {
         'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ const postRumah = async (values) => {
   const rumahId = values._id
 
   try {
-    const response = await axios.put(`https://api.petadakwah.site/api/petadakwah/` + rumahId, data, {
+    const response = await axios.put(`http://localhost:3000/api/petadakwah/` + rumahId, data, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
@@ -334,10 +334,6 @@ return (
           <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
           </>
           }
-           <FormControl mt="4" >
-            <FormLabel>Foto</FormLabel>  
-            <Image src={values?.foto ? values.foto : "" } h="200px" />
-          </FormControl>
           <FormControl isRequired mt="4">
             <FormLabel>Topik Dakwah</FormLabel>  
             <Input name="topikDakwah" onChange={handleChange} value={values?.topikDakwah ? values.topikDakwah : "" } disabled/>

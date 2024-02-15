@@ -89,7 +89,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -117,37 +117,19 @@ function Tables() {
 
   const postRumah = async (values) => {
 
-    const fileUrl = await postUpload();
-
-    if (fileUrl == undefined) {
-      toast.error('Foto Wajib Diupload', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
-      return 
-    }
-
     const data = {
       namaMasjid: values.namaMasjid,
       ketuaDKM: values.ketuaDKM,
       tahunBerdiri: values.tahunBerdiri,
       jumlahJamaah: values.jumlahJamaah,
       alamat: values.alamat,
-      foto: fileUrl,
       lat: latitude,
       lng: longtitude
     }
 
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/masjid/create`, data, {
+      const response = await axios.post(`http://localhost:3000/api/masjid/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -240,15 +222,6 @@ function Tables() {
               <FormLabel>Alamat</FormLabel>  
               <Input name="alamat" onChange={handleChange}/>
             </FormControl>
-            <FormControl isRequired mt="4" >
-              <FormLabel>Foto</FormLabel>  
-              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept={"image/jpeg, image/png, image/gif, image/jpg"}/>
-            </FormControl>
-            {photoView != null &&
-                <FormControl isRequired mt="4" >
-                  <Image src={photoView} h="200px" />
-                </FormControl>
-              }
             <Flex mt="4">
               <MapContainer 
                 center={[-6.947794701156682, 107.70349499168313]} 

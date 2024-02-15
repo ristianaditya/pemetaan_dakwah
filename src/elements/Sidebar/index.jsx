@@ -126,16 +126,16 @@ export default function Sidebars({mapRef }) {
 
     const fetchData = async () => {
         try {
-            const rumahAll = await axios.get('https://api.petadakwah.site/api/admin/rumah');
-            const rumahKurban = await axios.get('https://api.petadakwah.site/api/rumah/kurban/true');
-            const rumahHaji = await axios.get('https://api.petadakwah.site/api/rumah/haji/true');
-            const rumahZakat = await axios.get('https://api.petadakwah.site/api/rumah/zakat/true');
-            const petaDakwah = await axios.get('https://api.petadakwah.site/api/petadakwah');
-            const petaMasjid = await axios.get('https://api.petadakwah.site/api/masjid');
-            const graphRumahStats = await axios.get('https://api.petadakwah.site/api/graph/rumahstats');
-            const countRumah = await axios.get('https://api.petadakwah.site/api/graph/rumah');
-            const countDakwah = await axios.get('https://api.petadakwah.site/api/graph/petadakwah');
-            const countMasjid = await axios.get('https://api.petadakwah.site/api/graph/masjid');
+            const rumahAll = await axios.get('http://localhost:3000/api/admin/rumah');
+            const rumahKurban = await axios.get('http://localhost:3000/api/rumah/kurban/true');
+            const rumahHaji = await axios.get('http://localhost:3000/api/rumah/haji/true');
+            const rumahZakat = await axios.get('http://localhost:3000/api/rumah/zakat/true');
+            const petaDakwah = await axios.get('http://localhost:3000/api/petadakwah');
+            const petaMasjid = await axios.get('http://localhost:3000/api/masjid');
+            const graphRumahStats = await axios.get('http://localhost:3000/api/graph/rumahstats');
+            const countRumah = await axios.get('http://localhost:3000/api/graph/rumah');
+            const countDakwah = await axios.get('http://localhost:3000/api/graph/petadakwah');
+            const countMasjid = await axios.get('http://localhost:3000/api/graph/masjid');
             setDataMasyarakatKurban(rumahKurban.data.keluargas);
             setDataMasyarakatHaji(rumahHaji.data.keluargas);
             setDataMasyarakatZakat(rumahZakat.data.keluargas);

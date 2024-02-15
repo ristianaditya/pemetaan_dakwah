@@ -95,7 +95,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -124,7 +124,7 @@ function Tables() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`https://api.petadakwah.site/api/rumah/` + iditem, 
+      const response = await axios.get(`http://localhost:3000/api/rumah/` + iditem, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ function Tables() {
       mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
 
       try {
-        axios.get(`https://api.petadakwah.site/api/keluarga/` + data.RumahId, {
+        axios.get(`http://localhost:3000/api/keluarga/` + data.RumahId, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -218,7 +218,7 @@ function Tables() {
     const rumahId = values.RumahId
 
     try {
-      const response = await axios.put(`https://api.petadakwah.site/api/rumah/` + rumahId, data, {
+      const response = await axios.put(`http://localhost:3000/api/rumah/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -230,41 +230,22 @@ function Tables() {
 
       let dataFormRumah;
       if (photoView != null) {
-        console.log(photoView);
-        const fileUrl = await postUpload();
-  
-        if (fileUrl == undefined) {
-          toast.error('Foto Wajib Diupload', {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
-  
-          return 
-        }
   
         dataFormRumah = {
           rumah: dataRumah._id,
           kepalaKeluarga: values.kepalaKeluarga,
           anggotaKeluarga: values.anggotaKeluarga,
-          fotoRumah: fileUrl
         }
       } else {
         dataFormRumah = {
           rumah: dataRumah._id,
           kepalaKeluarga: values.kepalaKeluarga,
           anggotaKeluarga: values.anggotaKeluarga,
-          fotoRumah: dataRumah.fotoRumah
         }
       }
 
       try {
-        axios.put(`https://api.petadakwah.site/api/keluarga/` + dataRumah._id, dataFormRumah, {
+        axios.put(`http://localhost:3000/api/keluarga/` + dataRumah._id, dataFormRumah, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -418,19 +399,6 @@ function Tables() {
               <FormLabel>Alamat</FormLabel>  
               <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" }/>
             </FormControl>
-            <FormControl mt="4" >
-                <FormLabel>Foto</FormLabel>  
-                <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e)}} accept={"image/jpeg, image/png, image/gif, image/jpg"} />
-              </FormControl>
-              {photoView == null ? 
-                <FormControl isRequired mt="4" >
-                  <Image src={values?.fotoRumah ? values.fotoRumah : "" } h="200px" />
-                </FormControl>
-              :
-                <FormControl isRequired mt="4" >
-                  <Image src={photoView} h="200px" />
-                </FormControl>
-              }
             <Separator mt="10" mb="10"/>
             <FormControl mt="4" >
               <FormLabel><b>Kepala Keluarga</b></FormLabel>  

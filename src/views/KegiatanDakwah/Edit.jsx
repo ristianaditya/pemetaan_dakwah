@@ -54,7 +54,7 @@ function Tables() {
   }, []);
 
   const getDataMasjid = () => {
-    axios.get(`https://api.petadakwah.site/api/masjid`, 
+    axios.get(`http://localhost:3000/api/masjid`, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -140,7 +140,7 @@ function Tables() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`https://api.petadakwah.site/api/petadakwah/` + iditem, 
+      const response = await axios.get(`http://localhost:3000/api/petadakwah/` + iditem, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -242,7 +242,6 @@ function Tables() {
           kategori: values.kategori,
           waktuMulai: values.waktuMulai,
           waktuAkhir: values.waktuAkhir,
-          foto: fileUrl,
           tipe_kegiatan: values.tipe_kegiatan,
           nama_penyelenggara: values.nama_penyelenggara,
           alamat_penyelenggara: values.alamat_penyelenggara,
@@ -261,7 +260,6 @@ function Tables() {
           kategori: values.kategori,
           waktuMulai: values.waktuMulai,
           waktuAkhir: values.waktuAkhir,
-          foto: fileUrl,
           tipe_kegiatan: values.tipe_kegiatan,
           nama_penyelenggara: values.nama_penyelenggara,
           alamat_penyelenggara: values.alamat_penyelenggara,
@@ -282,7 +280,6 @@ function Tables() {
           kategori: values.kategori,
           waktuMulai: values.waktuMulai,
           waktuAkhir: values.waktuAkhir,
-          foto: values.foto,
           tipe_kegiatan: values.tipe_kegiatan,
           nama_penyelenggara: values.nama_penyelenggara,
           alamat_penyelenggara: values.alamat_penyelenggara,
@@ -301,7 +298,6 @@ function Tables() {
           kategori: values.kategori,
           waktuMulai: values.waktuMulai,
           waktuAkhir: values.waktuAkhir,
-          foto: values.foto,
           tipe_kegiatan: values.tipe_kegiatan,
           nama_penyelenggara: values.nama_penyelenggara,
           alamat_penyelenggara: values.alamat_penyelenggara,
@@ -314,7 +310,7 @@ function Tables() {
     const rumahId = values._id
 
     try {
-      const response = await axios.put(`https://api.petadakwah.site/api/petadakwah/` + rumahId, data, {
+      const response = await axios.put(`http://localhost:3000/api/petadakwah/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -435,19 +431,6 @@ function Tables() {
             <Text mt="1" align={'left'} display={ latitude && longtitude ? '' : ''}>lat : {latitude} long : {longtitude}</Text>
             </>
             }
-             <FormControl mt="4" >
-                <FormLabel>Foto</FormLabel>  
-                <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e)}} accept={"image/jpeg, image/png, image/gif, image/jpg"} />
-              </FormControl>
-              {photoView == null ? 
-                <FormControl isRequired mt="4" >
-                  <Image src={values?.foto ? values.foto : "" } h="200px" />
-                </FormControl>
-              :
-                <FormControl isRequired mt="4" >
-                  <Image src={photoView} h="200px" />
-                </FormControl>
-              }
             <FormControl isRequired mt="4">
               <FormLabel>Topik Dakwah</FormLabel>  
               <Input name="topikDakwah" onChange={handleChange} value={values?.topikDakwah ? values.topikDakwah : "" }/>

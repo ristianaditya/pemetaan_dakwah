@@ -93,7 +93,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -121,7 +121,7 @@ function Tables() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`https://api.petadakwah.site/api/masjid/` + iditem, 
+      const response = await axios.get(`http://localhost:3000/api/masjid/` + iditem, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -153,22 +153,6 @@ function Tables() {
   const postRumah = async (values) => {
     let data;
     if (photoView != null) {
-      const fileUrl = await postUpload();
-
-      if (fileUrl == undefined) {
-        toast.error('Foto Wajib Diupload', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-
-        return 
-      }
 
       data = {
         namaMasjid: values.namaMasjid,
@@ -176,7 +160,6 @@ function Tables() {
         tahunBerdiri: values.tahunBerdiri,
         jumlahJamaah: values.jumlahJamaah,
         alamat: values.alamat,
-        foto: fileUrl,
         lat: latitude,
         lng: longtitude
       }
@@ -187,7 +170,6 @@ function Tables() {
         tahunBerdiri: values.tahunBerdiri,
         jumlahJamaah: values.jumlahJamaah,
         alamat: values.alamat,
-        foto: values.foto,
         lat: latitude,
         lng: longtitude
       }
@@ -197,7 +179,7 @@ function Tables() {
     const rumahId = values._id
 
     try {
-      const response = await axios.put(`https://api.petadakwah.site/api/masjid/` + rumahId, data, {
+      const response = await axios.put(`http://localhost:3000/api/masjid/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -287,19 +269,7 @@ function Tables() {
               <FormLabel>Alamat</FormLabel>  
               <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" }/>
             </FormControl>
-              <FormControl mt="4" >
-                <FormLabel>Foto</FormLabel>  
-                <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e)}} accept={"image/jpeg, image/png, image/gif, image/jpg"} />
-              </FormControl>
-              {photoView == null ? 
-                <FormControl isRequired mt="4" >
-                  <Image src={values?.foto ? values.foto : "" } h="200px" />
-                </FormControl>
-              :
-                <FormControl isRequired mt="4" >
-                  <Image src={photoView} h="200px" />
-                </FormControl>
-              }
+
               
             <Flex mt="4">
               <MapContainer 

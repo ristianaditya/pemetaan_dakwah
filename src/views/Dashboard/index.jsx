@@ -46,7 +46,7 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      axios.get(`https://api.petadakwah.site/api/graph/rumahstats${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`,
+      axios.get(`http://localhost:3000/api/graph/rumahstats${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -64,9 +64,9 @@ export default function Dashboard() {
         setSeries([data.kurban, data.haji, data.zakat])
         
       })
-      const countRumah = await axios.get(`https://api.petadakwah.site/api/graph/rumah${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`);
-      const countDakwah = await axios.get(`https://api.petadakwah.site/api/graph/petadakwah${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`);
-      const countMasjid = await axios.get(`https://api.petadakwah.site/api/graph/masjid${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`);
+      const countRumah = await axios.get(`http://localhost:3000/api/graph/rumah${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`);
+      const countDakwah = await axios.get(`http://localhost:3000/api/graph/petadakwah${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`);
+      const countMasjid = await axios.get(`http://localhost:3000/api/graph/masjid${startDate != '' & endDate != '' ? `?startDate=${startDate}&endDate=${endDate}`  : ""}`);
 
       setDataCount([countRumah.data.count, countDakwah.data.count, countMasjid.data.count])
 

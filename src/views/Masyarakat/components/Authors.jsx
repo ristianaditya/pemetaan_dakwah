@@ -71,7 +71,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
 
     setPending(true);
     try {
-      await axios.delete(`https://api.petadakwah.site/api/rumah/` + deleteid, {
+      await axios.delete(`http://localhost:3000/api/rumah/` + deleteid, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -178,7 +178,7 @@ const Authors = ({ title, buttonTambah, buttonEdit, buttonDetail }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   useEffect(() => {
-    axios.get(`https://api.petadakwah.site/api/rumah`, 
+    axios.get(`http://localhost:3000/api/rumah`, 
         {
           headers: {
             'Content-Type': 'application/json',

@@ -51,7 +51,7 @@ function Tables() {
   }, []);
 
   const getDataMasjid = () => {
-    axios.get(`https://api.petadakwah.site/api/masjid`, 
+    axios.get(`http://localhost:3000/api/masjid`, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/upload`, data, {
+      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -152,22 +152,6 @@ function Tables() {
 
   const postRumah = async (values) => {
 
-    const fileUrl = await postUpload();
-
-    if (fileUrl == undefined) {
-      toast.error('Foto Wajib Diupload', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
-      return 
-    }
 
     let data;
     if (isDakwahMasjid) {
@@ -182,7 +166,6 @@ function Tables() {
         kategori: values.kategori,
         waktuMulai: values.waktuMulai,
         waktuAkhir: values.waktuAkhir,
-        foto: fileUrl,
         tipe_kegiatan: values.tipe_kegiatan,
         nama_penyelenggara: values.nama_penyelenggara,
         alamat_penyelenggara: values.alamat_penyelenggara,
@@ -201,7 +184,6 @@ function Tables() {
         kategori: values.kategori,
         waktuMulai: values.waktuMulai,
         waktuAkhir: values.waktuAkhir,
-        foto: fileUrl,
         tipe_kegiatan: values.tipe_kegiatan,
         nama_penyelenggara: values.nama_penyelenggara,
         alamat_penyelenggara: values.alamat_penyelenggara,
@@ -211,7 +193,7 @@ function Tables() {
     }
    
     try {
-      const response = await axios.post(`https://api.petadakwah.site/api/petadakwah/create`, data, {
+      const response = await axios.post(`http://localhost:3000/api/petadakwah/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -347,15 +329,6 @@ function Tables() {
 
           </>
             }
-             <FormControl isRequired mt="4" >
-              <FormLabel>Foto</FormLabel>  
-              <Input type="file" name="foto" onChange={(e) => {handleChangePhoto(e);}} accept={"image/jpeg, image/png, image/gif, image/jpg"}/>
-            </FormControl>
-            {photoView != null &&
-                <FormControl isRequired mt="4" >
-                  <Image src={photoView} h="200px" />
-                </FormControl>
-              }
             <FormControl isRequired mt="4">
               <FormLabel>Topik Dakwah</FormLabel>  
               <Input name="topikDakwah" onChange={handleChange}/>

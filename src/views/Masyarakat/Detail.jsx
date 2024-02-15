@@ -76,7 +76,7 @@ const myIcon = new Icon({
 
 const getData = async () => {
   try {
-    const response = await axios.get(`https://api.petadakwah.site/api/rumah/` + iditem, 
+    const response = await axios.get(`http://localhost:3000/api/rumah/` + iditem, 
     {
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const getData = async () => {
     mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
 
     try {
-      axios.get(`https://api.petadakwah.site/api/keluarga/` + data.RumahId, {
+      axios.get(`http://localhost:3000/api/keluarga/` + data.RumahId, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -173,7 +173,7 @@ const postRumah = async (values) => {
   const rumahId = values.RumahId
 
   try {
-    const response = await axios.put(`https://api.petadakwah.site/api/rumah/` + rumahId, data, {
+    const response = await axios.put(`http://localhost:3000/api/rumah/` + rumahId, data, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
@@ -189,7 +189,7 @@ const postRumah = async (values) => {
       fotoRumah: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmorefurniture.id%2Fartikel%2Frumah-minimalis-warna-biru&psig=AOvVaw21UQ24OgmUda4Emcv-E0Ju&ust=1690464034492000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCgn7S7rIADFQAAAAAdAAAAABAE"
     }
     try {
-      axios.put(`https://api.petadakwah.site/api/keluarga/` + data._id, dataKeluarga, {
+      axios.put(`http://localhost:3000/api/keluarga/` + data._id, dataKeluarga, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -349,10 +349,6 @@ return (
           <FormControl isRequired mt="4" >
             <FormLabel>Alamat</FormLabel>  
             <Input name="alamat" onChange={handleChange} value={values?.alamat ? values.alamat : "" } disabled/>
-          </FormControl>
-          <FormControl mt="4" >
-            <FormLabel>Foto</FormLabel>  
-            <Image src={values?.fotoRumah ? values.fotoRumah : "" } h="200px" />
           </FormControl>
           <Separator mt="10" mb="10"/>
           <FormControl mt="4" >
