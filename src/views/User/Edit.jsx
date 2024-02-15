@@ -93,7 +93,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
+      const response = await axios.post(`http://34.128.90.223:4000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -121,7 +121,7 @@ function Tables() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/user/` + iditem, 
+      const response = await axios.get(`http://34.128.90.223:4000/api/user/` + iditem, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ function Tables() {
     const rumahId = values._id
 
     try {
-      const response = await axios.put(`http://localhost:3000/api/user/` + rumahId, data, {
+      const response = await axios.put(`http://34.128.90.223:4000/api/user/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token

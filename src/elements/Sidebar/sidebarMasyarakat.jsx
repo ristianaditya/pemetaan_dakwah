@@ -44,7 +44,7 @@ export default function SidebarMasyarakat({ showSidebarMasyarakat, handleCloseSi
     const fetchData = async () => {
         try {
             if(selectedMarker?.rumahId){
-                const response = await axios.get('http://localhost:3000/api/admin/keluarga/'+selectedMarker?.rumahId);
+                const response = await axios.get('http://34.128.90.223:4000/api/admin/keluarga/'+selectedMarker?.rumahId);
                 setDataKeluarga(response.data.keluarga.anggotaKeluarga);
             }
         } catch (error) {

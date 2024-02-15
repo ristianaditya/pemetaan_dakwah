@@ -95,7 +95,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
+      const response = await axios.post(`http://34.128.90.223:4000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -124,7 +124,7 @@ function Tables() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/rumah/` + iditem, 
+      const response = await axios.get(`http://34.128.90.223:4000/api/rumah/` + iditem, 
       {
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ function Tables() {
       mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
 
       try {
-        axios.get(`http://localhost:3000/api/keluarga/` + data.RumahId, {
+        axios.get(`http://34.128.90.223:4000/api/keluarga/` + data.RumahId, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -218,7 +218,7 @@ function Tables() {
     const rumahId = values.RumahId
 
     try {
-      const response = await axios.put(`http://localhost:3000/api/rumah/` + rumahId, data, {
+      const response = await axios.put(`http://34.128.90.223:4000/api/rumah/` + rumahId, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -245,7 +245,7 @@ function Tables() {
       }
 
       try {
-        axios.put(`http://localhost:3000/api/keluarga/` + dataRumah._id, dataFormRumah, {
+        axios.put(`http://34.128.90.223:4000/api/keluarga/` + dataRumah._id, dataFormRumah, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token

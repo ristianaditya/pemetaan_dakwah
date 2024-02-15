@@ -47,7 +47,7 @@ export default function ModalLogin() {
             "password": password
         }
 
-        axios.post(`http://localhost:3000/api/login`, loginBody
+        axios.post(`http://34.128.90.223:4000/api/login`, loginBody
         )
         .then(res => {
             if (res.status == 200) {

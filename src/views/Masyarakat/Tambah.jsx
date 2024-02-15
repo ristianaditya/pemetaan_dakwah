@@ -104,7 +104,7 @@ function Tables() {
     data.append("image", file)
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/upload`, data, {
+      const response = await axios.post(`http://34.128.90.223:4000/api/upload`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' + token,
@@ -145,7 +145,7 @@ function Tables() {
     }
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/rumah/create`, data, {
+      const response = await axios.post(`http://34.128.90.223:4000/api/rumah/create`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -160,7 +160,7 @@ function Tables() {
         anggotaKeluarga: values?.anggotaKeluarga ? values?.anggotaKeluarga : [],
       }
       try {
-        axios.post(`http://localhost:3000/api/keluarga/create`, dataKeluarga, {
+        axios.post(`http://34.128.90.223:4000/api/keluarga/create`, dataKeluarga, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token

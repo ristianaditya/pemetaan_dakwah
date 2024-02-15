@@ -76,7 +76,7 @@ const myIcon = new Icon({
 
 const getData = async () => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/rumah/` + iditem, 
+    const response = await axios.get(`http://34.128.90.223:4000/api/rumah/` + iditem, 
     {
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const getData = async () => {
     mapRef.current.flyTo([data.lat, data.lng], 18, { duration: 2 });
 
     try {
-      axios.get(`http://localhost:3000/api/keluarga/` + data.RumahId, {
+      axios.get(`http://34.128.90.223:4000/api/keluarga/` + data.RumahId, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -173,7 +173,7 @@ const postRumah = async (values) => {
   const rumahId = values.RumahId
 
   try {
-    const response = await axios.put(`http://localhost:3000/api/rumah/` + rumahId, data, {
+    const response = await axios.put(`http://34.128.90.223:4000/api/rumah/` + rumahId, data, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
@@ -189,7 +189,7 @@ const postRumah = async (values) => {
       fotoRumah: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmorefurniture.id%2Fartikel%2Frumah-minimalis-warna-biru&psig=AOvVaw21UQ24OgmUda4Emcv-E0Ju&ust=1690464034492000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCgn7S7rIADFQAAAAAdAAAAABAE"
     }
     try {
-      axios.put(`http://localhost:3000/api/keluarga/` + data._id, dataKeluarga, {
+      axios.put(`http://34.128.90.223:4000/api/keluarga/` + data._id, dataKeluarga, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
